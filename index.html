@@ -30,13 +30,37 @@
     }
     </script>
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts (Non-blocking) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"></noscript>
     
-    <!-- Remix Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Remix Icons (Non-blocking) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" media="print" onload="this.media='all'">
+    
+    <!-- Critical CSS -->
+    <style>
+        :root {
+            --primary: #C2185B;
+            --primary-dark: #A20866;
+            --primary-light: #F0A8CE;
+            --bg-light: #FAE8F3;
+            --text-main: #1e293b;
+            --transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+            --container-max: 1200px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; color: var(--text-main); background-color: var(--bg-light); line-height: 1.6; overflow-x: hidden; }
+        .container { width: 100%; max-width: var(--container-max); margin: 0 auto; padding: 0 1.5rem; }
+        nav { background: white; padding: 1rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+        nav .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 4rem 0; text-align: center; }
+        .hero h1 { font-size: 2.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }
+        .hero p { color: rgba(255,255,255,0.8); font-size: 1rem; max-width: 600px; margin: 0 auto 2rem auto; }
+        .highlight { color: #fbbf24; }
+    </style>
     
     <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="style.css"></noscript>
