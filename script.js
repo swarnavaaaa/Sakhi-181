@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Automatic Location Detection
-    initLocationDetection();
+    // Location detection is now triggered manually via the "Use Current Location" button
+    // initLocationDetection();
 
     // Use Current Location Button
     const locationBtn = document.getElementById('useCurrentLocation');
