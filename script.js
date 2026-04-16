@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initLocationDetection();
 });
 
-async function searchCentersByPin(pin) {
+async function searchCentersByPin(pin, autoLocation = null) {
     if (!supabaseClient) {
         console.error("Supabase client not initialized.");
         return;
@@ -121,6 +121,9 @@ async function searchCentersByPin(pin) {
 
             if (data && data.length > 0) {
                 renderCenters(data);
+                if (autoLocation) {
+                    showLocationToast(autoLocation, data.length);
+                }
             } else {
                 resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-muted);">
                     <i class="ri-error-warning-line" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
@@ -274,7 +277,7 @@ function updateUIWithLocation(location) {
         
         // Auto-search if PIN is detected
         console.log(`Auto-searching for centers in PIN: ${cleanPin}`);
-        searchCentersByPin(cleanPin); 
+        searchCentersByPin(cleanPin, location); 
     }
 
     const districtSelect = document.querySelector('.hero-card select');
@@ -286,10 +289,12 @@ function updateUIWithLocation(location) {
         });
     }
 
-    showLocationToast(location);
+    // Toast will be shown from searchCentersByPin only if results are found
+    // showLocationToast(location);
 }
 
-function showLocationToast(location) {
+function showLocationToast(location, count) {
+    if (count <= 0) return;
     const cityName = location.city || "your area";
     // Check if toast already exists
     if (document.querySelector('.location-toast')) return;
@@ -298,7 +303,7 @@ function showLocationToast(location) {
     toast.className = 'location-toast';
     toast.innerHTML = `
         <i class="ri-map-marker-fill" style="color: #ef4444;"></i>
-        <span>Found centers near <strong>${cityName}</strong> (${location.zip || 'Detected Location'})</span>
+        <span>Found <strong>${count}</strong> centers near <strong>${cityName}</strong></span>
         <button onclick="this.parentElement.remove()">&times;</button>
     `;
     
