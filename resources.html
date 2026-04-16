@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Center | Sakhi One Stop Centre</title>
+    <meta name="description" content="Empowering you with knowledge and support. Find reliable information on legal rights, safety protocols, and available services.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">Sakhi OSC</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="resources.html" class="active">Resources</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="translate-control">
+                    <i class="ri-translate-2"></i>
+                    <div id="google_translate_element"></div>
+                </div>
+                <button class="btn-nav" id="quickExit">Quick Exit</button>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="ri-menu-line"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Resource Hero -->
+    <header class="resource-hero">
+        <div class="container resource-hero-grid">
+            <div class="hero-text">
+                <span class="badge-purple">Support Knowledge Base</span>
+                <h1>Resource Center</h1>
+                <p>Empowering you with knowledge and support. Find reliable information on legal rights, safety protocols, and available services.</p>
+                
+                <div class="search-container">
+                    <i class="ri-search-line"></i>
+                    <input type="text" placeholder="Search for specific topics or laws">
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="modern_safety_center_1775884852853.png" alt="Resource Center Interior" class="resource-hero-img">
+            </div>
+        </div>
+    </header>
+
+    <!-- Explore Topics Section -->
+    <section class="explore-section section-padding" style="background: #f8fafc;">
+        <div class="container">
+            <!-- Emergency Banner -->
+            <div class="emergency-response-banner">
+                <div class="emergency-info">
+                    <i class="ri-phone-fill"></i>
+                    <div class="emergency-text">
+                        <span>Emergency Response</span>
+                        <h4>24/7 Helpline: 181</h4>
+                    </div>
+                </div>
+                <div class="emergency-actions">
+                    <a href="#" class="btn-emergency-outline">Find Local Centre</a>
+                    <a href="tel:181" class="btn-emergency-white">Call Now</a>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 style="font-size: 2rem; font-weight: 800;">Explore Topics</h2>
+                <div style="width: 50px; height: 4px; background: var(--primary); margin-top: 0.5rem;"></div>
+            </div>
+
+            <div class="topic-grid">
+                <!-- Card 1 -->
+                <div id="shelter" class="topic-card">
+                    <div class="topic-icon"><i class="ri-map-pin-2-fill"></i></div>
+                    <h3>Sakhi One Stop Centers</h3>
+                    <p>Locate physical support centers offering integrated help including shelter, police support, and medical aid in one place.</p>
+                    <a href="#" class="btn-link">Find Centers <i class="ri-arrow-right-line"></i></a>
+                </div>
+                <!-- Card 2 -->
+                <div id="legal" class="topic-card">
+                    <div class="topic-icon"><i class="ri-scales-3-line"></i></div>
+                    <h3>Legal Aid</h3>
+                    <p>Access free legal advice, document drafting, and representation to help you navigate the justice system effectively.</p>
+                    <a href="#" class="btn-link">Legal Support <i class="ri-arrow-right-line"></i></a>
+                </div>
+                <!-- Card 3 -->
+                <div id="medical" class="topic-card">
+                    <div class="topic-icon"><i class="ri-hospital-line"></i></div>
+                    <h3>Medical Help</h3>
+                    <p>Immediate medical attention, forensic examinations, and healthcare referrals ensuring your health is prioritized.</p>
+                    <a href="#" class="btn-link">Medical Care <i class="ri-arrow-right-line"></i></a>
+                </div>
+                <!-- Card 4 -->
+                <div id="hiv" class="topic-card">
+                    <div class="topic-icon"><i class="ri-virus-line"></i></div>
+                    <h3>HIV</h3>
+                    <p>Specialized resources for HIV/AIDS awareness, confidential testing, counseling, and integrated healthcare support.</p>
+                    <a href="#" class="btn-link">HIV Resources <i class="ri-arrow-right-line"></i></a>
+                </div>
+                <!-- Card 5 -->
+                <div id="counseling" class="topic-card">
+                    <div class="topic-icon"><i class="ri-heart-pulse-line"></i></div>
+                    <h3>Counseling</h3>
+                    <p>Psychosocial support and mental health counseling to help you process trauma and build emotional resilience.</p>
+                    <a href="#" class="btn-link">Get Support <i class="ri-arrow-right-line"></i></a>
+                </div>
+                <!-- Card 6 -->
+                <div id="lgbtq" class="topic-card">
+                    <div class="topic-icon"><i class="ri-rainbow-line"></i></div>
+                    <h3>LGBTQ+ Resources</h3>
+                    <p>Tailored support and resources specifically for the LGBTQ+ community facing discrimination or distress.</p>
+                    <a href="#" class="btn-link">View Resources <i class="ri-arrow-right-line"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2 class="logo">Sakhi One Stop Centre</h2>
+                    <p>An initiative for the protection and empowerment of women across the country, providing support in one location.</p>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Emergency Protocol</a></li>
+                        <li><a href="#">Help Desk</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Sakhi One Stop Centre. All Rights Reserved. Government of India Initiative.</p>
+                <div class="social-links">
+                    <a href="#" class="social-icon"><i class="ri-facebook-fill"></i></a>
+                    <a href="#" class="social-icon"><i class="ri-twitter-fill"></i></a>
+                    <a href="#" class="social-icon"><i class="ri-instagram-line"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'hi,mr,ta,te,gu,kn,ml,pa,bn,as',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>

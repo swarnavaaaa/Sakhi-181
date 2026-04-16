@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sakhi Sentinel | Your Safe Harbor</title>
+    <meta name="description" content="Sakhi One Stop Center provides 24/7 integrated support for women facing violence or distress. Find a center near you.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">Sakhi OSC</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="resources.html">Resources</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="translate-control">
+                    <i class="ri-translate-2"></i>
+                    <div id="google_translate_element"></div>
+                </div>
+                <button class="btn-nav" id="quickExit">Quick Exit</button>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="ri-menu-line"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Your Safe Harbor<br>in Times of Need</h1>
+                <p>Sakhi One Stop Centers provide 24/7 support for women facing violence or distress. Protection, legal aid, and medical support are just a search away.</p>
+                
+                <div style="display: flex; align-items: center; gap: 1rem; margin-top: 2rem;">
+                    <div style="display: flex; -webkit-mask-image: linear-gradient(to right, black 80%, transparent);">
+                        <i class="ri-user-smile-fill" style="background: var(--secondary); padding: 5px; border-radius: 50%; border: 2px solid var(--primary);"></i>
+                        <i class="ri-user-heart-fill" style="background: #fbbf24; padding: 5px; border-radius: 50%; border: 2px solid var(--primary); margin-left: -10px;"></i>
+                        <i class="ri-heart-fill" style="background: #f87171; padding: 5px; border-radius: 50%; border: 2px solid var(--primary); margin-left: -10px;"></i>
+                    </div>
+                    <span style="font-size: 0.8rem; font-weight: 500; opacity: 0.9;">Join 50,000+ women who found help last month</span>
+                </div>
+            </div>
+
+            <div class="hero-card">
+                <h3><i class="ri-map-pin-2-fill" style="color: var(--primary);"></i> Find a Center</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2rem;">Locate the nearest One Stop Center</p>
+                
+                <form>
+                    <div class="form-group">
+                        <label>District</label>
+                        <select>
+                            <option>Select District</option>
+                            <option>New Delhi</option>
+                            <option>Mumbai</option>
+                            <option>Bangalore</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pin Code</label>
+                        <input type="text" placeholder="Enter 6-digit PIN">
+                    </div>
+                    <button type="submit" class="btn-hero">
+                        <i class="ri-search-line"></i> Locate Sakhi Center
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Search Results Container -->
+        <div id="searchResultsContainer" class="container" style="display: none; position: relative; z-index: 100; margin-bottom: 4rem;">
+            <div class="results-card">
+                <div class="results-header">
+                    <h3><i class="ri-list-check"></i> Found Centers</h3>
+                    <button class="btn-close-results" onclick="document.getElementById('searchResultsContainer').style.display='none'">&times;</button>
+                </div>
+                <div id="centersResultsList" class="results-list">
+                    <!-- Results will be injected here -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mission Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="mission-header">
+                <span class="card-tag">Our Mission</span>
+                <h2>Empowering Women Through Integrated Care</h2>
+            </div>
+
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <h3>Immediate Intervention</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 1rem;">Our crisis management teams are available 24/7 to provide rescue and immediate relief for women in distress.</p>
+                    <div style="display: flex; gap: 0.8rem; margin-top: 2rem;">
+                        <span style="background: var(--primary-light); color: var(--primary); padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700;">24/7 Helpline</span>
+                        <span style="background: var(--primary-light); color: var(--primary); padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700;">Rescue Teams</span>
+                    </div>
+                    <img src="hands_support_intervention_1775888798829.png" alt="Immediate Intervention" class="card-img-overlap">
+                </div>
+
+                <div class="mission-card dark" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <div class="icon-box" style="background: rgba(255,255,255,0.1); width: 60px; height: 60px; border-radius: 50%;">
+                        <i class="ri-shield-user-line" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 style="margin-top: 2rem;">Confidential Support</h3>
+                    <p style="opacity: 0.8; font-size: 0.9rem; margin-top: 1rem;">Your identity and history are protected with highest-grade security and ethical standards.</p>
+                </div>
+            </div>
+
+            <div class="feature-grid" style="margin-top: 2rem;">
+                <div class="feat-card light-blue">
+                    <div class="feat-content">
+                        <div class="icon-circle small">
+                            <i class="ri-chat-4-line"></i>
+                        </div>
+                        <h3>Counseling</h3>
+                        <p>Professional psycho-social counseling and mental health support to help you process trauma and rebuild with dignity.</p>
+                    </div>
+                    <div class="feat-image-container">
+                        <img src="counseling_therapy_room_1775888818305.png" alt="Counseling Room" class="feat-img">
+                    </div>
+                </div>
+
+                <div class="feat-card gray horizontal">
+                    <div class="feat-content">
+                        <h3>Legal & Medical Aid</h3>
+                        <p>Access free legal advisors and certified medical professionals without navigating multiple offices. We bring specialized experts directly to you.</p>
+                        <div class="feat-actions">
+                            <button class="btn-primary-small">Learn More</button>
+                        </div>
+                    </div>
+                    <div class="feat-image-small">
+                        <img src="legal_and_medical_icons_1775888850640.png" alt="Legal and Medical">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Preview Section -->
+    <section class="section-padding integrated-section" style="background: #f8fafc;">
+        <div class="container" style="text-align: center;">
+            <span class="card-tag">Support Hub</span>
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Explore our Resources</h2>
+            <p style="color: var(--text-muted); font-size: 1rem; max-width: 600px; margin: 0 auto;">Access specialized support through our integrated welfare network.</p>
+            
+            <div class="services-grid" style="margin-top: 4rem;">
+                <a href="resources.html#shelter" class="service-box reveal">
+                    <div class="icon-box" style="background: #dbeafe; color: #2563eb;"><i class="ri-map-pin-2-fill"></i></div>
+                    <h4>Sakhi One Stop Centers</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Locate centers providing shelter, police, and medical aid in one place.</p>
+                    <span class="btn-link">View Details <i class="ri-arrow-right-line"></i></span>
+                </a>
+
+                <a href="resources.html#legal" class="service-box reveal">
+                    <div class="icon-box" style="background: #ede9fe; color: #7c3aed;"><i class="ri-scales-3-line"></i></div>
+                    <h4>Legal Aid</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Access free legal advice and representation to help you navigate the system.</p>
+                    <span class="btn-link">Learn More <i class="ri-arrow-right-line"></i></span>
+                </a>
+
+                <a href="resources.html#medical" class="service-box reveal">
+                    <div class="icon-box" style="background: #fff7ed; color: #ea580c;"><i class="ri-hospital-line"></i></div>
+                    <h4>Medical Help</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Immediate medical attention and healthcare referrals ensuring your safety.</p>
+                    <span class="btn-link">Get Support <i class="ri-arrow-right-line"></i></span>
+                </a>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <a href="resources.html" class="btn-hero" style="display: inline-flex; width: auto; padding: 1.2rem 3rem;">
+                    Browse All Resources <i class="ri-arrow-right-up-line"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="section-padding">
+        <div class="container impact-grid">
+            <div style="position: relative;">
+                <img src="women_illustration_impact_1775888833931.png" alt="Women Impact" class="impact-img">
+                <div style="position: absolute; bottom: -20px; right: -20px; background: var(--primary); color: white; padding: 2rem; border-radius: 20px; width: 250px;">
+                    <h2 style="font-size: 2rem; font-weight: 800;">700+</h2>
+                    <p style="font-size: 0.75rem; opacity: 0.9;">Centers across all districts of India providing vital support.</p>
+                </div>
+            </div>
+
+            <div class="reveal">
+                <span class="card-tag">Our Impact</span>
+                <h2 style="font-size: 2.5rem; line-height: 1.2; margin: 1rem 0 2rem 0;">Measuring Success Through Stories of Healing</h2>
+                
+                <div class="stat-item">
+                    <i class="ri-group-line stat-icon"></i>
+                    <div>
+                        <h4 style="font-size: 1rem;">Empowering the Vulnerable</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Over 5 Lakh women have received support through our integrated network since 2015.</p>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <i class="ri-flashlight-line stat-icon"></i>
+                    <div>
+                        <h4 style="font-size: 1rem;">Rapid Response</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Average response time of under 30 minutes for emergency medical and police intervention.</p>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <i class="ri-verified-badge-line stat-icon"></i>
+                    <div>
+                        <h4 style="font-size: 1rem;">Quality Guaranteed</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">All centers follow standardized operational protocols verified by central government monitoring.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Bar -->
+    <div class="emergency-bar">
+        <div class="container">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <i class="ri-phone-fill" style="font-size: 1.5rem;"></i>
+                <div style="text-align: left;">
+                    <h4 style="font-size: 1rem;">Immediate Emergency?</h4>
+                    <p style="font-size: 0.75rem; opacity: 0.9;">Call the Women's Helpline immediately for rescue.</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <a href="tel:181" class="btn-emergency-pill">181</a>
+                <a href="tel:112" class="btn-emergency-pill">112</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2 class="logo">Sakhi One Stop Centre</h2>
+                    <p>An initiative for the protection and empowerment of women across the country, providing support in one location.</p>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Emergency Protocol</a></li>
+                        <li><a href="#">Help Desk</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Sakhi One Stop Centre. All Rights Reserved. Government of India Initiative.</p>
+                <div class="social-links">
+                    <a href="#" class="social-icon"><i class="ri-facebook-fill"></i></a>
+                    <a href="#" class="social-icon"><i class="ri-twitter-fill"></i></a>
+                    <a href="#" class="social-icon"><i class="ri-instagram-line"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'hi,mr,ta,te,gu,kn,ml,pa,bn,as', // Added common Indian languages
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>
