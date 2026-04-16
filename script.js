@@ -89,6 +89,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Automatic Location Detection
     initLocationDetection();
+
+    // Use Current Location Button
+    const locationBtn = document.getElementById('useCurrentLocation');
+    if (locationBtn) {
+        locationBtn.addEventListener('click', () => {
+            const originalHtml = locationBtn.innerHTML;
+            locationBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Detecting...';
+            locationBtn.disabled = true;
+            
+            initLocationDetection(true).finally(() => {
+                locationBtn.innerHTML = originalHtml;
+                locationBtn.disabled = false;
+            });
+        });
+    }
 });
 
 async function searchCentersByPin(pin, autoLocation = null) {
@@ -137,6 +152,62 @@ async function searchCentersByPin(pin, autoLocation = null) {
     }
 }
 
+async function searchNearbyCenters(lat, lon, radiusKm = 100) {
+    if (!supabaseClient) return;
+
+    const resultsContainer = document.getElementById('searchResultsContainer');
+    const resultsList = document.getElementById('centersResultsList');
+    
+    if (resultsContainer && resultsList) {
+        resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+            <i class="ri-loader-4-line ri-spin" style="font-size: 2rem; display: block; margin-bottom: 1rem; color: var(--primary);"></i>
+            Finding OSCs within ${radiusKm}km of your location...
+        </div>`;
+        resultsContainer.style.display = 'block';
+        resultsContainer.scrollIntoView({ behavior: 'smooth' });
+
+        try {
+            const { data, error } = await supabaseClient.from('centers').select('*');
+            if (error) throw error;
+
+            const nearby = data.filter(center => {
+                // Check for latitude/longitude columns (will be added to schema)
+                if (center.latitude && center.longitude) {
+                    const dist = calculateDistance(lat, lon, center.latitude, center.longitude);
+                    center.distance = dist;
+                    return dist <= radiusKm;
+                }
+                return false;
+            }).sort((a, b) => a.distance - b.distance);
+
+            if (nearby.length > 0) {
+                renderCenters(nearby);
+                showLocationToast({ city: 'Detected Area' }, nearby.length);
+            } else {
+                resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-muted);">
+                    <i class="ri-error-warning-line" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
+                    No centers found within <strong>${radiusKm}km</strong> of your location.
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">Try searching by PIN code below.</p>
+                </div>`;
+            }
+        } catch (err) {
+            console.error("Error fetching nearby centers:", err);
+            resultsList.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 2rem;">Failed to fetch nearby centers.</div>';
+        }
+    }
+}
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+
 function renderCenters(centers) {
     const resultsList = document.getElementById('centersResultsList');
     resultsList.innerHTML = '';
@@ -148,7 +219,7 @@ function renderCenters(centers) {
             <div class="center-item">
                 <h4>
                     ${center["Name"]}
-                    <span class="center-type-badge">${center["District"] || 'OSC'}</span>
+                    <span class="center-type-badge">${center.distance ? Math.round(center.distance) + ' km away' : (center["District"] || 'OSC')}</span>
                 </h4>
                 <p style="font-size: 0.8rem; color: var(--primary); margin-bottom: 1rem;">${center["Category"] || 'Support Center'}</p>
                 
@@ -195,36 +266,45 @@ function renderCenters(centers) {
     });
 }
 
-function initLocationDetection() {
+function initLocationDetection(isManual = false) {
     console.log("Initializing location detection...");
     
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-                const { latitude, longitude } = position.coords;
-                console.log(`Coordinates detected: ${latitude}, ${longitude}`);
-                
-                // Try reverse geocoding to get PIN code
-                const geoData = await reverseGeocode(latitude, longitude);
-                
-                handleLocationData({ 
-                    lat: latitude, 
-                    lon: longitude, 
-                    zip: geoData.postcode,
-                    city: geoData.city || geoData.town || geoData.village,
-                    method: 'browser' 
-                });
-            },
-            (error) => {
-                console.warn(`Geolocation failed: ${error.message}. Falling back to IP detection.`);
-                fallbackToIpDetection();
-            },
-            { timeout: 8000, enableHighAccuracy: true }
-        );
-    } else {
-        console.warn("Geolocation API not supported. Falling back to IP detection.");
-        fallbackToIpDetection();
-    }
+    return new Promise((resolve) => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    console.log(`Coordinates detected: ${latitude}, ${longitude}`);
+                    
+                    if (isManual) {
+                        await searchNearbyCenters(latitude, longitude, 100);
+                        resolve();
+                        return;
+                    }
+                    
+                    // Try reverse geocoding to get PIN code for auto-fill
+                    const geoData = await reverseGeocode(latitude, longitude);
+                    
+                    handleLocationData({ 
+                        lat: latitude, 
+                        lon: longitude, 
+                        zip: geoData.postcode,
+                        city: geoData.city || geoData.town || geoData.village,
+                        method: 'browser' 
+                    });
+                    resolve();
+                },
+                (error) => {
+                    console.warn(`Geolocation failed: ${error.message}. Falling back to IP detection.`);
+                    fallbackToIpDetection(isManual).then(resolve);
+                },
+                { timeout: 8000, enableHighAccuracy: true }
+            );
+        } else {
+            console.warn("Geolocation API not supported. Falling back to IP detection.");
+            fallbackToIpDetection(isManual).then(resolve);
+        }
+    });
 }
 
 async function reverseGeocode(lat, lon) {
@@ -242,11 +322,16 @@ async function reverseGeocode(lat, lon) {
     }
 }
 
-async function fallbackToIpDetection() {
+async function fallbackToIpDetection(isManual = false) {
     try {
         const response = await fetch('https://ipapi.co/json/');
         const data = await response.json();
         if (!data.error) {
+            if (isManual) {
+                await searchNearbyCenters(data.latitude, data.longitude, 100);
+                return;
+            }
+
             handleLocationData({ 
                 lat: data.latitude, 
                 lon: data.longitude, 

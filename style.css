@@ -353,6 +353,32 @@ body {
     color: var(--primary-dark);
 }
 
+.btn-location-alt {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: #f1f5f9;
+    color: var(--primary);
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.btn-location-alt:hover {
+    background: #eef2ff;
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.btn-location-alt i {
+    font-size: 1.1rem;
+}
+
 /* Mission Section */
 .mission-header {
     text-align: center;

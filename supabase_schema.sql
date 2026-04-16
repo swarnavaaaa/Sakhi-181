@@ -19,6 +19,8 @@ CREATE TABLE centers (
     "Photo URL" TEXT,
     "Services offered" TEXT,
     "Google link" TEXT,
+    "latitude" DOUBLE PRECISION,
+    "longitude" DOUBLE PRECISION,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
