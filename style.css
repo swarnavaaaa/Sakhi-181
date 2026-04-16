@@ -363,6 +363,27 @@ body {
     color: var(--primary-dark);
 }
 
+/* Avatar Stack styles */
+.avatar-stack {
+    display: flex;
+    align-items: center;
+}
+
+.avatar-item {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 3px solid white;
+    margin-left: -15px;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background: white;
+}
+
+.avatar-item:first-child {
+    margin-left: 0;
+}
+
 .btn-location-alt {
     width: 100%;
     padding: 0.8rem 1rem;
