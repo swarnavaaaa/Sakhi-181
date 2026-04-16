@@ -167,6 +167,12 @@ nav .container {
     transform: translateY(-2px);
 }
 
+@media (max-width: 768px) {
+    .logo { font-size: 1.1rem; }
+    .btn-nav { padding: 0.4rem 1rem; font-size: 0.75rem; }
+    .nav-actions { gap: 0.5rem; }
+}
+
 .translate-control i {
     font-size: 1.2rem;
     color: var(--primary);
@@ -280,7 +286,7 @@ body {
 }
 
 .hero h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 800;
     line-height: 1.1;
     margin-bottom: 1rem;
@@ -296,11 +302,15 @@ body {
 /* Hero Card - Find Center */
 .hero-card {
     background: white;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 20px;
     color: var(--text-main);
     text-align: left;
     box-shadow: var(--shadow-lg);
+}
+
+@media (min-width: 768px) {
+    .hero-card { padding: 2.5rem; }
 }
 
 .hero-card h3 {
@@ -408,13 +418,16 @@ body {
 .mission-card.blue { background: #f0f7ff; }
 .mission-card.dark { background: var(--primary); color: white; }
 
-.card-tag {
+.card-tag, .hero-pill {
     font-size: 0.7rem;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--primary);
     margin-bottom: 1rem;
     display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    border: 1px solid rgba(212, 56, 143, 0.2);
 }
 
 .card-img-overlap {
@@ -726,7 +739,7 @@ footer {
 }
 
 .resource-hero h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 800;
     margin-bottom: 1.5rem;
 }
@@ -1042,7 +1055,7 @@ footer {
 
 .mission-hero h1 {
     color: var(--text-main);
-    font-size: 3rem;
+    font-size: 2.5rem;
 }
 
 .mission-hero .highlight {
@@ -1130,7 +1143,7 @@ footer {
     background: var(--primary-dark);
     color: white;
     text-align: center;
-    padding: 6rem 0;
+    padding: 4rem 0;
 }
 
 .mission-statement h2 {
@@ -1213,9 +1226,13 @@ footer {
 }
 
 .contact-hero-section h1 {
-    font-size: 4rem;
+    font-size: 2.5rem;
     font-weight: 800;
     margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    .contact-hero-section h1 { font-size: 3.5rem; }
 }
 
 .contact-hero-section h1 span {
@@ -1239,11 +1256,20 @@ footer {
 .helpline-card-red {
     background: var(--accent);
     color: white;
-    padding: 2.5rem;
+    padding: 1.5rem;
     border-radius: 12px;
     display: flex;
-    gap: 1.5rem;
+    flex-direction: column;
+    gap: 1rem;
     margin-bottom: 2rem;
+}
+
+@media (min-width: 480px) {
+    .helpline-card-red {
+        flex-direction: row;
+        padding: 2.5rem;
+        gap: 1.5rem;
+    }
 }
 
 .helpline-card-red i {
@@ -1256,10 +1282,14 @@ footer {
 }
 
 .helpline-card-red .phone-number {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 800;
     display: block;
     margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+    .helpline-card-red .phone-number { font-size: 2.5rem; }
 }
 
 .helpline-card-red p {
@@ -1318,14 +1348,14 @@ footer {
 }
 
 .contact-form-card h2 {
-    font-size: 2rem;
+    font-size: 1.75rem;
     margin-bottom: 1rem;
 }
 
 .contact-form-card p {
     font-size: 0.9rem;
     color: var(--text-muted);
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .form-row-2 {
