@@ -5,11 +5,14 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 let supabaseClient = null;
 
-if (typeof supabase !== 'undefined') {
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
-
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Supabase if library is loaded
+    if (typeof supabase !== 'undefined') {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log("Supabase client initialized successfully.");
+    } else {
+        console.error("Supabase library not found. Ensure the CDN script is loading correctly.");
+    }
     // Translation Control Logic
     const translateControl = document.querySelector('.translate-control');
     if (translateControl) {
