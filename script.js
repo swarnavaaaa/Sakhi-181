@@ -50,13 +50,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Search Form Submission
     const searchForm = document.querySelector('.hero-card form');
     if (searchForm) {
-        searchForm.addEventListener('submit', async (e) => {
+        searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const pinInput = searchForm.querySelector('input[placeholder="Enter 6-digit PIN"]');
-            if (pinInput && pinInput.value.length === 6) {
-                searchCentersByPin(pinInput.value);
+            const pinInput = document.getElementById('pinInput');
+            if (!pinInput) return;
+            
+            const pinVal = pinInput.value.trim();
+            
+            if (!supabaseClient) {
+                showSimpleToast("Connecting to database... Please try again in 2 seconds.", "info");
+                return;
+            }
+
+            if (pinVal.length === 6 && /^\d+$/.test(pinVal)) {
+                searchCentersByPin(pinVal);
             } else {
-                alert("Please enter a valid 6-digit PIN code.");
+                showSimpleToast("Please enter a valid 6-digit numeric PIN code.", "error");
             }
         });
     }
@@ -94,14 +103,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const locationBtn = document.getElementById('useCurrentLocation');
     if (locationBtn) {
         locationBtn.addEventListener('click', () => {
+            if (!supabaseClient) {
+                showSimpleToast("Search service is still initializing. Please wait a moment.", "error");
+                return;
+            }
+            
             const originalHtml = locationBtn.innerHTML;
             locationBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Detecting...';
             locationBtn.disabled = true;
             
-            initLocationDetection(true).finally(() => {
-                locationBtn.innerHTML = originalHtml;
-                locationBtn.disabled = false;
-            });
+            initLocationDetection(true)
+                .catch(err => {
+                    console.error("Location detection error:", err);
+                    showSimpleToast(err.message || "Could not detect location. Please enter PIN manually.", "error");
+                })
+                .finally(() => {
+                    locationBtn.innerHTML = originalHtml;
+                    locationBtn.disabled = false;
+                });
         });
     }
 
@@ -142,25 +161,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function searchCentersByPin(pin, autoLocation = null) {
     if (!supabaseClient) {
-        console.error("Supabase client not initialized.");
+        showSimpleToast("Database service not ready.", "error");
         return;
     }
 
     const cleanPin = pin.toString().trim();
-    if (cleanPin.length !== 6) {
-        console.warn(`Invalid PIN length: ${cleanPin.length}. Expected 6.`);
-        return;
-    }
-
     const resultsContainer = document.getElementById('searchResultsContainer');
     const resultsList = document.getElementById('centersResultsList');
     
     if (resultsContainer && resultsList) {
-        resultsList.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem;">Searching for centers in PIN ' + cleanPin + '...</div>';
+        resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+            <i class="ri-loader-4-line ri-spin" style="font-size: 2.5rem; display: block; margin-bottom: 1rem; color: var(--primary);"></i>
+            Searching for Sakhi Centers in PIN <strong>${cleanPin}</strong>...
+        </div>`;
         resultsContainer.style.display = 'block';
-        resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
         try {
+            console.log(`Querying centers for PIN: ${cleanPin}`);
             const { data, error } = await supabaseClient
                 .from('centers')
                 .select('*')
@@ -169,45 +187,64 @@ async function searchCentersByPin(pin, autoLocation = null) {
             if (error) throw error;
 
             if (data && data.length > 0) {
+                console.log(`Found ${data.length} centers for PIN ${cleanPin}`);
                 renderCenters(data);
                 if (autoLocation) {
                     showLocationToast(autoLocation, data.length);
                 }
             } else {
-                resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-muted);">
-                    <i class="ri-error-warning-line" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
-                    No centers found for PIN code <strong>${cleanPin}</strong>. Please try a nearby PIN or contact the helpline.
+                console.log(`No centers found for PIN ${cleanPin}`);
+                resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <i class="ri-map-pin-user-line" style="font-size: 3rem; display: block; margin-bottom: 1.5rem; color: var(--text-light);"></i>
+                    <h3>No centers found in this area</h3>
+                    <p style="margin-top: 1rem;">We couldn't find any Sakhi Centers for PIN <strong>${cleanPin}</strong>.</p>
+                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">Try a nearby PIN code or use "Current Location" detection.</p>
                 </div>`;
             }
         } catch (err) {
             console.error("Error fetching centers:", err);
-            resultsList.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 2rem;">Failed to fetch centers. Please check your connection.</div>';
+            resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 3rem;">
+                <i class="ri-error-warning-line" style="font-size: 2.5rem; display: block; margin-bottom: 1rem;"></i>
+                <strong>Unexpected Error</strong>
+                <p style="margin-top: 0.5rem;">${err.message || 'Failed to connect to database'}</p>
+            </div>`;
         }
     }
 }
 
 async function searchNearbyCenters(lat, lon, radiusKm = 100) {
-    if (!supabaseClient) return;
+    if (!supabaseClient) {
+        showSimpleToast("Supabase client not initialized.", "error");
+        return;
+    }
 
     const resultsContainer = document.getElementById('searchResultsContainer');
     const resultsList = document.getElementById('centersResultsList');
     
     if (resultsContainer && resultsList) {
-        resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
-            <i class="ri-loader-4-line ri-spin" style="font-size: 2rem; display: block; margin-bottom: 1rem; color: var(--primary);"></i>
-            Finding OSCs within ${radiusKm}km of your location...
+        resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+            <i class="ri-loader-4-line ri-spin" style="font-size: 2.5rem; display: block; margin-bottom: 1rem; color: var(--primary);"></i>
+            Finding Sakhi Centers within ${radiusKm}km of your location...
         </div>`;
         resultsContainer.style.display = 'block';
-        resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
         try {
             const { data, error } = await supabaseClient.from('centers').select('*');
             if (error) throw error;
 
+            if (!data || data.length === 0) {
+                resultsList.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem;">No center data found in database.</div>';
+                return;
+            }
+
             const nearby = data.filter(center => {
-                // Check for latitude/longitude columns (will be added to schema)
-                if (center.latitude && center.longitude) {
-                    const dist = calculateDistance(lat, lon, center.latitude, center.longitude);
+                // Try both lowercase and PascalCase just in case
+                const latVal = center.latitude || center.Latitude;
+                const lonVal = center.longitude || center.Longitude;
+                
+                if (latVal != null && lonVal != null) {
+                    const dist = calculateDistance(lat, lon, parseFloat(latVal), parseFloat(lonVal));
                     center.distance = dist;
                     return dist <= radiusKm;
                 }
@@ -216,17 +253,18 @@ async function searchNearbyCenters(lat, lon, radiusKm = 100) {
 
             if (nearby.length > 0) {
                 renderCenters(nearby);
-                showLocationToast({ city: 'Detected Area' }, nearby.length);
+                showLocationToast({ city: 'Current Location' }, nearby.length);
             } else {
-                resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-muted);">
-                    <i class="ri-error-warning-line" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
-                    No centers found within <strong>${radiusKm}km</strong> of your location.
-                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">Try searching by PIN code below.</p>
+                resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <i class="ri-map-pin-range-line" style="font-size: 3rem; display: block; margin-bottom: 1.5rem; color: var(--text-light);"></i>
+                    <h3>No centers found nearby</h3>
+                    <p style="margin-top: 1rem;">We couldn't find any centers within <strong>${radiusKm}km</strong> of your detected location.</p>
+                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">Try searching by PIN code instead.</p>
                 </div>`;
             }
         } catch (err) {
             console.error("Error fetching nearby centers:", err);
-            resultsList.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 2rem;">Failed to fetch nearby centers.</div>';
+            resultsList.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 2rem;">Failed to fetch nearby centers. Error: ' + err.message + '</div>';
         }
     }
 }
@@ -244,28 +282,31 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 
 function renderCenters(centers) {
     const resultsList = document.getElementById('centersResultsList');
+    if (!resultsList) return;
+    
     resultsList.innerHTML = '';
 
     centers.forEach(center => {
         const services = center["Services offered"] ? center["Services offered"].split(',').map(s => `<span class="service-tag">${s.trim()}</span>`).join('') : '';
+        const distanceText = center.distance ? `${Math.round(center.distance * 10) / 10} km away` : (center["District"] || 'OSC');
         
         const centerHtml = `
             <div class="center-item">
-                <h4>
-                    ${center["Name"]}
-                    <span class="center-type-badge">${center.distance ? Math.round(center.distance) + ' km away' : (center["District"] || 'OSC')}</span>
-                </h4>
-                <p style="font-size: 0.8rem; color: var(--primary); margin-bottom: 1rem;">${center["Category"] || 'Support Center'}</p>
+                <div class="center-header">
+                    <h4>${center["Name"]}</h4>
+                    <span class="center-type-badge">${distanceText}</span>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-bottom: 1rem;">${center["Category"] || 'Sakhi One Stop Centre'}</p>
                 
                 <div class="center-details">
                     <div class="center-info-row">
                         <i class="ri-map-pin-2-line"></i>
-                        <span>${center["Address"]}<br><strong>${center["District"] || ''}</strong></span>
+                        <span>${center["Address"]}<br><strong>${center["Pin Code"] ? 'PIN: ' + center["Pin Code"] : ''} ${center["District"] ? '(' + center["District"] + ')' : ''}</strong></span>
                     </div>
                     ${center["OSC Phone number"] ? `
                         <div class="center-info-row">
                             <i class="ri-phone-line"></i>
-                            <a href="tel:${center["OSC Phone number"]}">${center["OSC Phone number"]}</a>
+                            <a href="tel:${center["OSC Phone number"]}" class="contact-link">${center["OSC Phone number"]}</a>
                         </div>
                     ` : ''}
                     ${center["Name of CA"] ? `
@@ -277,21 +318,21 @@ function renderCenters(centers) {
                     ${center["Email"] ? `
                         <div class="center-info-row">
                             <i class="ri-mail-line"></i>
-                            <a href="mailto:${center["Email"]}">${center["Email"]}</a>
+                            <a href="mailto:${center["Email"]}" class="contact-link">${center["Email"]}</a>
                         </div>
                     ` : ''}
                 </div>
 
                 ${services ? `
                     <div class="center-services">
-                        <p style="font-size: 0.75rem; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; color: var(--text-muted);">Services Provided</p>
-                        ${services}
+                        <p style="font-size: 0.7rem; font-weight: 700; margin-bottom: 0.6rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Integrated Services</p>
+                        <div class="services-wrapper">${services}</div>
                     </div>
                 ` : ''}
 
                 ${center["Google link"] ? `
-                    <a href="${center["Google link"]}" target="_blank" class="btn-link" style="margin-top: 1.5rem; display: inline-flex; font-size: 0.8rem;">
-                        View on Google Maps <i class="ri-map-pin-line"></i>
+                    <a href="${center["Google link"]}" target="_blank" class="btn-maps">
+                        <i class="ri-map-pin-line"></i> View on Google Maps
                     </a>
                 ` : ''}
             </div>
@@ -303,16 +344,39 @@ function renderCenters(centers) {
 function initLocationDetection(isManual = false) {
     console.log("Initializing location detection...");
     
-    return new Promise((resolve) => {
+    // Safety check for Secure Context (Required for Geolocation)
+    if (!window.isSecureContext && window.location.hostname !== 'localhost') {
+        console.warn("Geolocation requires a secure context (HTTPS). Falling back to IP detection.");
+        if (isManual) {
+            showSimpleToast("HTTPS required for precise location. Trying IP fallback...", "info");
+        }
+        return fallbackToIpDetection(isManual);
+    }
+
+    return new Promise((resolve, reject) => {
+        // Safety timeout in case the browser hangs or blocks the prompt without calling the error callback
+        const safetyTimeout = setTimeout(() => {
+            console.warn("Geolocation prompt or response timed out (Safety Timeout).");
+            if (isManual) {
+                showSimpleToast("Location prompt timed out. Trying IP fallback...", "info");
+            }
+            fallbackToIpDetection(isManual).then(resolve).catch(reject);
+        }, 12000); // 12 seconds safety margin
+
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
+                    clearTimeout(safetyTimeout);
                     const { latitude, longitude } = position.coords;
                     console.log(`Coordinates detected: ${latitude}, ${longitude}`);
                     
                     if (isManual) {
-                        await searchNearbyCenters(latitude, longitude, 100);
-                        resolve();
+                        try {
+                            await searchNearbyCenters(latitude, longitude, 100);
+                            resolve();
+                        } catch (err) {
+                            reject(err);
+                        }
                         return;
                     }
                     
@@ -329,14 +393,24 @@ function initLocationDetection(isManual = false) {
                     resolve();
                 },
                 (error) => {
+                    clearTimeout(safetyTimeout);
                     console.warn(`Geolocation failed: ${error.message}. Falling back to IP detection.`);
-                    fallbackToIpDetection(isManual).then(resolve);
+                    let errorMsg = "Location access denied.";
+                    if (error.code === error.TIMEOUT) errorMsg = "Location detection timed out.";
+                    if (error.code === error.POSITION_UNAVAILABLE) errorMsg = "Location information is unavailable.";
+                    
+                   if (isManual) {
+                       showSimpleToast(`${errorMsg} Trying IP detection...`, "info");
+                   }
+                   
+                   fallbackToIpDetection(isManual).then(resolve).catch(reject);
                 },
-                { timeout: 8000, enableHighAccuracy: true }
+                { timeout: 10000, enableHighAccuracy: false } // Set to false for faster response on more devices
             );
         } else {
+            clearTimeout(safetyTimeout);
             console.warn("Geolocation API not supported. Falling back to IP detection.");
-            fallbackToIpDetection(isManual).then(resolve);
+            fallbackToIpDetection(isManual).then(resolve).catch(reject);
         }
     });
 }
@@ -387,7 +461,7 @@ function handleLocationData(location) {
 }
 
 function updateUIWithLocation(location) {
-    const pinInput = document.querySelector('input[placeholder="Enter 6-digit PIN"]');
+    const pinInput = document.getElementById('pinInput');
     
     if (pinInput && location.zip) {
         // Clean the PIN code (sometimes Nominatim returns things like "110054; 110055")
@@ -398,30 +472,34 @@ function updateUIWithLocation(location) {
         console.log(`Auto-searching for centers in PIN: ${cleanPin}`);
         searchCentersByPin(cleanPin, location); 
     }
+}
 
-    const districtSelect = document.querySelector('.hero-card select');
-    if (districtSelect && location.city) {
-        Array.from(districtSelect.options).forEach(option => {
-            if (option.text.toLowerCase().includes(location.city.toLowerCase())) {
-                districtSelect.value = option.text;
-            }
-        });
-    }
+function showSimpleToast(message, type = "info") {
+    const existingToast = document.querySelector('.location-toast');
+    if (existingToast) existingToast.remove();
 
-    // Toast will be shown from searchCentersByPin only if results are found
-    // showLocationToast(location);
+    const toast = document.createElement('div');
+    toast.className = `location-toast ${type}`;
+    toast.innerHTML = `
+        <i class="${type === 'error' ? 'ri-error-warning-fill' : 'ri-information-fill'}" style="color: ${type === 'error' ? '#ef4444' : 'var(--primary)'};"></i>
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()">&times;</button>
+    `;
+    
+    document.body.appendChild(toast);
+    setTimeout(() => { if (toast.parentElement) toast.remove(); }, 5000);
 }
 
 function showLocationToast(location, count) {
     if (count <= 0) return;
     const cityName = location.city || "your area";
-    // Check if toast already exists
-    if (document.querySelector('.location-toast')) return;
+    const existingToast = document.querySelector('.location-toast');
+    if (existingToast) existingToast.remove();
 
     const toast = document.createElement('div');
     toast.className = 'location-toast';
     toast.innerHTML = `
-        <i class="ri-map-marker-fill" style="color: #ef4444;"></i>
+        <i class="ri-map-marker-fill" style="color: var(--primary);"></i>
         <span>Found <strong>${count}</strong> centers near <strong>${cityName}</strong></span>
         <button onclick="this.parentElement.remove()">&times;</button>
     `;
