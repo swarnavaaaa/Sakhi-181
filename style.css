@@ -1094,7 +1094,7 @@ footer {
     display: grid;
     grid-template-columns: 1fr; /* Mobile */
     gap: 2rem;
-    margin-top: 2rem; /* No overlap on mobile */
+    margin-top: 4rem; /* Increased gap */
     margin-bottom: 4rem;
     position: relative;
     z-index: 10;
@@ -1230,7 +1230,7 @@ footer {
     
     .feat-cards {
         grid-template-columns: repeat(3, 1fr);
-        margin-top: -8rem;
+        margin-top: 4rem;
     }
     
     .mission-statement h2 { font-size: 2.5rem; }
