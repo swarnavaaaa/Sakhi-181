@@ -104,6 +104,30 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // Resource Search Functionality
+    const resourceSearchInput = document.getElementById('resourceSearch');
+    const topicCards = document.querySelectorAll('.topic-card');
+
+    if (resourceSearchInput) {
+        resourceSearchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+
+            topicCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    // Re-trigger animation if hidden previously
+                    setTimeout(() => card.classList.add('active'), 10);
+                } else {
+                    card.style.display = 'none';
+                    card.classList.remove('active');
+                }
+            });
+        });
+    }
 });
 
 async function searchCentersByPin(pin, autoLocation = null) {
