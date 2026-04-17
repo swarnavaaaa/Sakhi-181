@@ -107,11 +107,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Resource Search Functionality
     const resourceSearchInput = document.getElementById('resourceSearch');
+    const searchStatus = document.getElementById('searchStatus');
     const topicCards = document.querySelectorAll('.topic-card');
 
     if (resourceSearchInput) {
         resourceSearchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            if (searchStatus) {
+                searchStatus.textContent = searchTerm ? `Showing results for: "${searchTerm}"` : '';
+            }
 
             topicCards.forEach(card => {
                 const title = card.querySelector('h3').textContent.toLowerCase();
@@ -119,13 +125,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (title.includes(searchTerm) || description.includes(searchTerm)) {
                     card.style.display = 'block';
-                    // Re-trigger animation if hidden previously
+                    visibleCount++;
                     setTimeout(() => card.classList.add('active'), 10);
                 } else {
                     card.style.display = 'none';
                     card.classList.remove('active');
                 }
             });
+
+            if (searchStatus && searchTerm) {
+                searchStatus.textContent = `Found ${visibleCount} results for: "${searchTerm}"`;
+            }
         });
     }
 });

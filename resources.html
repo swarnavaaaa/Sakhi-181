@@ -58,6 +58,7 @@
                     <i class="ri-search-line"></i>
                     <input type="text" placeholder="Search for resource categories" id="resourceSearch" aria-label="Search resources">
                 </div>
+                <div id="searchStatus" style="margin-top: 1rem; font-size: 0.9rem; color: var(--primary); font-weight: 600; min-height: 1.5rem;"></div>
             </div>
             <div class="hero-image">
                 <img src="modern_safety_center_1775884852853.png" alt="Resource Center Interior" class="resource-hero-img" width="600" height="400" fetchpriority="high">
@@ -68,27 +69,12 @@
     <!-- Explore Topics Section -->
     <section class="explore-section section-padding" style="background: #f8fafc;">
         <div class="container">
-            <!-- Emergency Banner -->
-            <div class="emergency-response-banner">
-                <div class="emergency-info">
-                    <i class="ri-phone-fill"></i>
-                    <div class="emergency-text">
-                        <span>Emergency Response</span>
-                        <h4>24/7 Helpline: 181</h4>
-                    </div>
-                </div>
-                <div class="emergency-actions">
-                    <a href="#" class="btn-emergency-outline">Find Local Centre</a>
-                    <a href="tel:181" class="btn-emergency-white">Call Now</a>
-                </div>
-            </div>
-
-            <div style="margin-top: 4rem;">
+            <div>
                 <h2 style="font-size: 2rem; font-weight: 800;">Explore Topics</h2>
                 <div style="width: 50px; height: 4px; background: var(--primary); margin-top: 0.5rem;"></div>
             </div>
 
-            <div class="topic-grid">
+            <div class="topic-grid" style="margin-top: 3rem;">
                 <!-- Card 1 -->
                 <div id="shelter" class="topic-card">
                     <div class="topic-icon"><i class="ri-map-pin-2-fill"></i></div>
@@ -132,10 +118,23 @@
                     <a href="#" class="btn-link">View Resources <i class="ri-arrow-right-line"></i></a>
                 </div>
             </div>
+
+            <!-- Emergency Banner (Moved Below Grid) -->
+            <div class="emergency-response-banner" style="margin-top: 6rem;">
+                <div class="emergency-info">
+                    <i class="ri-phone-fill"></i>
+                    <div class="emergency-text">
+                        <span>Emergency Response</span>
+                        <h4>24/7 Helpline: 181</h4>
+                    </div>
+                </div>
+                <div class="emergency-actions">
+                    <a href="#" class="btn-emergency-outline">Find Local Centre</a>
+                    <a href="tel:181" class="btn-emergency-white">Call Now</a>
+                </div>
+            </div>
         </div>
     </section>
-
-
     </main>
     <!-- Footer -->
     <footer>
