@@ -13,6 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("Supabase library not found. Ensure the CDN script is loading correctly.");
     }
+
+    // Populate Categories Dropdown
+    if (supabaseClient) {
+        populateCategories();
+    }
     // Translation Control Logic
     const translateControl = document.querySelector('.translate-control');
     if (translateControl) {
@@ -56,9 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
         searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const pinInput = document.getElementById('pinInput');
+            const categorySelect = document.getElementById('categorySelect');
             if (!pinInput) return;
             
             const pinVal = pinInput.value.trim();
+            const categoryVal = categorySelect ? categorySelect.value : "";
             
             if (!supabaseClient) {
                 showSimpleToast("Connecting to database... Please try again in 2 seconds.", "info");
@@ -66,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (pinVal.length === 6 && /^\d+$/.test(pinVal)) {
-                searchCentersByPin(pinVal);
+                searchCentersByPin(pinVal, null, categoryVal);
             } else {
                 showSimpleToast("Please enter a valid 6-digit numeric PIN code.", "error");
             }
@@ -162,7 +169,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-async function searchCentersByPin(pin, autoLocation = null) {
+/**
+ * Fetches unique categories from the database and populates the dropdown
+ */
+async function populateCategories() {
+    const categorySelect = document.getElementById('categorySelect');
+    if (!categorySelect || !supabaseClient) return;
+
+    try {
+        console.log("Fetching unique categories...");
+        // Use a select query to get all categories
+        const { data, error } = await supabaseClient
+            .from('centers')
+            .select('Category');
+
+        if (error) throw error;
+
+        if (data) {
+            // Extract unique categories and filter out nulls/empty strings
+            const categories = [...new Set(data.map(item => item.Category))]
+                .filter(cat => cat && cat.trim() !== "")
+                .sort();
+
+            console.log("Categories found:", categories);
+
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categorySelect.appendChild(option);
+            });
+        }
+    } catch (err) {
+        console.error("Error populating categories:", err);
+    }
+}
+
+async function searchCentersByPin(pin, autoLocation = null, category = "") {
     if (!supabaseClient) {
         showSimpleToast("Database service not ready.", "error");
         return;
@@ -181,11 +224,18 @@ async function searchCentersByPin(pin, autoLocation = null) {
         resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
         try {
-            console.log(`Querying centers for PIN: ${cleanPin}`);
-            const { data, error } = await supabaseClient
+            console.log(`Querying centers for PIN: ${cleanPin}${category ? ' in Category: ' + category : ''}`);
+            
+            let query = supabaseClient
                 .from('centers')
                 .select('*')
                 .eq('Pin Code', cleanPin);
+
+            if (category) {
+                query = query.eq('Category', category);
+            }
+
+            const { data, error } = await query;
 
             if (error) throw error;
 
@@ -215,7 +265,7 @@ async function searchCentersByPin(pin, autoLocation = null) {
     }
 }
 
-async function searchNearbyCenters(lat, lon, radiusKm = 100) {
+async function searchNearbyCenters(lat, lon, radiusKm = 100, category = "") {
     if (!supabaseClient) {
         showSimpleToast("Supabase client not initialized.", "error");
         return;
@@ -249,7 +299,10 @@ async function searchNearbyCenters(lat, lon, radiusKm = 100) {
                 if (latVal != null && lonVal != null) {
                     const dist = calculateDistance(lat, lon, parseFloat(latVal), parseFloat(lonVal));
                     center.distance = dist;
-                    return dist <= radiusKm;
+                    
+                    // Apply distance filter AND category filter
+                    const matchesCategory = !category || center.Category === category;
+                    return dist <= radiusKm && matchesCategory;
                 }
                 return false;
             }).sort((a, b) => a.distance - b.distance);
@@ -375,7 +428,8 @@ function initLocationDetection(isManual = false) {
                     
                     if (isManual) {
                         try {
-                            await searchNearbyCenters(latitude, longitude, 100);
+                            const categoryVal = document.getElementById('categorySelect')?.value || "";
+                            await searchNearbyCenters(latitude, longitude, 100, categoryVal);
                             resolve();
                         } catch (err) {
                             reject(err);
@@ -439,7 +493,8 @@ async function fallbackToIpDetection(isManual = false) {
         const data = await response.json();
         if (!data.error) {
             if (isManual) {
-                await searchNearbyCenters(data.latitude, data.longitude, 100);
+                const categoryVal = document.getElementById('categorySelect')?.value || "";
+                await searchNearbyCenters(data.latitude, data.longitude, 100, categoryVal);
                 return;
             }
 
@@ -472,8 +527,9 @@ function updateUIWithLocation(location) {
         pinInput.value = cleanPin;
         
         // Auto-search if PIN is detected
-        console.log(`Auto-searching for centers in PIN: ${cleanPin}`);
-        searchCentersByPin(cleanPin, location); 
+        const categoryVal = document.getElementById('categorySelect')?.value || "";
+        console.log(`Auto-searching for centers in PIN: ${cleanPin}${categoryVal ? ' (Category: ' + categoryVal + ')' : ''}`);
+        searchCentersByPin(cleanPin, location, categoryVal); 
     }
 }
 
