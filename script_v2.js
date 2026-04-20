@@ -229,7 +229,7 @@ async function searchCentersByPin(pin, autoLocation = null, category = "") {
             let query = supabaseClient
                 .from('centers')
                 .select('*')
-                .eq('Pin Code', cleanPin);
+                .eq('Pincode', cleanPin);
 
             if (category) {
                 query = query.eq('Category', category);
@@ -343,7 +343,7 @@ function renderCenters(centers) {
     resultsList.innerHTML = '';
 
     centers.forEach(center => {
-        const services = center["Services offered"] ? center["Services offered"].split(',').map(s => `<span class="service-tag">${s.trim()}</span>`).join('') : '';
+        const services = center["Services provided"] ? center["Services provided"].split(',').map(s => `<span class="service-tag">${s.trim()}</span>`).join('') : '';
         const distanceText = center.distance ? `${Math.round(center.distance * 10) / 10} km away` : (center["District"] || 'OSC');
         
         const centerHtml = `
@@ -357,18 +357,18 @@ function renderCenters(centers) {
                 <div class="center-details">
                     <div class="center-info-row">
                         <i class="ri-map-pin-2-line"></i>
-                        <span>${center["Address"]}<br><strong>${center["Pin Code"] ? 'PIN: ' + center["Pin Code"] : ''} ${center["District"] ? '(' + center["District"] + ')' : ''}</strong></span>
+                        <span>${center["Address"]}<br><strong>${center["Pincode"] ? 'PIN: ' + center["Pincode"] : ''} ${center["District"] ? '(' + center["District"] + ')' : ''}</strong></span>
                     </div>
-                    ${center["OSC Phone number"] ? `
+                    ${center["Phone Number"] ? `
                         <div class="center-info-row">
                             <i class="ri-phone-line"></i>
-                            <a href="tel:${center["OSC Phone number"]}" class="contact-link">${center["OSC Phone number"]}</a>
+                            <a href="tel:${center["Phone Number"]}" class="contact-link">${center["Phone Number"]}</a>
                         </div>
                     ` : ''}
-                    ${center["Name of CA"] ? `
+                    ${center["Point of Contact"] ? `
                         <div class="center-info-row">
                             <i class="ri-user-voice-line"></i>
-                            <span>CA: ${center["Name of CA"]}</span>
+                            <span>PoC: ${center["Point of Contact"]}</span>
                         </div>
                     ` : ''}
                     ${center["Email"] ? `

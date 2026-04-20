@@ -9,15 +9,18 @@ CREATE TABLE centers (
     "District" TEXT,
     "Name" TEXT NOT NULL,
     "Category" TEXT,
+    "NGO/GOVT/Pvt" TEXT,
+    "Phone Number" TEXT,
+    "Cnter Admin Phone Number (OSC)" TEXT,
     "Address" TEXT,
-    "Pin Code" TEXT NOT NULL,
-    "OSC Phone number" TEXT,
-    "CA Phone number" TEXT,
-    "Name of CA" TEXT,
+    "Pincode" TEXT NOT NULL,
+    "Location" TEXT,
+    "Point of Contact" TEXT,
     "Email" TEXT,
-    "Sharing URL" TEXT,
-    "Photo URL" TEXT,
-    "Services offered" TEXT,
+    "Website" TEXT,
+    "Services provided" TEXT,
+    "Last verified date" TEXT,
+    "Photo" TEXT,
     "Google link" TEXT,
     "latitude" DOUBLE PRECISION,
     "longitude" DOUBLE PRECISION,
@@ -25,7 +28,7 @@ CREATE TABLE centers (
 );
 
 -- 2. Index for faster search (using the quoted name)
-CREATE INDEX IF NOT EXISTS idx_centers_pincode ON centers("Pin Code");
+CREATE INDEX IF NOT EXISTS idx_centers_pincode ON centers("Pincode");
 
 -- 3. Enable Row Level Security (RLS)
 ALTER TABLE centers ENABLE ROW LEVEL SECURITY;
