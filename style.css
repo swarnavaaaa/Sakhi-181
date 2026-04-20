@@ -145,6 +145,12 @@ nav .container {
     }
 }
 
+/* Performance: Deferred rendering for off-screen sections */
+section {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 500px;
+}
+
 .translate-control {
     display: flex;
     align-items: center;
@@ -258,10 +264,19 @@ nav .container {
 
 body {
     top: 0px !important;
+    position: static !important;
 }
 
 .goog-logo-link {
     display: none !important;
+}
+
+/* Fix Google Translate Layout Shift */
+.skiptranslate.goog-te-gadget {
+    height: 0 !important;
+    overflow: hidden !important;
+    width: 0 !important;
+    position: absolute !important;
 }
 
 .goog-te-gadget {
@@ -407,6 +422,7 @@ body {
 .avatar-item {
     width: 42px;
     height: 42px;
+    aspect-ratio: 1 / 1;
     border-radius: 50%;
     border: 3px solid white;
     margin-left: -15px;
@@ -1141,6 +1157,8 @@ footer {
     max-width: 500px;
     border-radius: 20px;
     box-shadow: var(--shadow-lg);
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
 }
 
 .feat-cards {

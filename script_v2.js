@@ -163,7 +163,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (searchStatus && searchTerm) {
-                searchStatus.textContent = `Found ${visibleCount} results for: "${searchTerm}"`;
+                requestAnimationFrame(() => {
+                    searchStatus.textContent = `Found ${visibleCount} results for: "${searchTerm}"`;
+                });
             }
         });
     }
@@ -186,18 +188,20 @@ async function populateCategories() {
         if (error) throw error;
 
         if (data) {
-            // Extract unique categories and filter out nulls/empty strings
             const categories = [...new Set(data.map(item => item.Category))]
                 .filter(cat => cat && cat.trim() !== "")
                 .sort();
 
-            console.log("Categories found:", categories);
-
+            const fragment = document.createDocumentFragment();
             categories.forEach(cat => {
                 const option = document.createElement('option');
                 option.value = cat;
                 option.textContent = cat;
-                categorySelect.appendChild(option);
+                fragment.appendChild(option);
+            });
+            
+            requestAnimationFrame(() => {
+                categorySelect.appendChild(fragment);
             });
         }
     } catch (err) {
@@ -221,7 +225,11 @@ async function searchCentersByPin(pin, autoLocation = null, category = "") {
             Searching for Sakhi Centers in PIN <strong>${cleanPin}</strong>...
         </div>`;
         resultsContainer.style.display = 'block';
-        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Defer scroll to prevent layout thrashing
+        setTimeout(() => {
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
 
         try {
             console.log(`Querying centers for PIN: ${cleanPin}${category ? ' in Category: ' + category : ''}`);
@@ -337,10 +345,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 }
 
 function renderCenters(centers) {
-    const resultsList = document.getElementById('centersResultsList');
-    if (!resultsList) return;
-    
-    resultsList.innerHTML = '';
+    const fragment = document.createDocumentFragment();
 
     centers.forEach(center => {
         const services = center["Services provided"] ? center["Services provided"].split(',').map(s => `<span class="service-tag">${s.trim()}</span>`).join('') : '';
@@ -393,7 +398,17 @@ function renderCenters(centers) {
                 ` : ''}
             </div>
         `;
-        resultsList.insertAdjacentHTML('beforeend', centerHtml);
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = centerHtml.trim();
+        fragment.appendChild(tempDiv.firstChild);
+    });
+    
+    requestAnimationFrame(() => {
+        const resultsList = document.getElementById('centersResultsList');
+        if (resultsList) {
+            resultsList.innerHTML = '';
+            resultsList.appendChild(fragment);
+        }
     });
 }
 
