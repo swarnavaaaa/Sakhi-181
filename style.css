@@ -413,26 +413,21 @@ body {
     color: var(--primary-dark);
 }
 
-/* Avatar Stack styles */
-.avatar-stack {
-    display: flex;
+/* Trust Badge */
+.trust-badge {
+    background: rgba(255,255,255,0.1);
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
     align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(255,255,255,0.2);
 }
 
-.avatar-item {
-    width: 42px;
-    height: 42px;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    border: 3px solid white;
-    margin-left: -15px;
-    object-fit: cover;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    background: white;
-}
-
-.avatar-item:first-child {
-    margin-left: 0;
+.trust-badge i {
+    color: #fbbf24;
 }
 
 .btn-location-alt {
@@ -502,13 +497,19 @@ body {
     border: 1px solid rgba(212, 56, 143, 0.2);
 }
 
-.card-img-overlap {
+.card-icon-large {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
+    height: 180px;
+    background: #f8fafc;
     border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 2rem;
+    font-size: 5rem;
 }
+
+.card-icon-large.red { color: var(--primary); background: #fff1f2; }
 
 /* Feature Grid */
 .feature-grid {
@@ -545,12 +546,25 @@ body {
     line-height: 1.6;
 }
 
-.feat-img {
+.feat-image-placeholder {
     width: 100%;
     height: 200px;
-    object-fit: cover;
     border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
 }
+
+.feat-image-placeholder.blue { background: #eff6ff; color: #2563eb; }
+
+.feat-icon-xl {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 3.5rem;
+}
+
+.feat-icon-xl.gray { color: #64748b; }
 
 .feat-card.gray { background: #f8fafc; }
 .feat-card.light-blue { background: #f0f7ff; }
