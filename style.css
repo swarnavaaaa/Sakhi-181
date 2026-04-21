@@ -88,7 +88,7 @@ nav .container {
 }
 
 .logo img {
-    height: 48px;
+    height: 32px;
     width: auto;
     display: block;
 }
@@ -182,7 +182,7 @@ section {
 }
 
 @media (max-width: 768px) {
-    .logo img { height: 36px; }
+    .logo img { height: 24px; }
     .btn-nav { padding: 0.4rem 1rem; font-size: 0.75rem; }
     .nav-actions { gap: 0.5rem; }
 }
