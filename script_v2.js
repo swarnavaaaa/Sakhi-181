@@ -266,8 +266,8 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                     center.distance = calculateDistance(searchCoords.lat, searchCoords.lon, parseFloat(cLat), parseFloat(cLon));
                 }
             });
-            // Add those within 500km
-            const proximityResults = allCenters.filter(c => c.distance !== undefined && c.distance <= 500);
+            // Add those within 200km
+            const proximityResults = allCenters.filter(c => c.distance !== undefined && c.distance <= 200);
             results.push(...proximityResults);
         }
 
