@@ -83,7 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const geocoded = await geocodePin(pinVal);
                     if (geocoded) {
                         console.log(`Geocoded PIN ${pinVal} to:`, geocoded);
-                        await searchNearbyCenters(geocoded.lat, geocoded.lon, 200, categoryVal, `PIN ${pinVal}`);
+                        // Using a large radius (500km) to ensure we find the closest centers in the state
+                        await searchNearbyCenters(geocoded.lat, geocoded.lon, 500, categoryVal, `PIN ${pinVal}`);
                     } else {
                         // Fallback to exact PIN match if geocoding fails
                         console.warn(`Geocoding failed for PIN ${pinVal}, falling back to exact match.`);
@@ -296,7 +297,7 @@ async function searchCentersByPin(pin, autoLocation = null, category = "") {
     }
 }
 
-async function searchNearbyCenters(lat, lon, radiusKm = 100, category = "", locationLabel = "your location") {
+async function searchNearbyCenters(lat, lon, radiusKm = 500, category = "", locationLabel = "your location") {
     if (!supabaseClient) {
         showSimpleToast("Supabase client not initialized.", "error");
         return;
@@ -540,8 +541,14 @@ async function reverseGeocode(lat, lon) {
 async function geocodePin(pin) {
     try {
         console.log(`Geocoding PIN: ${pin}...`);
-        // We add "India" to ensure we stay within the country
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${pin}&country=India&limit=1`);
+        // Using 'q' parameter instead of 'postalcode' as it's more robust in Nominatim for Indian PINs
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${pin}+India&limit=1`;
+        
+        const response = await fetch(url, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
         const data = await response.json();
         
         if (data && data.length > 0) {
@@ -600,7 +607,7 @@ function updateUIWithLocation(location) {
         const categoryVal = document.getElementById('categorySelect')?.value || "";
         if (location.lat && location.lon) {
             console.log(`Auto-searching for centers near coordinates: ${location.lat}, ${location.lon}`);
-            searchNearbyCenters(location.lat, location.lon, 100, categoryVal, location.city || "your area");
+            searchNearbyCenters(location.lat, location.lon, 500, categoryVal, location.city || "your area");
         } else {
             console.log(`Auto-searching for centers in PIN: ${cleanPin}`);
             searchCentersByPin(cleanPin, location, categoryVal); 
