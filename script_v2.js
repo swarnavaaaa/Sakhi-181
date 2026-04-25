@@ -167,12 +167,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Handle same-page category triggers (Resources page)
+    document.querySelectorAll('.category-trigger').forEach(trigger => {
+        trigger.addEventListener('click', () => {
+            const category = trigger.getAttribute('data-category');
+            if (category) {
+                // If we have stored location, use it. Otherwise just search by category globally.
+                const storedLocation = sessionStorage.getItem('userLocation');
+                let searchParams = { category, source: 'resource-card' };
+                
+                if (storedLocation) {
+                    const loc = JSON.parse(storedLocation);
+                    searchParams.lat = loc.lat;
+                    searchParams.lon = loc.lon;
+                    searchParams.pin = loc.zip;
+                }
+                
+                performUnifiedSearch(searchParams);
+            }
+        });
+    });
+
     // Handle URL parameters for category search
     const urlParams = new URLSearchParams(window.location.search);
     const urlCategory = urlParams.get('category');
     const categorySelect = document.getElementById('categorySelect');
     
-    if (urlCategory && categorySelect) {
+    // Check if we are on resources.html to handle automatic trigger
+    if (urlCategory && window.location.pathname.includes('resources.html')) {
+        setTimeout(() => {
+            const storedLocation = sessionStorage.getItem('userLocation');
+            let searchParams = { category: urlCategory, source: 'url-param' };
+            if (storedLocation) {
+                const loc = JSON.parse(storedLocation);
+                searchParams.lat = loc.lat;
+                searchParams.lon = loc.lon;
+                searchParams.pin = loc.zip;
+            }
+            performUnifiedSearch(searchParams);
+        }, 1000);
+    }
+    
+    if (urlCategory && categorySelect && !window.location.pathname.includes('resources.html')) {
         console.log(`URL category detected: ${urlCategory}. Waiting for dropdown population...`);
         // We need to wait for categories to be populated via populateCategories()
         let attempts = 0;
@@ -252,22 +288,27 @@ async function populateCategories() {
 /**
  * Unified search function that handles Proximity, PIN matching, and District fallbacks
  */
-async function performUnifiedSearch({ lat = null, lon = null, pin = null, category = "", source = 'auto' }) {
+async function performUnifiedSearch({ lat = null, lon = null, pin = null, category = "", source = 'auto', listId = 'centersResultsList', containerId = 'searchResultsContainer' }) {
     if (!supabaseClient) {
         showSimpleToast("Database service not ready.", "error");
         return;
     }
 
-    const resultsContainer = document.getElementById('searchResultsContainer');
-    const resultsList = document.getElementById('centersResultsList');
-    const searchBtn = document.querySelector('.hero-card form button[type="submit"]');
+    const resultsContainer = document.getElementById(containerId);
+    const resultsList = document.getElementById(listId);
     
-    if (!resultsContainer || !resultsList) return;
+    if (!resultsContainer || !resultsList) {
+        // If we're on the Resources page, the IDs are different
+        if (window.location.pathname.includes('resources.html')) {
+            return performUnifiedSearch({ lat, lon, pin, category, source, listId: 'resourceResultsList', containerId: 'resourceResultsContainer' });
+        }
+        return;
+    }
 
     // UI Feedback
     let statusText = "Searching for Sakhi Centers...";
-    if (pin) statusText = `Searching for centers matching PIN <strong>${pin}</strong>...`;
-    else if (lat && lon) statusText = "Finding Sakhi Centers near you...";
+    if (category) statusText = `Finding <strong>${category}</strong> centers...`;
+    else if (pin) statusText = `Searching for centers matching PIN <strong>${pin}</strong>...`;
 
     resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
         <i class="ri-loader-4-line ri-spin" style="font-size: 2.5rem; display: block; margin-bottom: 1rem; color: var(--primary);"></i>
@@ -276,22 +317,16 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
     resultsContainer.style.display = 'block';
     
     setTimeout(() => {
-        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
 
     try {
-        // 1. Fetch All Centers (Manageable size for state-level data)
         const { data: allCenters, error } = await supabaseClient.from('centers').select('*');
         if (error) throw error;
-        if (!allCenters || allCenters.length === 0) {
-            resultsList.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem;">No center data found in database.</div>';
-            return;
-        }
-
+        
         let results = [];
         let searchCoords = { lat, lon };
 
-        // 2. If we have a PIN but no coordinates, try to geocode it
         if (pin && !searchCoords.lat) {
             const geocoded = await geocodePin(pin);
             if (geocoded) {
@@ -300,7 +335,7 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             }
         }
 
-        // 3. Proximity Search (if we have coordinates)
+        // Distance calculation
         if (searchCoords.lat && searchCoords.lon) {
             allCenters.forEach(center => {
                 const cLat = center.latitude || center.Latitude;
@@ -309,85 +344,31 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                     center.distance = calculateDistance(searchCoords.lat, searchCoords.lon, parseFloat(cLat), parseFloat(cLon));
                 }
             });
-            // Add those within 200km
-            const proximityResults = allCenters.filter(c => c.distance !== undefined && c.distance <= 200);
-            results.push(...proximityResults);
+            results.push(...allCenters.filter(c => c.distance !== undefined && c.distance <= 200));
         }
 
-        // 4. PIN/Address/District matching (Crucial for records with missing coordinates)
-        if (pin) {
-            console.log(`Performing keyword and district matching for PIN: ${pin}`);
-            
-            // a) Direct PIN/Address match
-            const keywordResults = allCenters.filter(c => 
-                (c.Pincode && c.Pincode.toString().includes(pin)) || 
-                (c.Address && c.Address.toString().includes(pin))
-            );
+        // Keyword/District match if no coordinates or no proximity results
+        if (pin || category) {
+            const keywordResults = allCenters.filter(c => {
+                const matchesPin = pin && ((c.Pincode && c.Pincode.toString().includes(pin)) || (c.Address && c.Address.toString().includes(pin)));
+                const matchesCategory = category && c.Category && (c.Category.toLowerCase() === category.toLowerCase() || c.Category.toLowerCase().includes(category.toLowerCase()));
+                
+                if (category && pin) return matchesCategory && matchesPin;
+                if (category) return matchesCategory;
+                return matchesPin;
+            });
             results.push(...keywordResults);
-
-            // b) PIN Prefix match (First 4 digits) - Very effective for neighboring Indian areas
-            const pinPrefix = pin.substring(0, 4);
-            if (pinPrefix.length === 4) {
-                console.log(`Searching for neighbors with PIN prefix: ${pinPrefix}`);
-                const prefixResults = allCenters.filter(c => 
-                    (c.Pincode && c.Pincode.toString().startsWith(pinPrefix)) ||
-                    (c.Address && c.Address.toString().includes(pinPrefix))
-                );
-                results.push(...prefixResults);
-            }
-
-            // c) District match
-            try {
-                const postApiUrl = `https://api.postalpincode.in/pincode/${pin}`;
-                const postResponse = await fetch(postApiUrl);
-                const postData = await postResponse.json();
-
-                if (postData && postData[0] && postData[0].Status === "Success") {
-                    const district = postData[0].PostOffice[0].District;
-                    console.log(`Including results for district: ${district}`);
-                    const districtResults = allCenters.filter(c => 
-                        c.District && c.District.toLowerCase() === district.toLowerCase()
-                    );
-                    results.push(...districtResults);
-                }
-            } catch (e) {
-                console.error("District lookup failed:", e);
-            }
         }
 
-        // 5. Deduplicate results by ID
-        const resultsMap = new Map();
-        results.forEach(c => {
-            if (!resultsMap.has(c.id)) {
-                resultsMap.set(c.id, JSON.parse(JSON.stringify(c))); // Clone to avoid side effects
-            }
+        // Deduplicate
+        const seen = new Set();
+        let finalResults = results.filter(el => {
+            const duplicate = seen.has(el.id || el.Name);
+            seen.add(el.id || el.Name);
+            return !duplicate;
         });
-        
-        let finalResults = Array.from(resultsMap.values());
 
-        // 6. "Virtual Geocoding" for results missing coordinates
-        // If we have search coordinates, we try to geocode the PIN of the matching centers 
-        // to get an estimated distance for sorting.
-        if (searchCoords.lat && searchCoords.lon && finalResults.length > 0) {
-            const missingCoords = finalResults.filter(c => !c.latitude && !c.Latitude);
-            if (missingCoords.length > 0) {
-                console.log(`Estimating locations for ${missingCoords.length} centers...`);
-                // Limit to 10 to avoid rate limits
-                for (const c of missingCoords.slice(0, 10)) {
-                    const cPin = c.Pincode || extractPinFromAddress(c.Address);
-                    if (cPin) {
-                        const coords = await geocodePin(cPin);
-                        if (coords) {
-                            c.tempLat = coords.lat;
-                            c.tempLon = coords.lon;
-                            c.distance = calculateDistance(searchCoords.lat, searchCoords.lon, coords.lat, coords.lon);
-                        }
-                    }
-                }
-            }
-        }
-
-        // 7. Final Sort (Closest First)
+        // Final Sort
         finalResults.sort((a, b) => {
             const distA = a.distance !== undefined ? a.distance : 999999;
             const distB = b.distance !== undefined ? b.distance : 999999;
@@ -395,29 +376,22 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             return a.Name.localeCompare(b.Name);
         });
 
-        // 8. Final Category Filtering
-        if (category) {
-            finalResults = finalResults.filter(c => c.Category === category);
-        }
-
         if (finalResults.length > 0) {
-            renderCenters(finalResults);
-            const label = pin ? `near PIN ${pin}` : "your area";
+            renderCenters(finalResults, listId);
+            const label = category || (pin ? `near ${pin}` : "your area");
             showLocationToast({ city: label }, finalResults.length);
         } else {
             resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
                 <i class="ri-map-pin-user-line" style="font-size: 3rem; display: block; margin-bottom: 1.5rem; color: var(--text-light);"></i>
-                <h3>No centers found in this area</h3>
-                <p style="margin-top: 1rem;">We couldn't find any Sakhi Centers matching your search criteria.</p>
-                <p style="font-size: 0.85rem; margin-top: 0.5rem;">Try searching for your District name or a nearby PIN code.</p>
+                <h3>No centers found</h3>
+                <p style="margin-top: 1rem;">We couldn't find any <strong>${category || 'centers'}</strong> matching your criteria.</p>
             </div>`;
         }
     } catch (err) {
-        console.error("Unified search error:", err);
+        console.error("Search error:", err);
         resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 3rem;">
-            <i class="ri-error-warning-line" style="font-size: 2.5rem; display: block; margin-bottom: 1rem;"></i>
             <strong>Search Error</strong>
-            <p style="margin-top: 0.5rem;">${err.message || 'Failed to complete search'}</p>
+            <p>${err.message}</p>
         </div>`;
     }
 }
@@ -433,11 +407,10 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-function renderCenters(centers) {
+function renderCenters(centers, listId = 'centersResultsList') {
     const fragment = document.createDocumentFragment();
 
     centers.forEach((center, index) => {
-        const services = center["Services provided"] ? center["Services provided"].split(',').map(s => `<span class="service-tag">${s.trim()}</span>`).join('') : '';
         const distanceText = center.distance ? `${Math.round(center.distance * 10) / 10} km away` : (center["District"] || 'OSC');
         
         // Check if this is the closest center (first in sorted list)
@@ -489,13 +462,11 @@ function renderCenters(centers) {
         fragment.appendChild(tempDiv.firstChild);
     });
     
-    requestAnimationFrame(() => {
-        const resultsList = document.getElementById('centersResultsList');
-        if (resultsList) {
-            resultsList.innerHTML = '';
-            resultsList.appendChild(fragment);
-        }
-    });
+    const resultsList = document.getElementById(listId);
+    if (resultsList) {
+        resultsList.innerHTML = '';
+        resultsList.appendChild(fragment);
+    }
 }
 
 function initLocationDetection(isManual = false) {
