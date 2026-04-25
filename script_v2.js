@@ -293,7 +293,7 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                 results.push(...prefixResults);
             }
 
-            // c) Always try District match as well to ensure maximum coverage
+            // c) District match
             try {
                 const postApiUrl = `https://api.postalpincode.in/pincode/${pin}`;
                 const postResponse = await fetch(postApiUrl);
@@ -316,29 +316,43 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
         const resultsMap = new Map();
         results.forEach(c => {
             if (!resultsMap.has(c.id)) {
-                resultsMap.set(c.id, c);
-            } else {
-                // If we already have it, keep the one with distance if available
-                const existing = resultsMap.get(c.id);
-                if (c.distance !== undefined && (existing.distance === undefined || c.distance < existing.distance)) {
-                    resultsMap.set(c.id, c);
-                }
+                resultsMap.set(c.id, JSON.parse(JSON.stringify(c))); // Clone to avoid side effects
             }
         });
         
         let finalResults = Array.from(resultsMap.values());
 
-        // 6. Sort results
+        // 6. "Virtual Geocoding" for results missing coordinates
+        // If we have search coordinates, we try to geocode the PIN of the matching centers 
+        // to get an estimated distance for sorting.
+        if (searchCoords.lat && searchCoords.lon && finalResults.length > 0) {
+            const missingCoords = finalResults.filter(c => !c.latitude && !c.Latitude);
+            if (missingCoords.length > 0) {
+                console.log(`Estimating locations for ${missingCoords.length} centers...`);
+                // Limit to 10 to avoid rate limits
+                for (const c of missingCoords.slice(0, 10)) {
+                    const cPin = c.Pincode || extractPinFromAddress(c.Address);
+                    if (cPin) {
+                        const coords = await geocodePin(cPin);
+                        if (coords) {
+                            c.tempLat = coords.lat;
+                            c.tempLon = coords.lon;
+                            c.distance = calculateDistance(searchCoords.lat, searchCoords.lon, coords.lat, coords.lon);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 7. Final Sort (Closest First)
         finalResults.sort((a, b) => {
-            // Centers with distance come first, sorted by distance
-            if (a.distance !== undefined && b.distance !== undefined) return a.distance - b.distance;
-            if (a.distance !== undefined) return -1;
-            if (b.distance !== undefined) return 1;
-            // Otherwise maintain original order or sort by name
+            const distA = a.distance !== undefined ? a.distance : 999999;
+            const distB = b.distance !== undefined ? b.distance : 999999;
+            if (distA !== distB) return distA - distB;
             return a.Name.localeCompare(b.Name);
         });
 
-        // 7. Final Category Filtering
+        // 8. Final Category Filtering
         if (category) {
             finalResults = finalResults.filter(c => c.Category === category);
         }
