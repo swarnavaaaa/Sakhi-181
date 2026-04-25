@@ -683,3 +683,9 @@ function showLocationToast(location, count) {
     document.body.appendChild(toast);
     setTimeout(() => { if (toast.parentElement) toast.remove(); }, 8000);
 }
+
+function extractPinFromAddress(address) {
+    if (!address) return null;
+    const match = address.match(/\b\d{6}\b/);
+    return match ? match[0] : null;
+}
