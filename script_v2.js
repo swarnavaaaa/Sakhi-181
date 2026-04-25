@@ -246,7 +246,7 @@ async function searchCentersByPin(pin, autoLocation = null, category = "") {
     if (resultsContainer && resultsList) {
         resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
             <i class="ri-loader-4-line ri-spin" style="font-size: 2.5rem; display: block; margin-bottom: 1rem; color: var(--primary);"></i>
-            Searching for Sakhi Centers in PIN <strong>${cleanPin}</strong>...
+            Searching for Sakhi Centers matching PIN <strong>${cleanPin}</strong>...
         </div>`;
         resultsContainer.style.display = 'block';
         
@@ -541,22 +541,45 @@ async function reverseGeocode(lat, lon) {
 async function geocodePin(pin) {
     try {
         console.log(`Geocoding PIN: ${pin}...`);
-        // Using 'q' parameter instead of 'postalcode' as it's more robust in Nominatim for Indian PINs
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${pin}+India&limit=1`;
         
-        const response = await fetch(url, {
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
-        const data = await response.json();
+        // 1. Primary: Nominatim with 'q' parameter (very reliable for most PINs)
+        const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${pin}+India&format=json&limit=1`;
+        const nomResponse = await fetch(nominatimUrl);
+        const nomData = await nomResponse.json();
         
-        if (data && data.length > 0) {
+        if (nomData && nomData.length > 0) {
             return {
-                lat: parseFloat(data[0].lat),
-                lon: parseFloat(data[0].lon),
-                display_name: data[0].display_name
+                lat: parseFloat(nomData[0].lat),
+                lon: parseFloat(nomData[0].lon),
+                display_name: nomData[0].display_name,
+                method: 'nominatim-direct'
             };
+        }
+
+        // 2. Secondary: Fallback to Indian Post API to get district, then geocode the district
+        // This handles cases where Nominatim doesn't recognize the specific PIN but knows the district
+        console.log(`Direct geocoding failed for ${pin}. Trying district fallback...`);
+        const postApiUrl = `https://api.postalpincode.in/pincode/${pin}`;
+        const postResponse = await fetch(postApiUrl);
+        const postData = await postResponse.json();
+
+        if (postData && postData[0] && postData[0].Status === "Success") {
+            const district = postData[0].PostOffice[0].District;
+            const state = postData[0].PostOffice[0].State;
+            console.log(`Found district for ${pin}: ${district}, ${state}. Geocoding district...`);
+            
+            const distUrl = `https://nominatim.openstreetmap.org/search?q=${district}+${state}+India&format=json&limit=1`;
+            const distRes = await fetch(distUrl);
+            const distData = await distRes.json();
+            
+            if (distData && distData.length > 0) {
+                return {
+                    lat: parseFloat(distData[0].lat),
+                    lon: parseFloat(distData[0].lon),
+                    display_name: `${district}, ${state} (via PIN ${pin})`,
+                    method: 'district-fallback'
+                };
+            }
         }
     } catch (error) {
         console.error("Geocoding error:", error);
