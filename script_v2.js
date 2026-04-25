@@ -494,7 +494,7 @@ function initLocationDetection(isManual = false) {
                     if (isManual) {
                         try {
                             const categoryVal = document.getElementById('categorySelect')?.value || "";
-                            await searchNearbyCenters(latitude, longitude, 100, categoryVal);
+                            await performUnifiedSearch({ lat: latitude, lon: longitude, category: categoryVal, source: 'manual-location' });
                             resolve();
                         } catch (err) {
                             reject(err);
