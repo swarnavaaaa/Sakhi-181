@@ -412,31 +412,31 @@ function renderCenters(centers) {
                 <div class="center-details">
                     <div class="center-info-row">
                         <i class="ri-map-pin-2-line"></i>
-                        <span>${center["Address"]}<br><strong>${center["Pincode"] ? 'PIN: ' + center["Pincode"] : ''} ${center["District"] ? '(' + center["District"] + ')' : ''}</strong></span>
+                        <span><strong>Address:</strong> ${center["Address"]}<br><strong>Pincode:</strong> ${center["Pincode"] || 'N/A'} ${center["District"] ? '(' + center["District"] + ')' : ''}</span>
                     </div>
                     ${center["Phone Number"] ? `
                         <div class="center-info-row">
                             <i class="ri-phone-line"></i>
-                            <a href="tel:${center["Phone Number"]}" class="contact-link">${center["Phone Number"]}</a>
+                            <span><strong>Phone:</strong> <a href="tel:${center["Phone Number"]}" class="contact-link">${center["Phone Number"]}</a></span>
                         </div>
                     ` : ''}
                     ${center["Point of Contact"] ? `
                         <div class="center-info-row">
                             <i class="ri-user-voice-line"></i>
-                            <span>PoC: ${center["Point of Contact"]}</span>
+                            <span><strong>Contact Person:</strong> ${center["Point of Contact"]}</span>
                         </div>
                     ` : ''}
                     ${center["Email"] ? `
                         <div class="center-info-row">
                             <i class="ri-mail-line"></i>
-                            <a href="mailto:${center["Email"]}" class="contact-link">${center["Email"]}</a>
+                            <span><strong>Email:</strong> <a href="mailto:${center["Email"]}" class="contact-link">${center["Email"]}</a></span>
                         </div>
                     ` : ''}
                 </div>
 
                 ${services ? `
                     <div class="center-services">
-                        <p style="font-size: 0.7rem; font-weight: 700; margin-bottom: 0.6rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Integrated Services</p>
+                        <p style="font-size: 0.7rem; font-weight: 700; margin-bottom: 0.6rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Services Provided</p>
                         <div class="services-wrapper">${services}</div>
                     </div>
                 ` : ''}
