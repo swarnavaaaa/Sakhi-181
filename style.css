@@ -339,26 +339,6 @@ body {
     margin: 0 auto 2.5rem auto;
 }
 
-.hero-image-wrap {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.hero-main-img {
-    width: 100%;
-    max-width: 450px;
-    border-radius: 30px;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.1);
-    transform: translateY(0);
-    transition: var(--transition);
-}
-
-.hero-main-img:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 40px 80px rgba(0,0,0,0.15);
-}
-
 /* Hero Card - Find Center */
 .hero-card {
     background: white;
@@ -1144,13 +1124,10 @@ footer {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        gap: 4rem;
     }
-    .hero-text { flex: 1.2; text-align: left; }
-    .hero-text h1 { margin-left: 0; }
-    .hero-text p { margin-left: 0; }
-    .hero-image-wrap { flex: 1; display: block; }
-    .hero-card { flex: 0.8; min-width: 400px; }
+    .hero-text { flex: 1; max-width: 600px; }
+    .hero h1 { font-size: 4.5rem; }
+    .hero-card { width: 450px; }
     #searchResultsContainer { margin-top: -4rem; }
     
     .mission-grid { grid-template-columns: 1.2fr 0.8fr; }
