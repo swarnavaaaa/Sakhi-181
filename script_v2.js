@@ -166,6 +166,49 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Handle URL parameters for category search
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlCategory = urlParams.get('category');
+    const categorySelect = document.getElementById('categorySelect');
+    
+    if (urlCategory && categorySelect) {
+        console.log(`URL category detected: ${urlCategory}. Waiting for dropdown population...`);
+        // We need to wait for categories to be populated via populateCategories()
+        let attempts = 0;
+        const checkInterval = setInterval(() => {
+            attempts++;
+            if (categorySelect.options.length > 1 || attempts > 20) {
+                clearInterval(checkInterval);
+                
+                // Try to find a partial or exact match in the dropdown options
+                let targetValue = urlCategory;
+                const options = Array.from(categorySelect.options);
+                const match = options.find(opt => 
+                    opt.value.toLowerCase() === urlCategory.toLowerCase() || 
+                    opt.value.toLowerCase().includes(urlCategory.toLowerCase())
+                );
+                
+                if (match) {
+                    targetValue = match.value;
+                    categorySelect.value = targetValue;
+                    console.log(`Pre-selected category: ${targetValue}`);
+                    
+                    // If we have stored location, search immediately
+                    const storedLocation = sessionStorage.getItem('userLocation');
+                    if (storedLocation) {
+                        const loc = JSON.parse(storedLocation);
+                        performUnifiedSearch({ lat: loc.lat, lon: loc.lon, pin: loc.zip, category: targetValue, source: 'url-param' });
+                    } else {
+                        // Prompt for location if not stored
+                        showSimpleToast(`Searching for ${targetValue}. Please enter your PIN or use Current Location.`, "info");
+                        const searchSection = document.getElementById('searchResultsContainer');
+                        if (searchSection) searchSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            }
+        }, 300);
+    }
 });
 
 /**
