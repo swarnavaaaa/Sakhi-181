@@ -434,13 +434,6 @@ function renderCenters(centers) {
                     ` : ''}
                 </div>
 
-                ${services ? `
-                    <div class="center-services">
-                        <p style="font-size: 0.7rem; font-weight: 700; margin-bottom: 0.6rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Services Provided</p>
-                        <div class="services-wrapper">${services}</div>
-                    </div>
-                ` : ''}
-
                 ${center["Google link"] ? `
                     <a href="${center["Google link"]}" target="_blank" class="btn-maps">
                         <i class="ri-map-pin-line"></i> View on Google Maps
