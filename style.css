@@ -1139,7 +1139,13 @@ footer {
     
     .emergency-bar .container {
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: center;
+        position: relative;
+    }
+    
+    .emergency-bar .container > div:last-child {
+        position: absolute;
+        right: 1.5rem;
     }
 
     .footer-grid {
