@@ -275,14 +275,25 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
         if (pin) {
             console.log(`Performing keyword and district matching for PIN: ${pin}`);
             
-            // Keyword match (Pincode or Address)
+            // a) Direct PIN/Address match
             const keywordResults = allCenters.filter(c => 
                 (c.Pincode && c.Pincode.toString().includes(pin)) || 
                 (c.Address && c.Address.toString().includes(pin))
             );
             results.push(...keywordResults);
 
-            // Always try District match as well to ensure maximum coverage
+            // b) PIN Prefix match (First 4 digits) - Very effective for neighboring Indian areas
+            const pinPrefix = pin.substring(0, 4);
+            if (pinPrefix.length === 4) {
+                console.log(`Searching for neighbors with PIN prefix: ${pinPrefix}`);
+                const prefixResults = allCenters.filter(c => 
+                    (c.Pincode && c.Pincode.toString().startsWith(pinPrefix)) ||
+                    (c.Address && c.Address.toString().includes(pinPrefix))
+                );
+                results.push(...prefixResults);
+            }
+
+            // c) Always try District match as well to ensure maximum coverage
             try {
                 const postApiUrl = `https://api.postalpincode.in/pincode/${pin}`;
                 const postResponse = await fetch(postApiUrl);
@@ -295,9 +306,6 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                         c.District && c.District.toLowerCase() === district.toLowerCase()
                     );
                     results.push(...districtResults);
-                    if (districtResults.length > 0 && proximityResults.length === 0) {
-                        showSimpleToast(`Showing centers in ${district} district.`, "info");
-                    }
                 }
             } catch (e) {
                 console.error("District lookup failed:", e);
