@@ -1599,6 +1599,41 @@ footer {
     color: var(--text-main);
 }
 
+/* Closest Center Highlighting */
+.closest-highlight {
+    border: 2px solid var(--primary) !important;
+    position: relative;
+    transform: scale(1.02);
+    z-index: 2;
+    box-shadow: 0 10px 30px rgba(194, 24, 91, 0.15) !important;
+}
+
+.closest-badge {
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: var(--primary);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 10px rgba(194, 24, 91, 0.3);
+    z-index: 3;
+}
+
+@media (max-width: 768px) {
+    .closest-highlight {
+        transform: none;
+        margin-top: 1rem;
+    }
+}
+
 .location-toast button {
     background: none;
     border: none;

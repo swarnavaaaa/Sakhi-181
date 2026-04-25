@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Search Form Submission
     const searchForm = document.querySelector('.hero-card form');
     if (searchForm) {
-        searchForm.addEventListener('submit', (e) => {
+        searchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const pinInput = document.getElementById('pinInput');
             const categorySelect = document.getElementById('categorySelect');
@@ -73,7 +73,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (pinVal.length === 6 && /^\d+$/.test(pinVal)) {
-                searchCentersByPin(pinVal, null, categoryVal);
+                // NEW: Try to geocode the PIN first to find the "Closest" center
+                const btn = searchForm.querySelector('button[type="submit"]');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Locating...';
+                btn.disabled = true;
+
+                try {
+                    const geocoded = await geocodePin(pinVal);
+                    if (geocoded) {
+                        console.log(`Geocoded PIN ${pinVal} to:`, geocoded);
+                        await searchNearbyCenters(geocoded.lat, geocoded.lon, 200, categoryVal, `PIN ${pinVal}`);
+                    } else {
+                        // Fallback to exact PIN match if geocoding fails
+                        console.warn(`Geocoding failed for PIN ${pinVal}, falling back to exact match.`);
+                        await searchCentersByPin(pinVal, null, categoryVal);
+                    }
+                } catch (err) {
+                    console.error("Search error:", err);
+                    showSimpleToast("Error during search. Falling back to PIN match.", "error");
+                    await searchCentersByPin(pinVal, null, categoryVal);
+                } finally {
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                }
             } else {
                 showSimpleToast("Please enter a valid 6-digit numeric PIN code.", "error");
             }
@@ -273,7 +296,7 @@ async function searchCentersByPin(pin, autoLocation = null, category = "") {
     }
 }
 
-async function searchNearbyCenters(lat, lon, radiusKm = 100, category = "") {
+async function searchNearbyCenters(lat, lon, radiusKm = 100, category = "", locationLabel = "your location") {
     if (!supabaseClient) {
         showSimpleToast("Supabase client not initialized.", "error");
         return;
@@ -285,10 +308,14 @@ async function searchNearbyCenters(lat, lon, radiusKm = 100, category = "") {
     if (resultsContainer && resultsList) {
         resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
             <i class="ri-loader-4-line ri-spin" style="font-size: 2.5rem; display: block; margin-bottom: 1rem; color: var(--primary);"></i>
-            Finding Sakhi Centers within ${radiusKm}km of your location...
+            Finding Sakhi Centers near ${locationLabel}...
         </div>`;
         resultsContainer.style.display = 'block';
-        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Defer scroll to prevent layout thrashing
+        setTimeout(() => {
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
 
         try {
             const { data, error } = await supabaseClient.from('centers').select('*');
@@ -317,13 +344,13 @@ async function searchNearbyCenters(lat, lon, radiusKm = 100, category = "") {
 
             if (nearby.length > 0) {
                 renderCenters(nearby);
-                showLocationToast({ city: 'Current Location' }, nearby.length);
+                showLocationToast({ city: locationLabel === 'your location' ? 'Current Location' : locationLabel }, nearby.length);
             } else {
                 resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
                     <i class="ri-map-pin-range-line" style="font-size: 3rem; display: block; margin-bottom: 1.5rem; color: var(--text-light);"></i>
                     <h3>No centers found nearby</h3>
-                    <p style="margin-top: 1rem;">We couldn't find any centers within <strong>${radiusKm}km</strong> of your detected location.</p>
-                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">Try searching by PIN code instead.</p>
+                    <p style="margin-top: 1rem;">We couldn't find any centers within <strong>${radiusKm}km</strong> of <strong>${locationLabel}</strong>.</p>
+                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">Try searching by a different PIN code or district.</p>
                 </div>`;
             }
         } catch (err) {
@@ -347,12 +374,16 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 function renderCenters(centers) {
     const fragment = document.createDocumentFragment();
 
-    centers.forEach(center => {
+    centers.forEach((center, index) => {
         const services = center["Services provided"] ? center["Services provided"].split(',').map(s => `<span class="service-tag">${s.trim()}</span>`).join('') : '';
         const distanceText = center.distance ? `${Math.round(center.distance * 10) / 10} km away` : (center["District"] || 'OSC');
         
+        // Check if this is the closest center (first in sorted list)
+        const isClosest = index === 0 && center.distance !== undefined;
+        
         const centerHtml = `
-            <div class="center-item">
+            <div class="center-item ${isClosest ? 'closest-highlight' : ''}">
+                ${isClosest ? '<div class="closest-badge"><i class="ri-flashlight-fill"></i> Closest to you</div>' : ''}
                 <div class="center-header">
                     <h4>${center["Name"]}</h4>
                     <span class="center-type-badge">${distanceText}</span>
@@ -502,6 +533,30 @@ async function reverseGeocode(lat, lon) {
     }
 }
 
+/**
+ * Geocodes a 6-digit Indian PIN code to Latitude and Longitude
+ * Uses Nominatim OpenStreetMap API
+ */
+async function geocodePin(pin) {
+    try {
+        console.log(`Geocoding PIN: ${pin}...`);
+        // We add "India" to ensure we stay within the country
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${pin}&country=India&limit=1`);
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+            return {
+                lat: parseFloat(data[0].lat),
+                lon: parseFloat(data[0].lon),
+                display_name: data[0].display_name
+            };
+        }
+    } catch (error) {
+        console.error("Geocoding error:", error);
+    }
+    return null;
+}
+
 async function fallbackToIpDetection(isManual = false) {
     try {
         const response = await fetch('https://ipapi.co/json/');
@@ -537,14 +592,19 @@ function updateUIWithLocation(location) {
     const pinInput = document.getElementById('pinInput');
     
     if (pinInput && location.zip) {
-        // Clean the PIN code (sometimes Nominatim returns things like "110054; 110055")
+        // Clean the PIN code
         const cleanPin = location.zip.split(';')[0].trim();
         pinInput.value = cleanPin;
         
-        // Auto-search if PIN is detected
+        // Auto-search if PIN and coordinates are detected
         const categoryVal = document.getElementById('categorySelect')?.value || "";
-        console.log(`Auto-searching for centers in PIN: ${cleanPin}${categoryVal ? ' (Category: ' + categoryVal + ')' : ''}`);
-        searchCentersByPin(cleanPin, location, categoryVal); 
+        if (location.lat && location.lon) {
+            console.log(`Auto-searching for centers near coordinates: ${location.lat}, ${location.lon}`);
+            searchNearbyCenters(location.lat, location.lon, 100, categoryVal, location.city || "your area");
+        } else {
+            console.log(`Auto-searching for centers in PIN: ${cleanPin}`);
+            searchCentersByPin(cleanPin, location, categoryVal); 
+        }
     }
 }
 
