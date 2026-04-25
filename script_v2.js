@@ -267,60 +267,78 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                 }
             });
             // Add those within 500km
-            const proximityResults = allCenters
-                .filter(c => c.distance !== undefined && c.distance <= 500)
-                .sort((a, b) => a.distance - b.distance);
-            
+            const proximityResults = allCenters.filter(c => c.distance !== undefined && c.distance <= 500);
             results.push(...proximityResults);
         }
 
-        // 4. PIN/Address Fallbacks (especially important if DB coordinates are missing)
+        // 4. PIN/Address/District matching (Crucial for records with missing coordinates)
         if (pin) {
-            console.log(`Searching for keyword matches for PIN: ${pin}`);
+            console.log(`Performing keyword and district matching for PIN: ${pin}`);
+            
+            // Keyword match (Pincode or Address)
             const keywordResults = allCenters.filter(c => 
                 (c.Pincode && c.Pincode.toString().includes(pin)) || 
                 (c.Address && c.Address.toString().includes(pin))
             );
             results.push(...keywordResults);
 
-            // 5. District Fallback (if still no results)
-            // We only check district if results are empty to avoid too many irrelevant results
-            if (results.length === 0) {
-                console.log("No direct or proximity results. Attempting District-based search...");
-                try {
-                    const postApiUrl = `https://api.postalpincode.in/pincode/${pin}`;
-                    const postResponse = await fetch(postApiUrl);
-                    const postData = await postResponse.json();
+            // Always try District match as well to ensure maximum coverage
+            try {
+                const postApiUrl = `https://api.postalpincode.in/pincode/${pin}`;
+                const postResponse = await fetch(postApiUrl);
+                const postData = await postResponse.json();
 
-                    if (postData && postData[0] && postData[0].Status === "Success") {
-                        const district = postData[0].PostOffice[0].District;
-                        console.log(`Fallback: Found district: ${district}`);
-                        const districtResults = allCenters.filter(c => 
-                            c.District && c.District.toLowerCase() === district.toLowerCase()
-                        );
-                        results.push(...districtResults);
-                        if (districtResults.length > 0) {
-                            showSimpleToast(`Showing centers in ${district} district.`, "info");
-                        }
+                if (postData && postData[0] && postData[0].Status === "Success") {
+                    const district = postData[0].PostOffice[0].District;
+                    console.log(`Including results for district: ${district}`);
+                    const districtResults = allCenters.filter(c => 
+                        c.District && c.District.toLowerCase() === district.toLowerCase()
+                    );
+                    results.push(...districtResults);
+                    if (districtResults.length > 0 && proximityResults.length === 0) {
+                        showSimpleToast(`Showing centers in ${district} district.`, "info");
                     }
-                } catch (e) {
-                    console.error("District lookup failed:", e);
                 }
+            } catch (e) {
+                console.error("District lookup failed:", e);
             }
         }
 
-        // 5. Final Filtering & Rendering
+        // 5. Deduplicate results by ID
+        const resultsMap = new Map();
+        results.forEach(c => {
+            if (!resultsMap.has(c.id)) {
+                resultsMap.set(c.id, c);
+            } else {
+                // If we already have it, keep the one with distance if available
+                const existing = resultsMap.get(c.id);
+                if (c.distance !== undefined && (existing.distance === undefined || c.distance < existing.distance)) {
+                    resultsMap.set(c.id, c);
+                }
+            }
+        });
+        
+        let finalResults = Array.from(resultsMap.values());
+
+        // 6. Sort results
+        finalResults.sort((a, b) => {
+            // Centers with distance come first, sorted by distance
+            if (a.distance !== undefined && b.distance !== undefined) return a.distance - b.distance;
+            if (a.distance !== undefined) return -1;
+            if (b.distance !== undefined) return 1;
+            // Otherwise maintain original order or sort by name
+            return a.Name.localeCompare(b.Name);
+        });
+
+        // 7. Final Category Filtering
         if (category) {
-            results = results.filter(c => c.Category === category);
+            finalResults = finalResults.filter(c => c.Category === category);
         }
 
-        // Deduplicate results by ID
-        const uniqueResults = Array.from(new Map(results.map(item => [item.id, item])).values());
-
-        if (uniqueResults.length > 0) {
-            renderCenters(uniqueResults);
+        if (finalResults.length > 0) {
+            renderCenters(finalResults);
             const label = pin ? `near PIN ${pin}` : "your area";
-            showLocationToast({ city: label }, uniqueResults.length);
+            showLocationToast({ city: label }, finalResults.length);
         } else {
             resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
                 <i class="ri-map-pin-user-line" style="font-size: 3rem; display: block; margin-bottom: 1.5rem; color: var(--text-light);"></i>
