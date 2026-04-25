@@ -86,8 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Using a large radius (500km) to ensure we find the closest centers in the state
                         await searchNearbyCenters(geocoded.lat, geocoded.lon, 500, categoryVal, `PIN ${pinVal}`);
                     } else {
-                        // Fallback to exact PIN match if geocoding fails
-                        console.warn(`Geocoding failed for PIN ${pinVal}, falling back to exact match.`);
+                        // Fallback to enhanced PIN search (including Address matching)
+                        console.warn(`Geocoding failed for PIN ${pinVal}, falling back to enhanced PIN search.`);
                         await searchCentersByPin(pinVal, null, categoryVal);
                     }
                 } catch (err) {
@@ -258,10 +258,11 @@ async function searchCentersByPin(pin, autoLocation = null, category = "") {
         try {
             console.log(`Querying centers for PIN: ${cleanPin}${category ? ' in Category: ' + category : ''}`);
             
+            // Search both the Pincode column AND the Address column (since some records might have empty Pincode but have it in Address)
             let query = supabaseClient
                 .from('centers')
                 .select('*')
-                .eq('Pincode', cleanPin);
+                .or(`Pincode.eq.${cleanPin},Address.ilike.%${cleanPin}%`);
 
             if (category) {
                 query = query.eq('Category', category);
@@ -272,18 +273,45 @@ async function searchCentersByPin(pin, autoLocation = null, category = "") {
             if (error) throw error;
 
             if (data && data.length > 0) {
-                console.log(`Found ${data.length} centers for PIN ${cleanPin}`);
+                console.log(`Found ${data.length} centers matching PIN ${cleanPin}`);
                 renderCenters(data);
                 if (autoLocation) {
                     showLocationToast(autoLocation, data.length);
                 }
             } else {
-                console.log(`No centers found for PIN ${cleanPin}`);
+                // If direct PIN search fails, try searching by District (if we can find the district for this PIN)
+                console.log(`No direct match for PIN ${cleanPin}. Attempting District-based search...`);
+                
+                try {
+                    const postApiUrl = `https://api.postalpincode.in/pincode/${cleanPin}`;
+                    const postResponse = await fetch(postApiUrl);
+                    const postData = await postResponse.json();
+
+                    if (postData && postData[0] && postData[0].Status === "Success") {
+                        const district = postData[0].PostOffice[0].District;
+                        console.log(`Found district for ${cleanPin}: ${district}. Searching by district...`);
+                        
+                        let distQuery = supabaseClient.from('centers').select('*').eq('District', district);
+                        if (category) distQuery = distQuery.eq('Category', category);
+                        
+                        const { data: distData, error: distError } = await distQuery;
+                        
+                        if (!distError && distData && distData.length > 0) {
+                            renderCenters(distData);
+                            showSimpleToast(`Found ${distData.length} centers in ${district} district.`, "info");
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.error("District fallback search failed:", e);
+                }
+
+                console.log(`No centers found for PIN ${cleanPin} even with fallbacks.`);
                 resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
                     <i class="ri-map-pin-user-line" style="font-size: 3rem; display: block; margin-bottom: 1.5rem; color: var(--text-light);"></i>
                     <h3>No centers found in this area</h3>
-                    <p style="margin-top: 1rem;">We couldn't find any Sakhi Centers for PIN <strong>${cleanPin}</strong>.</p>
-                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">Try a nearby PIN code or use "Current Location" detection.</p>
+                    <p style="margin-top: 1rem;">We couldn't find any Sakhi Centers matching PIN <strong>${cleanPin}</strong>.</p>
+                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">Try searching for your District name or use "Current Location" detection.</p>
                 </div>`;
             }
         } catch (err) {
