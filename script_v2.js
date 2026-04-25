@@ -612,7 +612,7 @@ async function fallbackToIpDetection(isManual = false) {
         if (!data.error) {
             if (isManual) {
                 const categoryVal = document.getElementById('categorySelect')?.value || "";
-                await searchNearbyCenters(data.latitude, data.longitude, 100, categoryVal);
+                await performUnifiedSearch({ lat: data.latitude, lon: data.longitude, pin: data.postal, category: categoryVal, source: 'manual-location' });
                 return;
             }
 
