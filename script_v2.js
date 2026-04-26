@@ -388,11 +388,23 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             } catch (e) { console.warn("PIN API district lookup failed", e); }
         }
 
-        // 3. Process and filter all centers
-        const cleanPinSearch = pin ? pin.toString().replace(/\D/g, '') : "";
+        // 1. District Coordinate Fallback (Telangana Centroids)
+        // This ensures centers missing Lat/Long can still be filtered by distance
+        const DISTRICT_COORDS = {
+            "hyderabad": { lat: 17.3850, lon: 78.4867 },
+            "rangareddy": { lat: 17.3850, lon: 78.4867 }, // Overlaps with Hyderabad
+            "medchal": { lat: 17.5500, lon: 78.4500 },
+            "medchal-malkajgiri": { lat: 17.5500, lon: 78.4500 },
+            "vikarabad": { lat: 17.3300, lon: 77.9000 },
+            "sangareddy": { lat: 17.6100, lon: 78.0800 },
+            "medak": { lat: 18.0400, lon: 78.2600 },
+            "siddipet": { lat: 18.1000, lon: 78.8500 },
+            "yadadri": { lat: 17.5100, lon: 78.9400 },
+            "nalaonda": { lat: 17.0500, lon: 79.2700 },
+            "mahabubnagar": { lat: 16.7300, lon: 77.9800 }
+        };
 
-        // 1. Build a local coordinate map from centers that HAVE data
-        // This allows us to "guess" the location of centers missing lat/long if they share a PIN
+        // 2. Build a local coordinate map from centers that HAVE data
         const pinCoordMap = {};
         allCenters.forEach(c => {
             const lat = parseFloat(getProp(c, "latitude"));
@@ -403,21 +415,37 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             }
         });
 
-        console.log(`Starting search. Total centers in DB: ${allCenters.length}. PIN-Coord Map size: ${Object.keys(pinCoordMap).length}`);
+        console.log(`Starting search. Total centers: ${allCenters.length}. PIN Map: ${Object.keys(pinCoordMap).length}`);
         
         allCenters.forEach(center => {
-            // A. Coordinate access (with PIN-map fallback)
+            // A. Coordinate access (with double fallback: PIN map -> District Centroid)
             const latVal = getProp(center, "latitude");
             const lonVal = getProp(center, "longitude");
             const pinCode = (getProp(center, "Pincode") || "").toString().replace(/\D/g, '');
+            const distName = (getProp(center, "District") || "").toLowerCase().trim();
             
             let cLat = latVal ? parseFloat(latVal) : NaN;
             let cLon = lonVal ? parseFloat(lonVal) : NaN;
             
-            // Fallback: If this center lacks coordinates, check if we know the coords for this PIN from another center
+            // Fallback 1: PIN Match
             if (isNaN(cLat) && pinCode && pinCoordMap[pinCode]) {
                 cLat = pinCoordMap[pinCode].lat;
                 cLon = pinCoordMap[pinCode].lon;
+            }
+            
+            // Fallback 2: District Centroid Match
+            if (isNaN(cLat) && distName && DISTRICT_COORDS[distName]) {
+                cLat = DISTRICT_COORDS[distName].lat;
+                cLon = DISTRICT_COORDS[distName].lon;
+            } else if (isNaN(cLat) && distName) {
+                // Fuzzy match for district names
+                for (let d in DISTRICT_COORDS) {
+                    if (distName.includes(d) || d.includes(distName)) {
+                        cLat = DISTRICT_COORDS[d].lat;
+                        cLon = DISTRICT_COORDS[d].lon;
+                        break;
+                    }
+                }
             }
             
             if (searchCoords.lat && searchCoords.lon && !isNaN(cLat) && !isNaN(cLon)) {
@@ -440,25 +468,20 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             const cleanCenterPin = (getProp(center, "Pincode") || "").toString().replace(/\D/g, '');
             const matchesPinSearch = cleanPinSearch && cleanCenterPin && (cleanCenterPin.includes(cleanPinSearch) || cleanPinSearch.includes(cleanCenterPin));
             
-            const cDist = (getProp(center, "District") || "").toLowerCase();
-            const matchesDistrict = detectedDistrict && cDist && (cDist.includes(detectedDistrict.toLowerCase()) || detectedDistrict.toLowerCase().includes(cDist));
+            const matchesDistrict = detectedDistrict && distName && (distName.includes(detectedDistrict.toLowerCase()) || detectedDistrict.toLowerCase().includes(distName));
 
             const centerJson = JSON.stringify(center).replace(/\D/g, '');
             const matchesUniversal = cleanPinSearch && centerJson.includes(cleanPinSearch);
 
             // E. Final Inclusion Logic
             if (categoryMatch) {
-                // Criteria: 
-                // 1. Within 100km (Distance)
-                // 2. SAME District (Critical fallback if coords are missing)
-                // 3. Match PIN/Text
-                if (isWithin100km || matchesDistrict || matchesPinSearch || matchesUniversal || (!pin && !searchCoords.lat)) {
+                // Now we check distance AND text. 
+                // Since we have District centroids, distance is much more reliable now.
+                if (isWithin100km || matchesPinSearch || matchesDistrict || matchesUniversal || (!pin && !searchCoords.lat)) {
                     center.matchScore = 0;
                     if (matchesPinSearch) center.matchScore += 1000;
                     if (isWithin100km) center.matchScore += 500;
-                    if (matchesDistrict) center.matchScore += 300; // Boost district matches to be visible
-                    if (matchesUniversal) center.matchScore += 100;
-                    
+                    if (matchesDistrict) center.matchScore += 300;
                     results.push(center);
                 }
             }
