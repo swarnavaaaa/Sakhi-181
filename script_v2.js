@@ -453,14 +453,18 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             return !duplicate;
         });
 
-        // 5. Final Sort (Score, then Distance, then Name)
+        // 5. Final Sort (Distance first, then Score, then Name)
         finalResults.sort((a, b) => {
-            if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
+            const distA = a.distance !== undefined ? a.distance : 1000000;
+            const distB = b.distance !== undefined ? b.distance : 1000000;
             
-            const distA = a.distance !== undefined ? a.distance : 999999;
-            const distB = b.distance !== undefined ? b.distance : 999999;
+            // Primary Sort: Physical Distance
             if (distA !== distB) return distA - distB;
             
+            // Secondary Sort: Relevance Score (PIN match, District match, etc.)
+            if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
+            
+            // Tertiary Sort: Alphabetical Name
             const nameA = getProp(a, "Name") || "";
             const nameB = getProp(b, "Name") || "";
             return nameA.localeCompare(nameB);
