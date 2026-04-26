@@ -393,11 +393,13 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
 
         allCenters.forEach(center => {
             // A. Coordinate access (flexible naming)
-            const cLat = getProp(center, "latitude");
-            const cLon = getProp(center, "longitude");
+            const latVal = getProp(center, "latitude");
+            const lonVal = getProp(center, "longitude");
+            const cLat = latVal ? parseFloat(latVal) : NaN;
+            const cLon = lonVal ? parseFloat(lonVal) : NaN;
             
-            if (searchCoords.lat && searchCoords.lon && cLat && cLon) {
-                center.distance = calculateDistance(searchCoords.lat, searchCoords.lon, parseFloat(cLat), parseFloat(cLon));
+            if (searchCoords.lat && searchCoords.lon && !isNaN(cLat) && !isNaN(cLon)) {
+                center.distance = calculateDistance(searchCoords.lat, searchCoords.lon, cLat, cLon);
             } else {
                 center.distance = undefined;
             }
@@ -436,7 +438,7 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                     // Score the match for sorting
                     center.matchScore = 0;
                     if (distanceMatch) center.matchScore += 100;
-                    if (matchesPinString) center.matchScore += 75; // Higher priority for PIN matches
+                    if (matchesPinString) center.matchScore += 75; 
                     if (matchesDistrict) center.matchScore += 50;
                     if (matchesAddress) center.matchScore += 25;
                     results.push(center);
@@ -458,7 +460,7 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             const distA = a.distance !== undefined ? a.distance : 1000000;
             const distB = b.distance !== undefined ? b.distance : 1000000;
             
-            // Primary Sort: Physical Distance
+            // Primary Sort: Physical Distance (Closer is better)
             if (distA !== distB) return distA - distB;
             
             // Secondary Sort: Relevance Score (PIN match, District match, etc.)
@@ -517,19 +519,22 @@ function renderCenters(centers, listId = 'centersResultsList') {
     const fragment = document.createDocumentFragment();
 
     centers.forEach((center, index) => {
-        const distanceText = (center.distance !== undefined) ? `${Math.round(center.distance * 10) / 10} km away` : (center["District"] || 'OSC');
+        const hasDistance = center.distance !== undefined && !isNaN(center.distance);
+        const distanceText = hasDistance ? `${Math.round(center.distance * 10) / 10} km away` : (getProp(center, "District") || 'Support Center');
         
-        // Check if this is the closest center (first in sorted list)
-        const isClosest = index === 0 && center.distance !== undefined;
+        // Check if this is the closest center (first in sorted list and has distance)
+        const isClosest = index === 0 && hasDistance;
         
         const centerHtml = `
             <div class="center-item ${isClosest ? 'closest-highlight' : ''}">
-                ${isClosest ? '<div class="closest-badge"><i class="ri-flashlight-fill"></i> Closest to you</div>' : ''}
+                ${isClosest ? '<div class="closest-badge"><i class="ri-flashlight-fill"></i> Closest to your location</div>' : ''}
                 <div class="center-header">
-                    <h4>${center["Name"]}</h4>
-                    <span class="center-type-badge">${distanceText}</span>
+                    <h4>${getProp(center, "Name")}</h4>
+                    <span class="center-type-badge ${hasDistance ? 'distance-badge' : ''}">
+                        <i class="${hasDistance ? 'ri-map-pin-range-line' : 'ri-map-pin-2-line'}"></i> ${distanceText}
+                    </span>
                 </div>
-                <p style="font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-bottom: 1rem;">${center["Category"] || 'Sakhi One Stop Centre'}</p>
+                <p style="font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-bottom: 1rem;">${getProp(center, "Category") || 'Sakhi One Stop Centre'}</p>
                 
                 <div class="center-details">
                     <div class="center-info-row">
