@@ -388,8 +388,10 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             } catch (e) { console.warn("PIN API district lookup failed", e); }
         }
 
-        // 1. District Coordinate Fallback (Telangana Centroids)
-        // This ensures centers missing Lat/Long can still be filtered by distance
+        // 1. Process search term
+        const cleanPinSearch = pin ? pin.toString().replace(/\D/g, '') : "";
+
+        // 2. District Coordinate Fallback (Telangana Centroids)
         const DISTRICT_COORDS = {
             "hyderabad": { lat: 17.3850, lon: 78.4867 },
             "rangareddy": { lat: 17.3850, lon: 78.4867 }, // Overlaps with Hyderabad
