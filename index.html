@@ -57,6 +57,7 @@
             --text-main: #1e293b;
             --transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
             --container-max: 1200px;
+            --text-muted: #475569; /* Darkened for accessibility contrast */
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Outfit', sans-serif; color: var(--text-main); background-color: var(--bg-light); line-height: 1.6; overflow-x: hidden; }
@@ -131,7 +132,7 @@
             </div>
 
             <div class="hero-card">
-                <h3><i class="ri-map-pin-2-fill" style="color: var(--primary);"></i> Find a Center</h3>
+                <h2><i class="ri-map-pin-2-fill" style="color: var(--primary);"></i> Find a Center</h2>
                 <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2rem;">Find Sakhi OSCs within 200 km from you.<br>All OSC information provided here is verified by the Sakhi181 team</p>
                 
                 <form>
@@ -149,7 +150,7 @@
                     </div>
                     <div class="form-group">
                         <label for="pinInput">Pin Code</label>
-                        <input type="text" id="pinInput" placeholder="Enter 6-digit PIN" maxlength="6">
+                        <input type="text" id="pinInput" placeholder="Enter 6-digit PIN" maxlength="6" aria-label="Enter 6-digit PIN code">
                     </div>
                     <button type="submit" class="btn-hero">
                         <i class="ri-search-line"></i> Locate Sakhi Center
@@ -163,7 +164,7 @@
     <div id="searchResultsContainer" class="container" style="display: none; margin-top: -3rem; position: relative; z-index: 101; min-height: 200px; margin-bottom: 2rem;">
         <div class="results-card">
             <div class="results-header">
-                <h3><i class="ri-list-check"></i> Centers Nearby</h3>
+                <h2><i class="ri-list-check"></i> Centers Nearby</h2>
                 <button class="btn-close-results" onclick="document.getElementById('searchResultsContainer').style.display='none'">&times;</button>
             </div>
             <div id="centersResultsList" class="results-list">
@@ -182,21 +183,21 @@
             <div class="services-grid" style="margin-top: 4rem;">
                 <a href="resources.html#shelter" class="service-box reveal">
                     <div class="icon-box" style="background: #dbeafe; color: #2563eb;"><i class="ri-map-pin-2-fill"></i></div>
-                    <h4>Sakhi One Stop Centers</h4>
+                    <h3>Sakhi One Stop Centers</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Locate centers providing shelter, police, and medical aid in one place.</p>
                     <span class="btn-link">View Details <i class="ri-arrow-right-line"></i></span>
                 </a>
 
                 <a href="resources.html#legal" class="service-box reveal">
                     <div class="icon-box" style="background: #ede9fe; color: #7c3aed;"><i class="ri-scales-3-line"></i></div>
-                    <h4>Legal Aid</h4>
+                    <h3>Legal Aid</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Access free legal advice and representation to help you navigate the system.</p>
                     <span class="btn-link">Learn More <i class="ri-arrow-right-line"></i></span>
                 </a>
 
                 <a href="resources.html#medical" class="service-box reveal">
                     <div class="icon-box" style="background: #fff7ed; color: #ea580c;"><i class="ri-hospital-line"></i></div>
-                    <h4>Medical Help</h4>
+                    <h3>Medical Help</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Immediate medical attention and healthcare referrals ensuring your safety.</p>
                     <span class="btn-link">Get Support <i class="ri-arrow-right-line"></i></span>
                 </a>
