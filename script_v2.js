@@ -583,24 +583,28 @@ function renderCenters(centers, listId = 'centersResultsList') {
                 <div class="center-details">
                     <div class="center-info-row">
                         <i class="ri-map-pin-2-line"></i>
-                        <span><strong>Address:</strong> ${center["Address"]}<br><strong>Pincode:</strong> ${center["Pincode"] || 'N/A'} ${center["District"] ? '(' + center["District"] + ')' : ''}</span>
+                        <span><strong class="info-label">Address:</strong> ${center["Address"]}</span>
+                    </div>
+                    <div class="center-info-row">
+                        <i class="ri-hashtag"></i>
+                        <span><strong class="info-label">Pincode:</strong> ${center["Pincode"] || 'N/A'} ${center["District"] ? '(' + center["District"] + ')' : ''}</span>
                     </div>
                     ${center["Phone Number"] ? `
                         <div class="center-info-row">
                             <i class="ri-phone-line"></i>
-                            <span><strong>Phone:</strong> <a href="tel:${center["Phone Number"]}" class="contact-link">${center["Phone Number"]}</a></span>
+                            <span><strong class="info-label">Phone:</strong> <a href="tel:${center["Phone Number"]}" class="contact-link">${center["Phone Number"]}</a></span>
                         </div>
                     ` : ''}
                     ${center["Point of Contact"] ? `
                         <div class="center-info-row">
                             <i class="ri-user-voice-line"></i>
-                            <span><strong>Contact Person:</strong> ${center["Point of Contact"]}</span>
+                            <span><strong class="info-label">Contact Person:</strong> ${center["Point of Contact"]}</span>
                         </div>
                     ` : ''}
                     ${center["Email"] ? `
                         <div class="center-info-row">
                             <i class="ri-mail-line"></i>
-                            <span><strong>Email:</strong> <a href="mailto:${center["Email"]}" class="contact-link">${center["Email"]}</a></span>
+                            <span><strong class="info-label">Email:</strong> <a href="mailto:${center["Email"]}" class="contact-link">${center["Email"]}</a></span>
                         </div>
                     ` : ''}
                 </div>

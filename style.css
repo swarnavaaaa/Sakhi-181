@@ -1900,13 +1900,40 @@ footer {
 
 .contact-link {
     color: var(--text-main);
-    font-weight: 600;
+    font-weight: 400; /* Removed bold from actual phone/email */
     transition: var(--transition);
 }
 
 .contact-link:hover {
     color: var(--primary);
     text-decoration: underline;
+}
+
+.center-details {
+    margin-bottom: 1.5rem;
+}
+
+.center-info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+.center-info-row i {
+    color: var(--primary);
+    font-size: 1.1rem;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+}
+
+.info-label {
+    font-weight: 700;
+    color: var(--text-main);
+    margin-right: 0.25rem;
 }
 
 .services-wrapper {
