@@ -391,10 +391,10 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
         // 3. Process and filter all centers
         const cleanPinSearch = pin ? pin.toString().replace(/\D/g, '') : "";
 
-        console.log(`Successfully fetched ${allCenters.length} centers. Searching for PIN: ${pin} (${cleanPinSearch})`);
+        console.log(`Starting search for PIN: ${pin}. Detected Lat/Lon: ${searchCoords.lat}, ${searchCoords.lon}`);
         
         allCenters.forEach(center => {
-            // A. Coordinate access (flexible naming)
+            // A. Coordinate access
             const latVal = getProp(center, "latitude");
             const lonVal = getProp(center, "longitude");
             const cLat = latVal ? parseFloat(latVal) : NaN;
@@ -406,48 +406,41 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                 center.distance = undefined;
             }
 
-            // B. Category match (flexible naming, case-insensitive)
+            // B. Category match
             const cCat = getProp(center, "Category") || "";
             const categoryMatch = !category || (cCat && (
                 cCat.toLowerCase() === category.toLowerCase() || 
                 cCat.toLowerCase().includes(category.toLowerCase())
             ));
 
-            // C. Distance match (STRICT 100km range)
-            const distanceMatch = center.distance !== undefined && center.distance <= 100;
+            // C. Distance match (Strict 100km)
+            const isWithin100km = center.distance !== undefined && center.distance <= 100;
 
-            // D. PIN match (extremely loose: strip everything but digits)
+            // D. Text matches (PIN, Address, etc.)
             const cPin = getProp(center, "Pincode") || "";
-            const cleanCenterPin = cPin ? cPin.toString().replace(/\D/g, '') : "";
-            const matchesPinString = cleanPinSearch && cleanCenterPin && (
+            const cleanCenterPin = cPin.toString().replace(/\D/g, '');
+            const matchesPinSearch = cleanPinSearch && cleanCenterPin && (
                 cleanCenterPin.includes(cleanPinSearch) || cleanPinSearch.includes(cleanCenterPin)
             );
             
-            // E. Address match
-            const cAddr = getProp(center, "Address") || "";
-            const matchesAddress = cleanPinSearch && cAddr && cAddr.toString().replace(/\D/g, '').includes(cleanPinSearch);
-            
-            // F. Universal Match (Fallback: if the PIN string appears ANYWHERE in the data)
             const centerJson = JSON.stringify(center).replace(/\D/g, '');
             const matchesUniversal = cleanPinSearch && centerJson.includes(cleanPinSearch);
 
-            // G. District match
-            const cDist = getProp(center, "District") || "";
-            const matchesDistrict = detectedDistrict && cDist && (
-                cDist.toLowerCase().includes(detectedDistrict.toLowerCase()) ||
-                detectedDistrict.toLowerCase().includes(cDist.toLowerCase())
-            );
-
-            // H. Logic: If category matches AND (Universal Match OR Distance matches OR District matches)
-            // We removed the distance check for exact PIN/String matches to ensure they always show up
+            // E. Final Inclusion Logic:
+            // 1. MUST match category (if one is selected)
+            // 2. AND (MUST be within 100km OR match the PIN/text search)
             if (categoryMatch) {
-                if (matchesPinString || matchesAddress || matchesUniversal || distanceMatch || matchesDistrict || (!pin && !searchCoords.lat)) {
-                    // Score the match for sorting
+                const distanceIncluded = isWithin100km;
+                const textIncluded = matchesPinSearch || matchesUniversal;
+                const isAutoIncluded = !pin && !searchCoords.lat; // Show all if no search criteria
+
+                if (distanceIncluded || textIncluded || isAutoIncluded) {
+                    // Relevance Scoring
                     center.matchScore = 0;
-                    if (matchesPinString) center.matchScore += 300; // PIN match is highest signal
-                    if (matchesUniversal) center.matchScore += 200; // Found PIN elsewhere in data
-                    if (distanceMatch) center.matchScore += 100;
-                    if (matchesDistrict) center.matchScore += 50;
+                    if (matchesPinSearch) center.matchScore += 500; // Exact PIN match is high priority
+                    if (isWithin100km) center.matchScore += 200;    // Within range is high priority
+                    if (matchesUniversal) center.matchScore += 100; // Mentioned elsewhere
+                    
                     results.push(center);
                 }
             }
