@@ -413,33 +413,32 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                 cCat.toLowerCase().includes(category.toLowerCase())
             ));
 
-            // C. Distance match (Strict 100km)
+            // C. In-Range Check (100km)
             const isWithin100km = center.distance !== undefined && center.distance <= 100;
 
-            // D. Text matches (PIN, Address, etc.)
-            const cPin = getProp(center, "Pincode") || "";
-            const cleanCenterPin = cPin.toString().replace(/\D/g, '');
-            const matchesPinSearch = cleanPinSearch && cleanCenterPin && (
-                cleanCenterPin.includes(cleanPinSearch) || cleanPinSearch.includes(cleanCenterPin)
-            );
+            // D. PIN and District matches (Fallbacks)
+            const cPin = (getProp(center, "Pincode") || "").toString().replace(/\D/g, '');
+            const matchesPinSearch = cleanPinSearch && cPin && (cPin.includes(cleanPinSearch) || cleanPinSearch.includes(cPin));
             
+            const cDist = (getProp(center, "District") || "").toLowerCase();
+            const matchesDistrict = detectedDistrict && cDist && (cDist.includes(detectedDistrict.toLowerCase()) || detectedDistrict.toLowerCase().includes(cDist));
+
             const centerJson = JSON.stringify(center).replace(/\D/g, '');
             const matchesUniversal = cleanPinSearch && centerJson.includes(cleanPinSearch);
 
-            // E. Final Inclusion Logic:
-            // 1. MUST match category (if one is selected)
-            // 2. AND (MUST be within 100km OR match the PIN/text search)
+            // E. Final Inclusion Logic (Ultra-Resilient)
             if (categoryMatch) {
-                const distanceIncluded = isWithin100km;
-                const textIncluded = matchesPinSearch || matchesUniversal;
-                const isAutoIncluded = !pin && !searchCoords.lat; // Show all if no search criteria
-
-                if (distanceIncluded || textIncluded || isAutoIncluded) {
-                    // Relevance Scoring
+                // We show if:
+                // 1. It's within 100km
+                // 2. OR it matches the PIN string exactly
+                // 3. OR it's in the same district (critical fallback if geocoding fails)
+                // 4. OR the PIN appears anywhere in the text
+                if (isWithin100km || matchesPinSearch || matchesDistrict || matchesUniversal || (!pin && !searchCoords.lat)) {
                     center.matchScore = 0;
-                    if (matchesPinSearch) center.matchScore += 500; // Exact PIN match is high priority
-                    if (isWithin100km) center.matchScore += 200;    // Within range is high priority
-                    if (matchesUniversal) center.matchScore += 100; // Mentioned elsewhere
+                    if (matchesPinSearch) center.matchScore += 1000; // PIN is king
+                    if (isWithin100km) center.matchScore += 500;    // Distance is queen
+                    if (matchesDistrict) center.matchScore += 200;  // District is prince
+                    if (matchesUniversal) center.matchScore += 100; // Text match is backup
                     
                     results.push(center);
                 }
