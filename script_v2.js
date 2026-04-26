@@ -411,19 +411,19 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                 cCat.toLowerCase().includes(category.toLowerCase())
             ));
 
-            // C. Distance match (within 200km)
-            const distanceMatch = center.distance !== undefined && center.distance <= 200;
+            // C. Check distance match (STRICT 100km range as requested)
+            const distanceMatch = center.distance !== undefined && center.distance <= 100;
 
-            // D. PIN match (flexible naming, strip non-digits for robust comparison)
+            // D. Check PIN match (extremely loose: strip everything but digits)
             const cPin = getProp(center, "Pincode");
             const cleanCenterPin = cPin ? cPin.toString().replace(/\D/g, '') : "";
             const matchesPinString = cleanPinSearch && cleanCenterPin && (
                 cleanCenterPin.includes(cleanPinSearch) || cleanPinSearch.includes(cleanCenterPin)
             );
             
-            // E. Address match as last resort
+            // E. Address match
             const cAddr = getProp(center, "Address");
-            const matchesAddress = cleanPinSearch && cAddr && cAddr.toString().includes(cleanPinSearch);
+            const matchesAddress = cleanPinSearch && cAddr && cAddr.toString().replace(/\D/g, '').includes(cleanPinSearch);
             
             // F. District match
             const cDist = getProp(center, "District");
@@ -437,8 +437,8 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                 if (distanceMatch || matchesPinString || matchesDistrict || matchesAddress || (!pin && !searchCoords.lat)) {
                     // Score the match for sorting
                     center.matchScore = 0;
+                    if (matchesPinString) center.matchScore += 200; // PIN match is highest signal
                     if (distanceMatch) center.matchScore += 100;
-                    if (matchesPinString) center.matchScore += 75; 
                     if (matchesDistrict) center.matchScore += 50;
                     if (matchesAddress) center.matchScore += 25;
                     results.push(center);
@@ -522,12 +522,13 @@ function renderCenters(centers, listId = 'centersResultsList') {
         const hasDistance = center.distance !== undefined && !isNaN(center.distance);
         const distanceText = hasDistance ? `${Math.round(center.distance * 10) / 10} km away` : (getProp(center, "District") || 'Support Center');
         
-        // Check if this is the closest center (first in sorted list and has distance)
-        const isClosest = index === 0 && hasDistance;
+        // Mark the first item as the best/closest match
+        const isTopMatch = index === 0;
+        const badgeLabel = hasDistance ? "Closest to your location" : "Best match for your search";
         
         const centerHtml = `
-            <div class="center-item ${isClosest ? 'closest-highlight' : ''}">
-                ${isClosest ? '<div class="closest-badge"><i class="ri-flashlight-fill"></i> Closest to your location</div>' : ''}
+            <div class="center-item ${isTopMatch ? 'closest-highlight' : ''}">
+                ${isTopMatch ? `<div class="closest-badge"><i class="ri-flashlight-fill"></i> ${badgeLabel}</div>` : ''}
                 <div class="center-header">
                     <h4>${getProp(center, "Name")}</h4>
                     <span class="center-type-badge ${hasDistance ? 'distance-badge' : ''}">
