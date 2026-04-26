@@ -391,6 +391,8 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
         // 3. Process and filter all centers
         const cleanPinSearch = pin ? pin.toString().replace(/\D/g, '') : "";
 
+        console.log(`Successfully fetched ${allCenters.length} centers. Searching for PIN: ${pin} (${cleanPinSearch})`);
+        
         allCenters.forEach(center => {
             // A. Coordinate access (flexible naming)
             const latVal = getProp(center, "latitude");
@@ -405,42 +407,47 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             }
 
             // B. Category match (flexible naming, case-insensitive)
-            const cCat = getProp(center, "Category");
+            const cCat = getProp(center, "Category") || "";
             const categoryMatch = !category || (cCat && (
                 cCat.toLowerCase() === category.toLowerCase() || 
                 cCat.toLowerCase().includes(category.toLowerCase())
             ));
 
-            // C. Check distance match (STRICT 100km range as requested)
+            // C. Distance match (STRICT 100km range)
             const distanceMatch = center.distance !== undefined && center.distance <= 100;
 
-            // D. Check PIN match (extremely loose: strip everything but digits)
-            const cPin = getProp(center, "Pincode");
+            // D. PIN match (extremely loose: strip everything but digits)
+            const cPin = getProp(center, "Pincode") || "";
             const cleanCenterPin = cPin ? cPin.toString().replace(/\D/g, '') : "";
             const matchesPinString = cleanPinSearch && cleanCenterPin && (
                 cleanCenterPin.includes(cleanPinSearch) || cleanPinSearch.includes(cleanCenterPin)
             );
             
             // E. Address match
-            const cAddr = getProp(center, "Address");
+            const cAddr = getProp(center, "Address") || "";
             const matchesAddress = cleanPinSearch && cAddr && cAddr.toString().replace(/\D/g, '').includes(cleanPinSearch);
             
-            // F. District match
-            const cDist = getProp(center, "District");
+            // F. Universal Match (Fallback: if the PIN string appears ANYWHERE in the data)
+            const centerJson = JSON.stringify(center).replace(/\D/g, '');
+            const matchesUniversal = cleanPinSearch && centerJson.includes(cleanPinSearch);
+
+            // G. District match
+            const cDist = getProp(center, "District") || "";
             const matchesDistrict = detectedDistrict && cDist && (
                 cDist.toLowerCase().includes(detectedDistrict.toLowerCase()) ||
                 detectedDistrict.toLowerCase().includes(cDist.toLowerCase())
             );
 
-            // G. Logic: If category matches AND (Distance matches OR PIN matches OR District matches OR Address matches)
+            // H. Logic: If category matches AND (Universal Match OR Distance matches OR District matches)
+            // We removed the distance check for exact PIN/String matches to ensure they always show up
             if (categoryMatch) {
-                if (distanceMatch || matchesPinString || matchesDistrict || matchesAddress || (!pin && !searchCoords.lat)) {
+                if (matchesPinString || matchesAddress || matchesUniversal || distanceMatch || matchesDistrict || (!pin && !searchCoords.lat)) {
                     // Score the match for sorting
                     center.matchScore = 0;
-                    if (matchesPinString) center.matchScore += 200; // PIN match is highest signal
+                    if (matchesPinString) center.matchScore += 300; // PIN match is highest signal
+                    if (matchesUniversal) center.matchScore += 200; // Found PIN elsewhere in data
                     if (distanceMatch) center.matchScore += 100;
                     if (matchesDistrict) center.matchScore += 50;
-                    if (matchesAddress) center.matchScore += 25;
                     results.push(center);
                 }
             }
