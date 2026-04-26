@@ -1703,7 +1703,7 @@ footer {
 .closest-badge {
     position: absolute;
     top: -12px;
-    left: 20px;
+    left: 15px;
     background: var(--primary);
     color: white;
     padding: 4px 12px;
@@ -1721,8 +1721,13 @@ footer {
 
 @media (max-width: 768px) {
     .closest-highlight {
-        transform: none;
+        transform: none !important;
         margin-top: 1rem;
+    }
+    .closest-badge {
+        left: 10px;
+        font-size: 0.65rem;
+        padding: 4px 10px;
     }
 }
 
@@ -1759,9 +1764,15 @@ footer {
     background: white;
     border-radius: 20px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-    padding: 2rem;
+    padding: 1.25rem;
     border: 1px solid rgba(212, 56, 143, 0.1);
     animation: fadeInScale 0.4s ease-out;
+    width: 100%;
+}
+@media (max-width: 480px) {
+    .results-card {
+        padding: 1rem 0.75rem;
+    }
 }
 
 @media (min-width: 1024px) {
@@ -1813,30 +1824,52 @@ footer {
     gap: 1.5rem;
     max-height: 550px;
     overflow-y: auto;
-    padding: 1.5rem 0.75rem; /* Increased padding to prevent clipping of shadows/badges */
+    overflow-x: hidden;
+    padding: 1.5rem 0.5rem;
 }
 
 .center-item {
     background: #f8fafc;
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 1.25rem;
     border: 1px solid transparent;
     transition: var(--transition);
+    width: 100%;
+    position: relative;
+}
+
+@media (max-width: 480px) {
+    .center-item {
+        padding: 1rem;
+    }
 }
 
 .center-item:hover {
     border-color: var(--primary-light);
-    transform: translateX(5px);
+    transform: translateY(-2px);
     background: white;
     box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 768px) {
+    .center-item:hover {
+        transform: none;
+    }
 }
 
 .center-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 0.75rem;
     margin-bottom: 0.5rem;
+}
+
+@media (max-width: 600px) {
+    .center-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
 
 .center-item h4 {
