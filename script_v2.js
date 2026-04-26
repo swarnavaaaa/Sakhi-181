@@ -391,14 +391,34 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
         // 3. Process and filter all centers
         const cleanPinSearch = pin ? pin.toString().replace(/\D/g, '') : "";
 
-        console.log(`Starting search for PIN: ${pin}. Detected Lat/Lon: ${searchCoords.lat}, ${searchCoords.lon}`);
+        // 1. Build a local coordinate map from centers that HAVE data
+        // This allows us to "guess" the location of centers missing lat/long if they share a PIN
+        const pinCoordMap = {};
+        allCenters.forEach(c => {
+            const lat = parseFloat(getProp(c, "latitude"));
+            const lon = parseFloat(getProp(c, "longitude"));
+            const pinCode = (getProp(c, "Pincode") || "").toString().replace(/\D/g, '');
+            if (!isNaN(lat) && !isNaN(lon) && pinCode) {
+                if (!pinCoordMap[pinCode]) pinCoordMap[pinCode] = { lat, lon };
+            }
+        });
+
+        console.log(`Starting search. Total centers in DB: ${allCenters.length}. PIN-Coord Map size: ${Object.keys(pinCoordMap).length}`);
         
         allCenters.forEach(center => {
-            // A. Coordinate access
+            // A. Coordinate access (with PIN-map fallback)
             const latVal = getProp(center, "latitude");
             const lonVal = getProp(center, "longitude");
-            const cLat = latVal ? parseFloat(latVal) : NaN;
-            const cLon = lonVal ? parseFloat(lonVal) : NaN;
+            const pinCode = (getProp(center, "Pincode") || "").toString().replace(/\D/g, '');
+            
+            let cLat = latVal ? parseFloat(latVal) : NaN;
+            let cLon = lonVal ? parseFloat(lonVal) : NaN;
+            
+            // Fallback: If this center lacks coordinates, check if we know the coords for this PIN from another center
+            if (isNaN(cLat) && pinCode && pinCoordMap[pinCode]) {
+                cLat = pinCoordMap[pinCode].lat;
+                cLon = pinCoordMap[pinCode].lon;
+            }
             
             if (searchCoords.lat && searchCoords.lon && !isNaN(cLat) && !isNaN(cLon)) {
                 center.distance = calculateDistance(searchCoords.lat, searchCoords.lon, cLat, cLon);
@@ -413,12 +433,12 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                 cCat.toLowerCase().includes(category.toLowerCase())
             ));
 
-            // C. In-Range Check (100km)
+            // C. In-Range Check (Strict 100km)
             const isWithin100km = center.distance !== undefined && center.distance <= 100;
 
-            // D. PIN and District matches (Fallbacks)
-            const cPin = (getProp(center, "Pincode") || "").toString().replace(/\D/g, '');
-            const matchesPinSearch = cleanPinSearch && cPin && (cPin.includes(cleanPinSearch) || cleanPinSearch.includes(cPin));
+            // D. Matches (PIN, District, Universal)
+            const cleanCenterPin = (getProp(center, "Pincode") || "").toString().replace(/\D/g, '');
+            const matchesPinSearch = cleanPinSearch && cleanCenterPin && (cleanCenterPin.includes(cleanPinSearch) || cleanPinSearch.includes(cleanCenterPin));
             
             const cDist = (getProp(center, "District") || "").toLowerCase();
             const matchesDistrict = detectedDistrict && cDist && (cDist.includes(detectedDistrict.toLowerCase()) || detectedDistrict.toLowerCase().includes(cDist));
@@ -426,19 +446,18 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             const centerJson = JSON.stringify(center).replace(/\D/g, '');
             const matchesUniversal = cleanPinSearch && centerJson.includes(cleanPinSearch);
 
-            // E. Final Inclusion Logic (Ultra-Resilient)
+            // E. Final Inclusion Logic
             if (categoryMatch) {
-                // We show if:
-                // 1. It's within 100km
-                // 2. OR it matches the PIN string exactly
-                // 3. OR it's in the same district (critical fallback if geocoding fails)
-                // 4. OR the PIN appears anywhere in the text
-                if (isWithin100km || matchesPinSearch || matchesDistrict || matchesUniversal || (!pin && !searchCoords.lat)) {
+                // Criteria: 
+                // 1. Within 100km (Distance)
+                // 2. SAME District (Critical fallback if coords are missing)
+                // 3. Match PIN/Text
+                if (isWithin100km || matchesDistrict || matchesPinSearch || matchesUniversal || (!pin && !searchCoords.lat)) {
                     center.matchScore = 0;
-                    if (matchesPinSearch) center.matchScore += 1000; // PIN is king
-                    if (isWithin100km) center.matchScore += 500;    // Distance is queen
-                    if (matchesDistrict) center.matchScore += 200;  // District is prince
-                    if (matchesUniversal) center.matchScore += 100; // Text match is backup
+                    if (matchesPinSearch) center.matchScore += 1000;
+                    if (isWithin100km) center.matchScore += 500;
+                    if (matchesDistrict) center.matchScore += 300; // Boost district matches to be visible
+                    if (matchesUniversal) center.matchScore += 100;
                     
                     results.push(center);
                 }
