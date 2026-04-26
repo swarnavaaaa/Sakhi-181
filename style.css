@@ -1825,7 +1825,13 @@ footer {
     max-height: 550px;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 1.5rem 0.5rem;
+    padding: 1rem 0.5rem;
+    width: 100%;
+}
+@media (max-width: 480px) {
+    .results-list {
+        padding: 0.75rem 0.25rem;
+    }
 }
 
 .center-item {
@@ -1887,7 +1893,8 @@ footer {
     color: var(--primary-dark);
     text-transform: uppercase;
     font-weight: 800;
-    white-space: nowrap;
+    white-space: normal;
+    text-align: center;
     box-shadow: 0 2px 5px rgba(212, 56, 143, 0.1);
 }
 
