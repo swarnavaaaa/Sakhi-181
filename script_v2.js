@@ -288,6 +288,9 @@ async function populateCategories() {
 /**
  * Unified search function that handles Proximity, PIN matching, and District fallbacks
  */
+/**
+ * Unified search function that handles Proximity, PIN matching, and District fallbacks
+ */
 async function performUnifiedSearch({ lat = null, lon = null, pin = null, category = "", source = 'auto', listId = 'centersResultsList', containerId = 'searchResultsContainer' }) {
     if (!supabaseClient) {
         showSimpleToast("Database service not ready.", "error");
@@ -298,7 +301,6 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
     const resultsList = document.getElementById(listId);
     
     if (!resultsContainer || !resultsList) {
-        // If we're on the Resources page, the IDs are different
         if (window.location.pathname.includes('resources.html')) {
             return performUnifiedSearch({ lat, lon, pin, category, source, listId: 'resourceResultsList', containerId: 'resourceResultsContainer' });
         }
@@ -321,77 +323,140 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
     }, 100);
 
     try {
+        // 1. Fetch all centers
         const { data: allCenters, error } = await supabaseClient.from('centers').select('*');
         if (error) throw error;
         
+        if (!allCenters || allCenters.length === 0) {
+            resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+                <i class="ri-database-2-line" style="font-size: 3rem; display: block; margin-bottom: 1.5rem; color: var(--text-light);"></i>
+                <h3>Database is empty</h3>
+                <p style="margin-top: 1rem;">No center data has been uploaded to the database yet.</p>
+            </div>`;
+            return;
+        }
+
         let results = [];
         let searchCoords = { lat, lon };
+        let detectedDistrict = null;
 
+        // 2. Determine search coordinates and district from PIN if needed
         if (pin && !searchCoords.lat) {
+            // Try geocoding the PIN
             const geocoded = await geocodePin(pin);
             if (geocoded) {
                 searchCoords.lat = geocoded.lat;
                 searchCoords.lon = geocoded.lon;
+                if (geocoded.display_name && geocoded.display_name.includes(',')) {
+                    detectedDistrict = geocoded.display_name.split(',')[0].trim();
+                }
+            }
+            
+            // If direct geocoding fails or is incomplete, try finding the district from the PIN API
+            if (!detectedDistrict) {
+                try {
+                    const postApiUrl = `https://api.postalpincode.in/pincode/${pin}`;
+                    const postRes = await fetch(postApiUrl);
+                    const postData = await postRes.json();
+                    if (postData && postData[0] && postData[0].Status === "Success") {
+                        detectedDistrict = postData[0].PostOffice[0].District;
+                        console.log(`Detected district from PIN API: ${detectedDistrict}`);
+                    }
+                } catch (e) { console.warn("PIN API fallback failed", e); }
             }
         }
 
-        // Distance calculation
-        if (searchCoords.lat && searchCoords.lon) {
-            allCenters.forEach(center => {
-                const cLat = center.latitude || center.Latitude;
-                const cLon = center.longitude || center.Longitude;
-                if (cLat && cLon) {
-                    center.distance = calculateDistance(searchCoords.lat, searchCoords.lon, parseFloat(cLat), parseFloat(cLon));
+        // 3. Process and filter all centers
+        allCenters.forEach(center => {
+            // A. Calculate distance if coordinates available
+            const cLat = center.latitude || center.Latitude;
+            const cLon = center.longitude || center.Longitude;
+            if (searchCoords.lat && searchCoords.lon && cLat && cLon) {
+                center.distance = calculateDistance(searchCoords.lat, searchCoords.lon, parseFloat(cLat), parseFloat(cLon));
+            } else {
+                center.distance = undefined;
+            }
+
+            // B. Check category match
+            const categoryMatch = !category || (center.Category && (
+                center.Category.toLowerCase() === category.toLowerCase() || 
+                center.Category.toLowerCase().includes(category.toLowerCase())
+            ));
+
+            // C. Check distance match (within 200km)
+            const distanceMatch = center.distance !== undefined && center.distance <= 200;
+
+            // D. Check PIN/District string match
+            const pinStr = pin ? pin.toString() : "";
+            const matchesPinString = pin && (
+                (center.Pincode && center.Pincode.toString().includes(pinStr)) || 
+                (center.Address && center.Address.toString().includes(pinStr))
+            );
+            
+            const matchesDistrict = detectedDistrict && center.District && (
+                center.District.toLowerCase().includes(detectedDistrict.toLowerCase()) ||
+                detectedDistrict.toLowerCase().includes(center.District.toLowerCase())
+            );
+
+            // E. Logic: If category matches AND (Distance matches OR PIN matches OR District matches)
+            if (categoryMatch) {
+                if (distanceMatch || matchesPinString || matchesDistrict || (!pin && !searchCoords.lat)) {
+                    // Score the match for sorting
+                    center.matchScore = 0;
+                    if (distanceMatch) center.matchScore += 100;
+                    if (matchesPinString) center.matchScore += 50;
+                    if (matchesDistrict) center.matchScore += 25;
+                    results.push(center);
                 }
-            });
-            results.push(...allCenters.filter(c => c.distance !== undefined && c.distance <= 200));
-        }
+            }
+        });
 
-        // Keyword/District match if no coordinates or no proximity results
-        if (pin || category) {
-            const keywordResults = allCenters.filter(c => {
-                const matchesPin = pin && ((c.Pincode && c.Pincode.toString().includes(pin)) || (c.Address && c.Address.toString().includes(pin)));
-                const matchesCategory = category && c.Category && (c.Category.toLowerCase() === category.toLowerCase() || c.Category.toLowerCase().includes(category.toLowerCase()));
-                
-                if (category && pin) return matchesCategory && matchesPin;
-                if (category) return matchesCategory;
-                return matchesPin;
-            });
-            results.push(...keywordResults);
-        }
-
-        // Deduplicate
+        // 4. Deduplicate
         const seen = new Set();
         let finalResults = results.filter(el => {
-            const duplicate = seen.has(el.id || el.Name);
-            seen.add(el.id || el.Name);
+            const id = el.id || el.Name;
+            const duplicate = seen.has(id);
+            seen.add(id);
             return !duplicate;
         });
 
-        // Final Sort
+        // 5. Final Sort (Score, then Distance, then Name)
         finalResults.sort((a, b) => {
+            if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
+            
             const distA = a.distance !== undefined ? a.distance : 999999;
             const distB = b.distance !== undefined ? b.distance : 999999;
             if (distA !== distB) return distA - distB;
-            return a.Name.localeCompare(b.Name);
+            
+            return (a.Name || "").localeCompare(b.Name || "");
         });
 
+        // 6. UI Render
         if (finalResults.length > 0) {
             renderCenters(finalResults, listId);
             const label = category || (pin ? `near ${pin}` : "your area");
             showLocationToast({ city: label }, finalResults.length);
         } else {
             resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
-                <i class="ri-map-pin-user-line" style="font-size: 3rem; display: block; margin-bottom: 1.5rem; color: var(--text-light);"></i>
-                <h3>No centers found</h3>
-                <p style="margin-top: 1rem;">We couldn't find any <strong>${category || 'centers'}</strong> matching your criteria.</p>
+                <i class="ri-map-pin-user-line" style="font-size: 3.5rem; display: block; margin-bottom: 1.5rem; color: var(--text-light); opacity: 0.6;"></i>
+                <h3 style="color: var(--text-main);">No centers found</h3>
+                <p style="margin-top: 1rem; max-width: 400px; margin-left: auto; margin-right: auto;">We couldn't find any <strong>${category || 'centers'}</strong> matching your criteria in this area.</p>
+                <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 0.5rem; align-items: center;">
+                    <p style="font-size: 0.85rem;">Suggestions:</p>
+                    <ul style="font-size: 0.85rem; list-style: none; padding: 0; text-align: left;">
+                        <li>• Check the PIN code for errors</li>
+                        <li>• Try searching for "All Categories"</li>
+                        <li>• Expand your search to nearby areas</li>
+                    </ul>
+                </div>
             </div>`;
         }
     } catch (err) {
         console.error("Search error:", err);
         resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 3rem;">
-            <strong>Search Error</strong>
-            <p>${err.message}</p>
+            <i class="ri-error-warning-line" style="font-size: 3rem; display: block; margin-bottom: 1rem;"></i>
+            <strong>Search Service Unavailable</strong>
+            <p style="margin-top: 0.5rem;">${err.message || "An unexpected error occurred. Please try again later."}</p>
         </div>`;
     }
 }
@@ -411,7 +476,7 @@ function renderCenters(centers, listId = 'centersResultsList') {
     const fragment = document.createDocumentFragment();
 
     centers.forEach((center, index) => {
-        const distanceText = center.distance ? `${Math.round(center.distance * 10) / 10} km away` : (center["District"] || 'OSC');
+        const distanceText = (center.distance !== undefined) ? `${Math.round(center.distance * 10) / 10} km away` : (center["District"] || 'OSC');
         
         // Check if this is the closest center (first in sorted list)
         const isClosest = index === 0 && center.distance !== undefined;
