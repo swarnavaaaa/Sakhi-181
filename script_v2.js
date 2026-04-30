@@ -14,9 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Supabase library not found. Ensure the CDN script is loading correctly.");
     }
 
-    // Populate Categories Dropdown
+    // Populate Dropdowns
     if (supabaseClient) {
         populateCategories();
+        populateDistricts();
     }
     // Translation Control Logic
     const translateControl = document.querySelector('.translate-control');
@@ -62,10 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const pinInput = document.getElementById('pinInput');
             const categorySelect = document.getElementById('categorySelect');
+            const districtSelect = document.getElementById('districtSelect');
             if (!pinInput) return;
             
             const pinVal = pinInput.value.trim();
             const categoryVal = categorySelect ? categorySelect.value : "";
+            const districtVal = districtSelect ? districtSelect.value : "";
             
             if (!supabaseClient) {
                 showSimpleToast("Connecting to database... Please try again in 2 seconds.", "info");
@@ -73,9 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (pinVal.length === 6 && /^\d+$/.test(pinVal)) {
-                performUnifiedSearch({ pin: pinVal, category: categoryVal, source: 'manual-pin' });
+                performUnifiedSearch({ pin: pinVal, category: categoryVal, district: districtVal, source: 'manual-pin' });
+            } else if (pinVal === "" && (categoryVal !== "" || districtVal !== "")) {
+                // Allow searching by category/district only if PIN is empty
+                performUnifiedSearch({ category: categoryVal, district: districtVal, source: 'filter-only' });
             } else {
-                showSimpleToast("Please enter a valid 6-digit numeric PIN code.", "error");
+                showSimpleToast("Please enter a valid 6-digit numeric PIN code or select a filter.", "error");
             }
         });
     }
@@ -286,6 +292,43 @@ async function populateCategories() {
 }
 
 /**
+ * Fetches unique districts from the database and populates the dropdown
+ */
+async function populateDistricts() {
+    const districtSelect = document.getElementById('districtSelect');
+    if (!districtSelect || !supabaseClient) return;
+
+    try {
+        console.log("Fetching unique districts...");
+        const { data, error } = await supabaseClient
+            .from('centers')
+            .select('District');
+
+        if (error) throw error;
+
+        if (data) {
+            const districts = [...new Set(data.map(item => item.District))]
+                .filter(dist => dist && dist.trim() !== "")
+                .sort();
+
+            const fragment = document.createDocumentFragment();
+            districts.forEach(dist => {
+                const option = document.createElement('option');
+                option.value = dist;
+                option.textContent = dist;
+                fragment.appendChild(option);
+            });
+            
+            requestAnimationFrame(() => {
+                districtSelect.appendChild(fragment);
+            });
+        }
+    } catch (err) {
+        console.error("Error populating districts:", err);
+    }
+}
+
+/**
  * Unified search function that handles Proximity, PIN matching, and District fallbacks
  */
 /**
@@ -304,7 +347,7 @@ function getProp(obj, key) {
 /**
  * Unified search function that handles Proximity, PIN matching, and District fallbacks
  */
-async function performUnifiedSearch({ lat = null, lon = null, pin = null, category = "", source = 'auto', listId = 'centersResultsList', containerId = 'searchResultsContainer' }) {
+async function performUnifiedSearch({ lat = null, lon = null, pin = null, category = "", district = "", source = 'auto', listId = 'centersResultsList', containerId = 'searchResultsContainer' }) {
     if (!supabaseClient) {
         showSimpleToast("Database service not ready.", "error");
         return;
@@ -322,7 +365,9 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
 
     // UI Feedback
     let statusText = "Searching for Sakhi Centers...";
-    if (category) statusText = `Finding <strong>${category}</strong> centers...`;
+    if (category && district) statusText = `Finding <strong>${category}</strong> centers in <strong>${district}</strong>...`;
+    else if (category) statusText = `Finding <strong>${category}</strong> centers...`;
+    else if (district) statusText = `Finding centers in <strong>${district}</strong>...`;
     else if (pin) statusText = `Searching for centers matching PIN <strong>${pin}</strong>...`;
 
     resultsList.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
@@ -463,6 +508,12 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                 cCat.toLowerCase().includes(category.toLowerCase())
             ));
 
+            // B2. District match (explicit filter)
+            const districtMatch = !district || (distName && (
+                distName.toLowerCase() === district.toLowerCase() || 
+                distName.toLowerCase().includes(district.toLowerCase())
+            ));
+
             // C. In-Range Check (Strict 100km)
             const isWithin100km = center.distance !== undefined && center.distance <= 100;
 
@@ -470,16 +521,16 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             const cleanCenterPin = (getProp(center, "Pincode") || "").toString().replace(/\D/g, '');
             const matchesPinSearch = cleanPinSearch && cleanCenterPin && (cleanCenterPin.includes(cleanPinSearch) || cleanPinSearch.includes(cleanCenterPin));
             
-            const matchesDistrict = detectedDistrict && distName && (distName.includes(detectedDistrict.toLowerCase()) || detectedDistrict.toLowerCase().includes(distName));
+            const matchesDetectedDistrict = detectedDistrict && distName && (distName.includes(detectedDistrict.toLowerCase()) || detectedDistrict.toLowerCase().includes(distName));
 
             const centerJson = JSON.stringify(center).replace(/\D/g, '');
             const matchesUniversal = cleanPinSearch && centerJson.includes(cleanPinSearch);
 
             // E. Final Inclusion Logic
-            if (categoryMatch) {
+            if (categoryMatch && districtMatch) {
                 // Now we check distance AND text. 
                 // Since we have District centroids, distance is much more reliable now.
-                if (isWithin100km || matchesPinSearch || matchesDistrict || matchesUniversal || (!pin && !searchCoords.lat)) {
+                if (isWithin100km || matchesPinSearch || matchesDetectedDistrict || matchesUniversal || (!pin && !searchCoords.lat && !district)) {
                     center.matchScore = 0;
                     if (matchesPinSearch) center.matchScore += 1000;
                     if (isWithin100km) center.matchScore += 500;
