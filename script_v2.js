@@ -528,9 +528,15 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
 
             // E. Final Inclusion Logic
             if (categoryMatch && districtMatch) {
-                // Now we check distance AND text. 
-                // Since we have District centroids, distance is much more reliable now.
-                if (isWithin100km || matchesPinSearch || matchesDetectedDistrict || matchesUniversal || (!pin && !searchCoords.lat && !district)) {
+                // We include the center if:
+                // 1. It's within 100km of the search point (Proximity)
+                // 2. It matches the PIN code searched
+                // 3. It matches a district detected from the PIN
+                // 4. It matches a universal text search
+                // 5. OR if the user specifically selected a District/Category filter (since they matched above)
+                // 6. OR if no search criteria were provided at all (Show all)
+                if (isWithin100km || matchesPinSearch || matchesDetectedDistrict || matchesUniversal || 
+                    district !== "" || category !== "" || (!pin && !searchCoords.lat)) {
                     center.matchScore = 0;
                     if (matchesPinSearch) center.matchScore += 1000;
                     if (isWithin100km) center.matchScore += 500;
