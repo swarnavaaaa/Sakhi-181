@@ -1196,7 +1196,7 @@ footer {
     .hero-card { width: 450px; }
     #searchResultsContainer { margin-top: -4rem; }
     
-    .mission-grid { grid-template-columns: 1fr; }
+    .mission-grid { display: block; }
     .feature-grid { grid-template-columns: 0.8fr 1.2fr; }
     
     .services-grid { grid-template-columns: repeat(3, 1fr); }
