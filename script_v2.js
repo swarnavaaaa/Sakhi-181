@@ -540,7 +540,8 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
                     center.matchScore = 0;
                     if (matchesPinSearch) center.matchScore += 1000;
                     if (isWithin100km) center.matchScore += 500;
-                    if (matchesDistrict) center.matchScore += 300;
+                    if (district !== "" && districtMatch) center.matchScore += 400;
+                    if (matchesDetectedDistrict) center.matchScore += 300;
                     results.push(center);
                 }
             }
