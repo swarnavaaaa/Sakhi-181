@@ -589,7 +589,7 @@ function renderCenters(centers, listId = 'centersResultsList') {
                         <div class="center-info-row">
                             <i class="ri-navigation-line"></i>
                             <span><strong class="info-label">Location:</strong> 
-                                <a href="${center["Google link"] || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(getProp(center, 'Name') + ' ' + center['Location'])}`}" 
+                                <a href="${center["Google link"] || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(center['Location'])}`}" 
                                    target="_blank" class="contact-link">${center["Location"]}</a>
                             </span>
                         </div>
