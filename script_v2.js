@@ -585,6 +585,12 @@ function renderCenters(centers, listId = 'centersResultsList') {
                         <i class="ri-map-pin-2-line"></i>
                         <span><strong class="info-label">Address:</strong> ${center["Address"]}</span>
                     </div>
+                    ${center["Location"] ? `
+                        <div class="center-info-row">
+                            <i class="ri-navigation-line"></i>
+                            <span><strong class="info-label">Location:</strong> ${center["Location"]}</span>
+                        </div>
+                    ` : ''}
                     <div class="center-info-row">
                         <i class="ri-hashtag"></i>
                         <span><strong class="info-label">Pincode:</strong> ${center["Pincode"] || 'N/A'} ${center["District"] ? '(' + center["District"] + ')' : ''}</span>
@@ -605,6 +611,12 @@ function renderCenters(centers, listId = 'centersResultsList') {
                         <div class="center-info-row">
                             <i class="ri-mail-line"></i>
                             <span><strong class="info-label">Email:</strong> <a href="mailto:${center["Email"]}" class="contact-link">${center["Email"]}</a></span>
+                        </div>
+                    ` : ''}
+                    ${center["Last verified date"] ? `
+                        <div class="center-info-row" style="opacity: 0.8; font-size: 0.8rem; margin-top: 0.5rem; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem;">
+                            <i class="ri-calendar-check-line" style="color: #059669;"></i>
+                            <span><strong class="info-label">Last Verified:</strong> ${center["Last verified date"]}</span>
                         </div>
                     ` : ''}
                 </div>
