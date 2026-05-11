@@ -229,9 +229,8 @@
                     year: 'numeric', month: 'long', day: 'numeric'
                 });
                 
-                // For images, since they are stored in /public/images/posts,
-                // and frontmatter says /images/posts/..., if we're opening locally, we might need public/
-                // But Vercel rewrite maps /images/ to /public/images/.
+                // For images, since they are stored in /images/posts,
+                // and frontmatter says /images/posts/...
                 // If it fails locally, it's expected unless using dev server, but we'll try to load it.
                 if (post.coverImage) {
                     const cover = document.getElementById('postCover');

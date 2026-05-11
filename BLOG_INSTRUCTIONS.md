@@ -46,7 +46,7 @@ Start writing the content of your blog post here...
 
 ## 3. Uploading Images
 
-1. Go to the `public/images/posts/` folder in your GitHub repository.
+1. Go to the `images/posts/` folder in your GitHub repository.
 2. Click on **Add file** > **Upload files**.
 3. Choose the image file from your computer (e.g., `event-photo.jpg`).
 4. Click **Commit changes...**.

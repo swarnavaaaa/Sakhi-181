@@ -1,10 +1,6 @@
 {
   "rewrites": [
     {
-      "source": "/images/(.*)",
-      "destination": "/public/images/$1"
-    },
-    {
       "source": "/blog",
       "destination": "/blog.html"
     },
