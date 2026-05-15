@@ -21,12 +21,19 @@ date: "2024-05-15"
 excerpt: "A short description of what this post is about."
 coverImage: "/images/posts/your-image.jpg"
 published: true
+gallery:
+  - "/images/posts/event-1.jpg"
+  - "/images/posts/event-2.jpg"
+  - "/images/posts/event-3.jpg"
 ---
 
 # Your Heading Here
 
 Start writing the content of your blog post here...
 ```
+
+> [!TIP]
+> The **gallery** field allows you to add multiple pictures at the end of your blog post automatically. Just list the paths to your uploaded images as shown above.
 
 5. Write your blog post content below the frontmatter using standard Markdown formatting.
 6. Scroll down and click **Commit changes...** to save the file.

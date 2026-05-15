@@ -66,6 +66,68 @@
             .post-content { padding: 1.5rem; font-size: 1rem; }
             .post-title { font-size: 2rem; }
         }
+
+        /* Gallery Styles */
+        .post-gallery {
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        .gallery-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-main);
+            text-align: center;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .gallery-item {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            aspect-ratio: 4/3;
+        }
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Lightbox - Simple implementation */
+        #lightbox {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            cursor: zoom-out;
+        }
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
     </style>
     <link rel="preload" as="style" href="style.css">
     <link rel="stylesheet" href="style.css">
@@ -136,7 +198,18 @@
             </div>
             <img id="postCover" class="post-cover" src="" alt="Cover Image" style="display: none;">
             <div id="postContent" class="post-content"></div>
+            
+            <div id="postGallery" class="post-gallery" style="display: none;">
+                <h2 class="gallery-title">Photos from the Event</h2>
+                <div id="galleryGrid" class="gallery-grid"></div>
+            </div>
         </article>
+
+        <!-- Lightbox -->
+        <div id="lightbox" onclick="this.style.display='none'">
+            <span class="lightbox-close">&times;</span>
+            <img id="lightboxImg" src="" alt="Enlarged Photo">
+        </div>
         
         <div id="errorState" style="display: none; text-align: center; padding: 4rem 0;">
             <h2 style="margin-bottom: 1rem;">Post Not Found</h2>
@@ -245,6 +318,39 @@
                 }
                 
                 document.getElementById('postContent').innerHTML = post.content;
+                
+                // Render gallery if available
+                if (post.gallery && Array.isArray(post.gallery) && post.gallery.length > 0) {
+                    const galleryContainer = document.getElementById('postGallery');
+                    const galleryGrid = document.getElementById('galleryGrid');
+                    galleryGrid.innerHTML = ''; // Clear
+                    
+                    post.gallery.forEach(imgSrc => {
+                        let path = imgSrc;
+                        if (window.location.protocol === 'file:' && path.startsWith('/')) {
+                            path = '.' + path;
+                        }
+                        
+                        const item = document.createElement('div');
+                        item.className = 'gallery-item';
+                        item.onclick = () => {
+                            const lightbox = document.getElementById('lightbox');
+                            const lightboxImg = document.getElementById('lightboxImg');
+                            lightboxImg.src = path;
+                            lightbox.style.display = 'flex';
+                        };
+                        
+                        const img = document.createElement('img');
+                        img.src = path;
+                        img.alt = "Gallery Image";
+                        img.loading = "lazy";
+                        
+                        item.appendChild(img);
+                        galleryGrid.appendChild(item);
+                    });
+                    
+                    galleryContainer.style.display = 'block';
+                }
                 
                 // Swap visibility
                 document.getElementById('loadingState').style.display = 'none';
