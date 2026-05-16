@@ -2,7 +2,8 @@
 title: "Bhumika Support Centers"
 date: "2026-05-16"
 excerpt: "How Bhumika's Support Centers have evolved into Multipurpose Learning Centers, empowering women and children across communities through counseling, skill development, and creative learning."
-coverImage: "/images/posts/bhumika-support-centers.jpg.jpeg"
+coverImage: "/images/posts/bwc-learning-center-8.jpeg"
+
 published: true
 gallery:
   - "/images/posts/bwc-learning-center-1.jpeg"
@@ -12,7 +13,7 @@ gallery:
   - "/images/posts/bwc-learning-center-5.jpeg"
   - "/images/posts/bwc-learning-center-6.jpeg"
   - "/images/posts/bwc-learning-center-7.jpeg"
-  - "/images/posts/bwc-learning-center-8.jpeg"
+  - "/images/posts/bhumika-support-centers.jpg.jpeg"
   - "/images/posts/bwc-learning-center-9.jpeg"
 ---
 
