@@ -1,6 +1,6 @@
 ---
 title: "Bhumika Support Centers"
-date: "May 2026"
+date: "2026-05-16"
 excerpt: "How Bhumika's Support Centers have evolved into Multipurpose Learning Centers, empowering women and children across communities through counseling, skill development, and creative learning."
 coverImage: "/images/posts/bhumika-support-centers.jpg.jpeg"
 published: true
@@ -16,9 +16,10 @@ gallery:
   - "/images/posts/bwc-learning-center-9.jpeg"
 ---
 
-# Bhumika Support Centers
 
 *This post highlights the wonderful work of our partner NGO Bhumika Women's Collective. The content belongs to them and is shared here with their permission, as part of our collaborative efforts.*
+
+# Bhumika Support Centers
 
 For the past two years, Bhumika has been running Support Centers for women and children in the bastis where the organization works. These Support Centers are open and accessible to everyone at any time. Women and adolescents visit these centers to discuss their personal and family-related concerns with counselors, seek guidance, and receive emotional support. Individual counseling as well as family counseling sessions are conducted based on the needs of the individuals. Wherever necessary, support is also facilitated through relevant service organizations and institutions to help address their issues effectively.
 
