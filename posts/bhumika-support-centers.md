@@ -18,7 +18,7 @@ gallery:
 ---
 
 
-*This post highlights the wonderful work of our partner NGO Bhumika Women's Collective. The content belongs to them and is shared here with their permission, as part of our collaborative efforts.*
+*This post highlights the wonderful work of our partner NGO [Bhumika Women's Collective](https://bhumikawomenscollective.org/). The content belongs to them and is shared here with their permission, as part of our collaborative efforts.*
 
 # Bhumika Support Centers
 
