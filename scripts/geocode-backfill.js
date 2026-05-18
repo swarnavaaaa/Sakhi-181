@@ -1,6 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
+const fs = require('fs');
 
-// User's project credentials
 const SUPABASE_URL = 'https://ifasovihhhxznuvdgoxn.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYXNvdmloaGh4em51dmRnb3huIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNDIzMDgsImV4cCI6MjA5MTcxODMwOH0.iu5satWImQmodqy4FTXxWL6RZEUSVs22Y8Hnfh6753E';
 
@@ -24,9 +24,8 @@ async function sleep(ms) {
 }
 
 async function run() {
-  console.log("Fetching centers missing latitude/longitude...");
+  console.log("Fetching centers...");
   
-  // Fetch all centers where latitude is null
   const { data: centers, error } = await supabase
     .from('centers')
     .select('*')
@@ -37,12 +36,9 @@ async function run() {
     return;
   }
 
-  console.log(`Found ${centers.length} centers to process.`);
-
-  let successCount = 0;
+  let sqlFileContent = "-- Auto-generated SQL script to backfill latitude and longitude\n\n";
 
   for (const center of centers) {
-    console.log(`\nProcessing Center ID ${center.id}: ${center.Name}`);
     let lat = null;
     let lon = null;
 
@@ -52,17 +48,13 @@ async function run() {
     if (googleLinkCoords) {
       lat = googleLinkCoords.lat;
       lon = googleLinkCoords.lon;
-      console.log(`- Found coords in Google Link: ${lat}, ${lon}`);
     } else if (locationCoords) {
       lat = locationCoords.lat;
       lon = locationCoords.lon;
-      console.log(`- Found coords in Location Link: ${lat}, ${lon}`);
     } else {
-      // Fallback to Nominatim
       const addressToGeocode = center['Address'] || center['Location'];
       if (addressToGeocode && !addressToGeocode.startsWith('http')) {
         const query = addressToGeocode.includes('Telangana') ? addressToGeocode : `${addressToGeocode}, Telangana, India`;
-        console.log(`- Querying Nominatim for: ${query}`);
         
         try {
           const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`, {
@@ -72,11 +64,9 @@ async function run() {
           if (data && data.length > 0) {
             lat = parseFloat(data[0].lat);
             lon = parseFloat(data[0].lon);
-            console.log(`- Nominatim result: ${lat}, ${lon}`);
           } else {
              if (center['District']) {
                  const districtQuery = `${center['District']}, Telangana, India`;
-                 console.log(`- Full address failed. Querying district: ${districtQuery}`);
                  const fallbackRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(districtQuery)}&limit=1`, {
                     headers: { 'User-Agent': 'Sakhi-181-Backend-Geocoding-Service/1.0' }
                  });
@@ -84,38 +74,24 @@ async function run() {
                  if (fallbackData && fallbackData.length > 0) {
                      lat = parseFloat(fallbackData[0].lat);
                      lon = parseFloat(fallbackData[0].lon);
-                     console.log(`- District result: ${lat}, ${lon}`);
                  }
              }
           }
         } catch (e) {
-          console.error(`- Geocoding error: ${e.message}`);
+          console.error(`- Geocoding error for ${center.id}`);
         }
-        
-        // Sleep to respect Nominatim API rate limits (1 request per second max)
         await sleep(1100);
       }
     }
 
     if (lat !== null && lon !== null) {
-      console.log(`- Updating database for Center ${center.id}...`);
-      const { error: updateError } = await supabase
-        .from('centers')
-        .update({ latitude: lat, longitude: lon })
-        .eq('id', center.id);
-
-      if (updateError) {
-        console.error(`- Error updating Center ${center.id}:`, updateError);
-      } else {
-        console.log(`- Successfully updated!`);
-        successCount++;
-      }
-    } else {
-      console.log(`- Could not determine coordinates.`);
+      sqlFileContent += `UPDATE centers SET latitude = ${lat}, longitude = ${lon} WHERE id = ${center.id};\n`;
+      console.log(`Geocoded center ${center.id}: ${lat}, ${lon}`);
     }
   }
 
-  console.log(`\nBackfill complete. Successfully updated ${successCount} out of ${centers.length} centers.`);
+  fs.writeFileSync('update_centers.sql', sqlFileContent);
+  console.log("Created update_centers.sql");
 }
 
 run();
