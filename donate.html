@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="sakhi-favicon2.png?v=2">
+    <title>Donate | Support Sakhi 181</title>
+    <meta name="description" content="Support Sakhi 181 and help us provide emergency rescue, shelter, legal, and medical aid to women in need. Donate via bank transfer.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Specific Styles for Donate Page */
+        .donate-hero {
+            position: relative;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 8rem 1rem 6rem;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .donate-hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('women_illustration_impact_1775888833931.png') center/cover no-repeat;
+            opacity: 0.15;
+            mix-blend-mode: overlay;
+        }
+
+        .donate-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .donate-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .donate-hero p {
+            font-size: 1.25rem;
+            opacity: 0.95;
+            margin-bottom: 2.5rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+        }
+
+        .btn-cta-large {
+            display: inline-block;
+            background: #ffffff;
+            color: var(--primary-dark);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+        }
+
+        .btn-cta-large:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            background: #fdf2f8;
+        }
+
+        .donate-section {
+            padding: 5rem 1rem;
+            background: #ffffff;
+        }
+
+        .donate-section-alt {
+            padding: 5rem 1rem;
+            background: var(--bg-light);
+        }
+
+        .about-cause-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(194, 24, 91, 0.08);
+            max-width: 900px;
+            margin: -4rem auto 4rem;
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            border: 1px solid rgba(194, 24, 91, 0.05);
+        }
+
+        .about-cause-card h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .about-cause-card p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .transfer-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .transfer-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .transfer-header h2 {
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .transfer-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .bank-card {
+            background: linear-gradient(145deg, #ffffff, #fdf2f8);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(194, 24, 91, 0.15);
+            border: 1px solid rgba(194, 24, 91, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .bank-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .bank-card::after {
+            content: '\eb71'; /* remix icon bank */
+            font-family: 'remixicon';
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            font-size: 12rem;
+            opacity: 0.03;
+            color: var(--primary);
+            pointer-events: none;
+        }
+
+        .bank-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(194, 24, 91, 0.1);
+        }
+
+        .bank-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .copy-btn {
+            background: rgba(194, 24, 91, 0.1);
+            color: var(--primary);
+            border: none;
+            width: 35px; height: 35px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .faq-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-color: rgba(194, 24, 91, 0.2);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        .faq-answer {
+            margin-top: 1rem;
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            display: none;
+            animation: slideDown 0.3s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+
+        .faq-question i {
+            transition: transform 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .thank-you-msg {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .thank-you-msg h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+        
+        .thank-you-msg i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .donate-hero h1 { font-size: 2.5rem; }
+            .bank-detail-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .bank-card { padding: 1.5rem; }
+            .about-cause-card { padding: 2rem 1.5rem; }
+        }
+        
+        /* Toast Notification for copy */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text-main);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Emergency Bar -->
+    <div class="emergency-bar">
+        <div class="container">
+            <div class="emergency-content">
+                <i class="ri-phone-fill"></i>
+                <h4>Immediate Emergency? <span>Call for help</span></h4>
+            </div>
+            <div class="emergency-buttons-desktop">
+                <span style="font-size: 0.75rem; font-weight: 700; color: white; margin-right: 0.5rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;">Verified Govt. Helplines:</span>
+                <a href="tel:181" class="btn-emergency-pill">181</a>
+                <a href="tel:112" class="btn-emergency-pill">112</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="new%20logo.png" alt="Sakhi OSC Logo" width="180">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="resources.html">Resources</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="donate.html" class="active" style="color: var(--primary); font-weight: 700;">Donate</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="translate-control">
+                    <i class="ri-translate-2"></i>
+                    <div id="google_translate_element"></div>
+                </div>
+                <button class="btn-nav" id="quickExit">Quick Exit</button>
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation Menu">
+                    <i class="ri-menu-line"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="donate-hero">
+        <div class="donate-hero-content">
+            <h1>Support Sakhi 181</h1>
+            <p>Every contribution brings hope, safety, and a new beginning to women escaping gender-based violence. Your support helps us provide critical care when it matters most.</p>
+            <a href="#how-to-donate" class="btn-cta-large">
+                Donate Now <i class="ri-arrow-down-line" style="margin-left: 5px;"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- About the Cause -->
+    <section class="container">
+        <div class="about-cause-card">
+            <h2>Making a Difference Together</h2>
+            <p>Sakhi 181 is a dedicated initiative providing integrated support to women affected by violence, directly offering emergency rescue, shelter, medical aid, and legal assistance under one roof. Your donations directly empower these survivors, helping them heal from trauma, rebuild their lives with dignity, and secure a safer future for themselves and their children.</p>
+        </div>
+    </section>
+
+    <!-- How to Donate (Bank Transfer) -->
+    <section id="how-to-donate" class="donate-section-alt">
+        <div class="container transfer-container">
+            <div class="transfer-header">
+                <h2>Bank Transfer</h2>
+                <p>Support our cause securely via direct bank transfer using the details below.</p>
+            </div>
+
+            <div class="bank-card">
+                <div class="bank-detail-row">
+                    <div class="detail-label">Bank Name</div>
+                    <div class="detail-value">HDFC Bank</div>
+                </div>
+                <div class="bank-detail-row">
+                    <div class="detail-label">Account Name</div>
+                    <div class="detail-value">Sakhi181 Foundation</div>
+                </div>
+                <div class="bank-detail-row">
+                    <div class="detail-label">Account Number</div>
+                    <div class="detail-value">
+                        <span id="accNum">50200119116386</span>
+                        <button class="copy-btn" onclick="copyToClipboard('50200119116386', 'Account Number')" aria-label="Copy Account Number"><i class="ri-file-copy-line"></i></button>
+                    </div>
+                </div>
+                <div class="bank-detail-row">
+                    <div class="detail-label">IFSC Code</div>
+                    <div class="detail-value">
+                        <span id="ifscCode">HDFC0011605</span>
+                        <button class="copy-btn" onclick="copyToClipboard('HDFC0011605', 'IFSC Code')" aria-label="Copy IFSC Code"><i class="ri-file-copy-line"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.9rem;">
+                <i class="ri-information-line"></i> Please include your name and contact number in the transfer remarks so we can acknowledge your generous support.<br>
+                <strong>Note:</strong> Able to provide 80G certificate for donors.
+            </p>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="donate-section">
+        <div class="container faq-section">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: var(--text-main);">Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    Is my donation tax-exempt?
+                    <i class="ri-arrow-down-s-line"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes, all donations made to Sakhi 181 Foundation are eligible for tax exemption under section 80G of the Income Tax Act. We will email you the tax receipt within 7-10 working days of your contribution.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How will my donation be used?
+                    <i class="ri-arrow-down-s-line"></i>
+                </div>
+                <div class="faq-answer">
+                    Your contribution directly funds:
+                    <ul style="margin-top: 0.5rem; padding-left: 1.5rem; list-style-type: disc;">
+                        <li>Emergency rescue operations, medical treatments, psycho-social counseling, and legal representation.</li>
+                        <li>Daily needs of women seeking shelter at our centers.</li>
+                        <li>Web development.</li>
+                        <li>Verification processes.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can I donate regularly?
+                    <i class="ri-arrow-down-s-line"></i>
+                </div>
+                <div class="faq-answer">
+                    Absolutely! You can set up a standing instruction with your bank to automatically transfer a specific amount every month to our account. Monthly donations provide us with sustainable support to plan long-term rehabilitation programs.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Thank You Message -->
+    <div class="thank-you-msg">
+        <div class="container">
+            <i class="ri-heart-pulse-fill"></i>
+            <h3>Thank you for your support!</h3>
+            <p style="font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto;">Your generosity creates safe havens and empowers women to break free from violence. Together, we are building a safer community.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo" style="margin-bottom: 1.5rem;">
+                        <img src="new%20logo.png" alt="Sakhi OSC Logo" width="150">
+                    </div>
+                    <p>An initiative dedicated to the protection, support, and empowerment of women through accurate and accessible information and resources. </p>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="resources.html">Resources</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="donate.html">Donate</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="flex-direction: column; gap: 1rem;">
+                <p style="font-size: 0.75rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.4;">Sakhi181 Foundation is an independent, non-governmental organization and is not affiliated with any government body. We work to create awareness and improve access to existing support systems for women, including government helplines and services.</p>
+                <p>© 2026 Sakhi One Stop Centre. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/sakhi181_foundation?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="social-icon" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Element -->
+    <div id="toast"><i class="ri-check-line"></i> <span id="toast-msg">Copied!</span></div>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            if(window.google && window.google.translate) {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    includedLanguages: 'hi,mr,ta,te,gu,kn,ml,pa,bn,as',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                }, 'google_translate_element');
+            }
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+
+    <script>
+        // FAQ Toggle
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                
+                // Close all others
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                
+                // Toggle current
+                if(!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Copy to clipboard functionality
+        function copyToClipboard(text, type) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                const msg = document.getElementById('toast-msg');
+                msg.textContent = type + ' copied to clipboard!';
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+        
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if(menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        }
+    </script>
+    <script src="script_v2.js" defer></script>
+</body>
+</html>
