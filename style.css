@@ -25,12 +25,16 @@
     box-sizing: border-box;
 }
 
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
 body {
     font-family: 'Outfit', sans-serif;
     color: var(--text-main);
     background-color: var(--bg-light);
     line-height: 1.6;
-    overflow-x: hidden;
 }
 
 a {
@@ -194,17 +198,31 @@ section {
 }
 
 @media (max-width: 480px) {
-    .logo img { height: 50px; }
-    .btn-nav { padding: 0.35rem 0.75rem; font-size: 0.7rem; }
+    nav { padding: 0.5rem 0; }
+    nav .container { padding: 0 0.75rem; }
+    .logo img { max-width: 120px; height: auto; }
+    .nav-actions { gap: 0.35rem; }
+    #quickExit {
+        font-size: 0 !important;
+        padding: 0.35rem 0.6rem !important;
+    }
+    #quickExit::after {
+        content: "Exit" !important;
+        font-size: 0.7rem !important;
+    }
     .translate-control { padding: 0.25rem 0.5rem; }
-    .goog-te-menu-value span { font-size: 0.7rem !important; }
+    .goog-te-menu-value span { display: none !important; }
+    .goog-te-menu-value::after { margin-left: 0 !important; }
     .menu-toggle { width: 34px; height: 34px; font-size: 1.2rem; }
 }
 
 @media (max-width: 360px) {
-    .logo img { height: 42px; }
-    .btn-nav { padding: 0.3rem 0.5rem; font-size: 0.65rem; }
-    .nav-actions { gap: 0.3rem; }
+    nav .container { padding: 0 0.5rem; }
+    .logo img { max-width: 100px; height: auto; }
+    .nav-actions { gap: 0.25rem; }
+    #quickExit {
+        padding: 0.3rem 0.5rem !important;
+    }
 }
 
 .translate-control i {
@@ -2389,7 +2407,13 @@ footer {
 
 /* Map Card */
 .map-card {
-    padding: 1.5rem;
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    .map-card {
+        padding: 1.5rem;
+    }
 }
 
 .map-container-wrapper {
