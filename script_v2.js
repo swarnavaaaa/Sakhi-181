@@ -249,6 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }
+        }, 300);
     }
 
     // Center Card Click Delegation
