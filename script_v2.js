@@ -249,8 +249,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }
-        }, 300);
     }
+
+    // Center Card Click Delegation
+    document.addEventListener('click', (e) => {
+        const centerItem = e.target.closest('.center-item');
+        if (centerItem) {
+            // If the user clicked on a link (like tel:, mailto:, map link, etc.) or a button, do not intercept
+            if (e.target.closest('a') || e.target.closest('button')) {
+                return;
+            }
+            const centerId = centerItem.getAttribute('data-id');
+            if (centerId) {
+                window.location.href = `details.html?id=${centerId}`;
+            }
+        }
+    });
 });
 
 /**
@@ -628,7 +642,7 @@ function renderCenters(centers, listId = 'centersResultsList') {
         const badgeLabel = hasDistance ? "Closest to your location" : "Best match for your search";
         
         const centerHtml = `
-            <div class="center-item ${isTopMatch ? 'closest-highlight' : ''}">
+            <div class="center-item ${isTopMatch ? 'closest-highlight' : ''}" data-id="${getProp(center, "id") || center.id || ''}">
                 ${isTopMatch ? `<div class="closest-badge"><i class="ri-flashlight-fill"></i> ${badgeLabel}</div>` : ''}
                 <div class="center-header">
                     <h4>${getProp(center, "Name")}</h4>
@@ -682,11 +696,16 @@ function renderCenters(centers, listId = 'centersResultsList') {
                     ` : ''}
                 </div>
 
-                ${center["Google link"] ? `
-                    <a href="${center["Google link"]}" target="_blank" class="btn-maps">
-                        <i class="ri-map-pin-line"></i> View on Google Maps
-                    </a>
-                ` : ''}
+                <div class="center-item-footer">
+                    ${center["Google link"] ? `
+                        <a href="${center["Google link"]}" target="_blank" class="btn-maps" style="margin-top: 0;">
+                            <i class="ri-map-pin-line"></i> View on Google Maps
+                        </a>
+                    ` : '<div></div>'}
+                    <span class="btn-view-details">
+                        View Details & Photos <i class="ri-arrow-right-line"></i>
+                    </span>
+                </div>
             </div>
         `;
         const tempDiv = document.createElement('div');
