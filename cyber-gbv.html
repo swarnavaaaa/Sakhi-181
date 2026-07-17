@@ -44,10 +44,16 @@
 
         .cyber-header {
             background: linear-gradient(135deg, #fff0f6 0%, #fff 100%);
-            padding: 3.5rem 0 2.5rem 0;
+            padding: 2rem 0;
             border-bottom: 1px solid var(--glass-border);
             text-align: center;
             position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .cyber-header {
+                padding: 3.5rem 0 2.5rem 0;
+            }
         }
 
         .cyber-header::before {
@@ -64,7 +70,7 @@
         }
 
         .cyber-title {
-            font-size: 2.6rem;
+            font-size: 1.8rem;
             font-weight: 800;
             color: var(--primary-dark);
             line-height: 1.2;
@@ -72,28 +78,48 @@
             text-transform: capitalize;
         }
 
+        @media (min-width: 768px) {
+            .cyber-title {
+                font-size: 2.6rem;
+            }
+        }
+
         .cyber-subtitle {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
             max-width: 680px;
             margin: 0 auto 1.5rem auto;
             line-height: 1.6;
         }
 
+        @media (min-width: 768px) {
+            .cyber-subtitle {
+                font-size: 1.1rem;
+            }
+        }
+
         /* Reassurance Alert Box */
         .reassurance-box {
             background: linear-gradient(95deg, #fff5f5 0%, #ffe3e3 100%);
-            border-left: 5px solid #ff6b6b;
-            padding: 1.25rem 1.75rem;
+            border-left: 4px solid #ff6b6b;
+            padding: 1rem;
             border-radius: 12px;
             max-width: 750px;
             margin: 0 auto 2rem auto;
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.08);
             display: flex;
             align-items: flex-start;
-            gap: 1rem;
+            gap: 0.75rem;
             text-align: left;
             animation: fadeIn 0.8s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .reassurance-box {
+                border-left-width: 5px;
+                padding: 1.25rem 1.75rem;
+                gap: 1rem;
+            }
         }
 
         .reassurance-box i {
@@ -121,17 +147,26 @@
         }
 
         .tab-btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             background: white;
             border: 1px solid rgba(194, 24, 91, 0.15);
             border-radius: 30px;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--text-muted);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        @media (min-width: 768px) {
+            .tab-btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.95rem;
+                gap: 0.5rem;
+            }
         }
 
         .tab-btn:hover {
@@ -176,9 +211,15 @@
             background: white;
             border-radius: 20px;
             border: 1px solid var(--glass-border);
-            padding: 2rem;
+            padding: 1.25rem;
             box-shadow: var(--shadow);
             margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard-card {
+                padding: 2rem;
+            }
         }
 
         .dashboard-title {
@@ -260,11 +301,25 @@
 
         /* Sidebar Progress and Legend Card */
         .cyber-sidebar {
-            position: sticky;
-            top: 100px;
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+            position: static;
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .cyber-sidebar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                align-items: start;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .cyber-sidebar {
+                position: sticky;
+                top: 100px;
+            }
         }
 
         .progress-card {
@@ -455,10 +510,16 @@
             background: white;
             border-radius: 16px;
             border: 1px solid var(--glass-border);
-            padding: 1.25rem 1.5rem;
+            padding: 1rem;
             box-shadow: var(--shadow-sm);
             transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
             position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .sop-step-card {
+                padding: 1.25rem 1.5rem;
+            }
         }
 
         .sop-step-card:hover {
@@ -644,7 +705,13 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
-            padding-left: 2.3rem;
+            padding-left: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .sop-step-details {
+                padding-left: 2.3rem;
+            }
         }
 
         .sop-step-card.expanded .sop-step-details {
@@ -1500,57 +1567,59 @@
                     </div>
                     <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem;">You do not need to memorize these laws to register a complaint. However, referencing them can ensure police officers file the correct FIR sections.</p>
                     
-                    <table class="legal-table">
-                        <thead>
-                            <tr>
-                                <th>Statute & Section</th>
-                                <th>Description / Offence</th>
-                                <th>Punishment</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Section 66E, IT Act, 2000</strong></td>
-                                <td>Capturing, publishing, or transmitting images of a person's private parts without their consent (Violation of Privacy).</td>
-                                <td>Up to 3 years imprisonment or fine up to ₹2 Lakhs, or both.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Section 67 / 67A, IT Act, 2000</strong></td>
-                                <td>Publishing or transmitting sexually explicit or obscene content electronically.</td>
-                                <td>Up to 5 years imprisonment and fine up to ₹10 Lakhs (first conviction).</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Section 72, IT Act, 2000</strong></td>
-                                <td>Breach of confidentiality or privacy by someone who had authorized access to the content (e.g. an ex-partner).</td>
-                                <td>Up to 2 years imprisonment or fine up to ₹1 Lakh, or both.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Section 77, BNS, 2023</strong><br><small>(Replaced IPC Sec 354C)</small></td>
-                                <td>Voyeurism: Capturing or circulating images of a woman in a private act without consent.</td>
-                                <td>1 to 3 years imprisonment (first conviction); 3 to 7 years (subsequent).</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Section 78, BNS, 2023</strong><br><small>(Replaced IPC Sec 354D)</small></td>
-                                <td>Stalking: Monitoring a woman's internet, email, or electronic communication without consent.</td>
-                                <td>Up to 3 years imprisonment (first conviction); up to 5 years (subsequent).</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Section 79, BNS, 2023</strong><br><small>(Replaced IPC Sec 509)</small></td>
-                                <td>Word, gesture, or act intended to insult the modesty of a woman (e.g. sharing private images online).</td>
-                                <td>Up to 3 years imprisonment with fine.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Section 356, BNS, 2023</strong><br><small>(Replaced IPC Sec 499)</small></td>
-                                <td>Criminal Defamation.</td>
-                                <td>Simple imprisonment up to 2 years, or fine, or both.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Rule 3(2)(b), IT Rules 2021</strong></td>
-                                <td>Intermediaries must remove or disable access to non-consensual intimate or morphed media within <strong>24 hours</strong> of complaint.</td>
-                                <td>Loss of safe-harbour immunity for platforms.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; margin: 1rem 0;">
+                        <table class="legal-table" style="margin: 0; border: none;">
+                            <thead>
+                                <tr>
+                                    <th>Statute & Section</th>
+                                    <th>Description / Offence</th>
+                                    <th>Punishment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Section 66E, IT Act, 2000</strong></td>
+                                    <td>Capturing, publishing, or transmitting images of a person's private parts without their consent (Violation of Privacy).</td>
+                                    <td>Up to 3 years imprisonment or fine up to ₹2 Lakhs, or both.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Section 67 / 67A, IT Act, 2000</strong></td>
+                                    <td>Publishing or transmitting sexually explicit or obscene content electronically.</td>
+                                    <td>Up to 5 years imprisonment and fine up to ₹10 Lakhs (first conviction).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Section 72, IT Act, 2000</strong></td>
+                                    <td>Breach of confidentiality or privacy by someone who had authorized access to the content (e.g. an ex-partner).</td>
+                                    <td>Up to 2 years imprisonment or fine up to ₹1 Lakh, or both.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Section 77, BNS, 2023</strong><br><small>(Replaced IPC Sec 354C)</small></td>
+                                    <td>Voyeurism: Capturing or circulating images of a woman in a private act without consent.</td>
+                                    <td>1 to 3 years imprisonment (first conviction); 3 to 7 years (subsequent).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Section 78, BNS, 2023</strong><br><small>(Replaced IPC Sec 354D)</small></td>
+                                    <td>Stalking: Monitoring a woman's internet, email, or electronic communication without consent.</td>
+                                    <td>Up to 3 years imprisonment (first conviction); up to 5 years (subsequent).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Section 79, BNS, 2023</strong><br><small>(Replaced IPC Sec 509)</small></td>
+                                    <td>Word, gesture, or act intended to insult the modesty of a woman (e.g. sharing private images online).</td>
+                                    <td>Up to 3 years imprisonment with fine.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Section 356, BNS, 2023</strong><br><small>(Replaced IPC Sec 499)</small></td>
+                                    <td>Criminal Defamation.</td>
+                                    <td>Simple imprisonment up to 2 years, or fine, or both.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Rule 3(2)(b), IT Rules 2021</strong></td>
+                                    <td>Intermediaries must remove or disable access to non-consensual intimate or morphed media within <strong>24 hours</strong> of complaint.</td>
+                                    <td>Loss of safe-harbour immunity for platforms.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--bg-light); padding-top: 1rem;">
                         <strong>Sources:</strong> Ministry of Electronics and Information Technology SOP on NCII (Oct 2025); Information Technology Act, 2000; Bharatiya Nyaya Sanhita (BNS), 2023; IT Intermediary Guidelines, 2021.
