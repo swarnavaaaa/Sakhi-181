@@ -709,7 +709,7 @@
         }
 
         .sop-step-card.expanded .sop-step-details {
-            max-height: 1000px;
+            max-height: 2500px;
             transition: max-height 0.6s cubic-bezier(1, 0, 1, 0);
             margin-top: 1rem;
             border-top: 1px dashed var(--glass-border);
@@ -1203,6 +1203,14 @@
                                             <li><strong>IT Rules, 2021 (Rule 3(2)(b)):</strong> Platforms in India are legally obligated to remove or block access to reported intimate/nude/morphed media within <strong>24 hours</strong> of a complaint.</li>
                                             <li>If a platform fails to act within 24 hours, you can file a government appeal at the Grievance Appellate Committee (GAC) portal at <a href="https://gac.gov.in" target="_blank">gac.gov.in</a>.</li>
                                         </ul>
+                                        <div class="sop-step-flow-diagram" style="margin-top: 1.25rem; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 12px; padding: 1rem; text-align: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);">
+                                            <a href="social_media_report_flow.png" target="_blank" style="display: block; text-decoration: none;">
+                                                <img src="social_media_report_flow.png" alt="Social Media Reporting Process Flow" style="width: 100%; max-width: 720px; height: auto; border-radius: 8px; margin: 0 auto; display: block;" />
+                                            </a>
+                                            <p style="margin-top: 0.6rem; margin-bottom: 0; font-size: 0.82rem; color: var(--text-light); font-style: italic; display: flex; align-items: center; justify-content: center; gap: 0.35rem;">
+                                                <i class="ri-zoom-in-line" style="color: var(--primary);"></i> Click image to view high-resolution version
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1267,6 +1275,14 @@
                                             <li>Call the Cyber Crime Helpline on <strong>1930</strong> for immediate assistance or assistance freezing financial extortion funds.</li>
                                             <li>If dealing with fake phone numbers, SMS, or WhatsApp sextortion schemes, also file on the DOT's Chakshu portal at <a href="https://sancharsaathi.gov.in" target="_blank">sancharsaathi.gov.in</a> to block the IMEI/device.</li>
                                         </ul>
+                                        <div class="sop-step-flow-diagram" style="margin-top: 1.25rem; margin-bottom: 1rem; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 12px; padding: 1rem; text-align: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);">
+                                            <a href="cybercrime_portal_report_flow.png" target="_blank" style="display: block; text-decoration: none;">
+                                                <img src="cybercrime_portal_report_flow.png" alt="National Cyber Crime Portal Reporting Flow" style="width: 100%; max-width: 720px; height: auto; border-radius: 8px; margin: 0 auto; display: block;" />
+                                            </a>
+                                            <p style="margin-top: 0.6rem; margin-bottom: 0; font-size: 0.82rem; color: var(--text-light); font-style: italic; display: flex; align-items: center; justify-content: center; gap: 0.35rem;">
+                                                <i class="ri-zoom-in-line" style="color: var(--primary);"></i> Click image to view high-resolution version
+                                            </p>
+                                        </div>
                                         <a href="https://cybercrime.gov.in" target="_blank" class="action-link-btn">Cyber Crime Portal <i class="ri-external-link-line"></i></a>
                                     </div>
                                 </div>
@@ -1328,8 +1344,13 @@
                                             <li>OSC staff will assist in filing the Cyber Crime portal complaint, drafting the police complaint, and tracking progress.</li>
                                             <li>They provide free legal assistance, free mental health counseling, medical care, and temporary emergency shelter.</li>
                                             <li>They coordinate directly with District Legal Services Authorities (DLSA) to assign a free lawyer if needed.</li>
-                                            <li>You can locate nearby centers on our <a href="resources.html">Resources</a> directory page.</li>
+                                            <li>You can locate nearby centers on our <a href="resources.html">Resources</a> directory page or using our homepage locator.</li>
                                         </ul>
+                                        <div style="margin-top: 1.25rem;">
+                                            <a href="index.html#find-center" class="btn-hero" style="display: inline-flex; width: auto; padding: 0.75rem 1.5rem; font-size: 0.9rem; text-decoration: none;">
+                                                <i class="ri-map-pin-2-fill"></i> Find One Stop Centre on Homepage
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1360,6 +1381,11 @@
                                             <li>A lawyer can also draft and file appeals directly to the Grievance Appellate Committee (GAC).</li>
                                             <li>This step is optional if the platforms have already complied with automated reports.</li>
                                         </ul>
+                                        <div style="margin-top: 1.25rem;">
+                                            <a href="resources.html?category=Legal Aid" class="btn-hero" style="display: inline-flex; width: auto; padding: 0.75rem 1.5rem; font-size: 0.9rem; text-decoration: none;">
+                                                <i class="ri-scales-3-line"></i> View Legal Aid Resources
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1421,6 +1447,11 @@
                                             <li>Every district has a District Legal Services Authority (DLSA) office, which will assign a free advocate to represent you in court or draft legal motions.</li>
                                             <li>Staff at your local One Stop Centre (Step 7) can initiate this DLSA connection directly.</li>
                                         </ul>
+                                        <div style="margin-top: 1.25rem;">
+                                            <a href="resources.html?category=Legal Aid" class="btn-hero" style="display: inline-flex; width: auto; padding: 0.75rem 1.5rem; font-size: 0.9rem; text-decoration: none;">
+                                                <i class="ri-scales-3-line"></i> Find Legal Aid Resources
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1791,8 +1822,7 @@
             // Adjust max-height dynamically for smooth animation
             const details = card.querySelector('.sop-step-details');
             if (card.classList.contains('expanded')) {
-                // Approximate a large enough value or set standard.
-                details.style.maxHeight = '1000px';
+                details.style.maxHeight = (details.scrollHeight + 200) + 'px';
             } else {
                 details.style.maxHeight = '0';
             }
