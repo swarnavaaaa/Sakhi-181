@@ -1058,19 +1058,25 @@
         /* Accordion Panels */
         .accordion-item {
             background: white;
-            border-radius: 16px;
-            border: 1px solid var(--glass-border);
-            margin-bottom: 1rem;
+            border-radius: 18px;
+            border: 1.5px solid rgba(194, 24, 91, 0.12);
+            margin-bottom: 1.5rem;
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .accordion-item:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 8px 25px rgba(194, 24, 91, 0.08);
         }
 
         .accordion-header {
-            padding: 1.25rem 1.5rem;
-            font-weight: 700;
+            padding: 1.35rem 1.75rem;
+            font-weight: 800;
             font-size: 1.1rem;
             color: var(--text-main);
-            background: #fffbfe;
+            background: #ffffff;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1866,55 +1872,78 @@
 
             <!-- Tab 2: Special Situations Accordions -->
             <div id="tab-special" class="tab-content">
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this.parentNode)">
-                        <span>Minor Involved / Under 18 (POCSO Matter)</span>
-                        <i class="ri-arrow-down-s-line"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="accordion-body">
-                            <p>If the victim is under 18, or was under 18 when the images were captured, the matter falls under the **Protection of Children from Sexual Offences (POCSO) Act**, which carries much stricter penalties and protective mechanisms.</p>
-                            <ul>
-                                <li><strong>Immediate Action:</strong> Contact Childline on <strong>1098</strong> immediately. It is a 24/7 dedicated helpline for child protection.</li>
-                                <li><strong>POCSO e-Box:</strong> The National Commission for Protection of Child Rights (NCPCR) operates an online POCSO e-Box at <a href="https://ncpcr.gov.in" target="_blank">ncpcr.gov.in</a> for direct reporting.</li>
-                                <li><strong>Special Protections:</strong> Under POCSO, child safety is paramount. Law enforcement and judicial officers must protect the minor's identity from public disclosure. Reporting by observers is legally mandatory.</li>
-                            </ul>
-                        </div>
+                <div class="reassurance-box" style="margin-bottom: 2rem; background: #fff5f5; border-color: #ff6b6b;">
+                    <i class="ri-alarm-warning-fill" style="color: #e11d48;"></i>
+                    <div>
+                        <p><strong>High-Risk & Special Cases:</strong> Immediate guidance and legal mandates for minor-involved cases (POCSO), deepfakes/AI morphed media, and sextortion blackmail threats.</p>
                     </div>
                 </div>
 
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this.parentNode)">
-                        <span>AI-Generated / Deepfake / Morphed Images</span>
-                        <i class="ri-arrow-down-s-line"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="accordion-body">
-                            <p>Synthetic, morphed, or AI-generated nude media (deepfakes) are treated with the exact same severity under Indian law as real images.</p>
-                            <ul>
-                                <li>The platform's legal obligation to remove content within <strong>24 hours</strong> under Rule 3(2)(b) of the IT Rules explicitly covers morphed or synthetically altered images.</li>
-                                <li>StopNCII.org accepts hashes generated from deepfake images to block future uploads.</li>
-                                <li>Google's Search Removal Tool explicitly includes categories for removal of synthetic or AI-generated non-consensual sexual content.</li>
-                                <li>Section 66D, 67, and 67A of the IT Act (impersonation, transmitting explicit material) are fully applicable to morphed content prosecutions.</li>
-                            </ul>
+                <div class="accordion-container" style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem;">
+                    <!-- Section 1 -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this.parentNode)">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <i class="ri-user-heart-fill" style="color: #e11d48; font-size: 1.3rem;"></i>
+                                <span style="font-weight: 800; font-size: 1.05rem;">Minor Involved / Under 18 (POCSO Matter)</span>
+                            </div>
+                            <i class="ri-arrow-down-s-line"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p>If the victim is under 18, or was under 18 when the images were captured, the matter falls under the <strong>Protection of Children from Sexual Offences (POCSO) Act, 2012</strong>, which carries much stricter penalties and protective mechanisms.</p>
+                                <ul>
+                                    <li><strong>Immediate Action:</strong> Contact Childline on <strong>1098</strong> immediately. It is a 24/7 dedicated helpline for child protection.</li>
+                                    <li><strong>TakeItDown.ncmec.org:</strong> Use NCMEC's Take It Down tool specifically designed to generate digital hashes for explicit media of minors to prevent online distribution.</li>
+                                    <li><strong>POCSO e-Box:</strong> The National Commission for Protection of Child Rights (NCPCR) operates an online POCSO e-Box at <a href="https://ncpcr.gov.in" target="_blank" rel="noopener">ncpcr.gov.in</a> for direct reporting.</li>
+                                    <li><strong>Special Protections:</strong> Under POCSO, child safety is paramount. Law enforcement and judicial officers must protect the minor's identity from public disclosure. Reporting by observers is legally mandatory.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this.parentNode)">
-                        <span>Sextortion / Blackmail Threats</span>
-                        <i class="ri-arrow-down-s-line"></i>
+                    <!-- Section 2 -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this.parentNode)">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <i class="ri-cpu-line" style="color: #4f46e5; font-size: 1.3rem;"></i>
+                                <span style="font-weight: 800; font-size: 1.05rem;">AI-Generated / Deepfake / Morphed Images</span>
+                            </div>
+                            <i class="ri-arrow-down-s-line"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p>Synthetic, morphed, or AI-generated nude media (deepfakes) are treated with the exact same criminal severity under Indian law as real images.</p>
+                                <ul>
+                                    <li>The platform's legal obligation to remove content within <strong>24 hours</strong> under Rule 3(2)(b) of the IT Rules explicitly covers morphed or synthetically altered images.</li>
+                                    <li>StopNCII.org accepts hashes generated from deepfake images to block future uploads across major tech networks.</li>
+                                    <li>Google's Search Removal Tool explicitly includes categories for removal of synthetic or AI-generated non-consensual sexual content.</li>
+                                    <li>Section 66D, 67, and 67A of the IT Act (impersonation, transmitting explicit material) and Section 77 BNS (Voyeurism) are fully applicable to morphed content prosecutions.</li>
+                                    <li>Grievance Appellate Committee (GAC) at <a href="https://www.gac.gov.in" target="_blank" rel="noopener">gac.gov.in</a> allows direct government appeals if platforms fail to take down AI deepfakes.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="accordion-content">
-                        <div class="accordion-body">
-                            <p>If someone is threatening to leak your images unless you pay money or provide more images, you are dealing with criminal extortion.</p>
-                            <ul>
-                                <li><strong>Do not pay:</strong> Paying does not solve the problem. Offenders almost always demand more money once they know you will pay.</li>
-                                <li><strong>Collect details:</strong> Take screenshots of all threat messages, the UPI IDs used for money requests, the phone numbers, and username profiles.</li>
-                                <li><strong>Report immediately:</strong> Call <strong>1930</strong> (Cyber Crime Helpline) to trace the phone numbers and block extortion bank accounts. Report the UPI IDs to your banking provider.</li>
-                                <li>File the complaint on <a href="https://cybercrime.gov.in" target="_blank">cybercrime.gov.in</a> as extortion. Police cells have dedicated units to trace these organized extortion rings.</li>
-                            </ul>
+
+                    <!-- Section 3 -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this.parentNode)">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <i class="ri-alarm-warning-fill" style="color: #d97706; font-size: 1.3rem;"></i>
+                                <span style="font-weight: 800; font-size: 1.05rem;">Sextortion / Blackmail Threats</span>
+                            </div>
+                            <i class="ri-arrow-down-s-line"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p>If someone is threatening to leak your images unless you pay money or provide more images, you are dealing with criminal extortion under Section 308 BNS 2023.</p>
+                                <ul>
+                                    <li><strong>Do not pay:</strong> Paying does not solve the problem. Offenders almost always demand more money once they know you will pay.</li>
+                                    <li><strong>Collect details:</strong> Take full uncropped screenshots of all threat messages, the UPI IDs used for money requests, phone numbers, and username profiles.</li>
+                                    <li><strong>Report immediately:</strong> Call <strong>1930</strong> (Cyber Crime Helpline) to trace phone numbers and freeze extortion bank/UPI accounts in real time.</li>
+                                    <li>File the complaint on <a href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in</a> as extortion. Police cells have dedicated units to trace these organized extortion rings.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
