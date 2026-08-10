@@ -577,19 +577,61 @@
             z-index: 1;
         }
 
-        /* Sidebar Legend Card & Progress Section */
-        .legend-section {
+        /* Single Line Legend Strip above Progress Bar */
+        .legend-horizontal-strip {
+            background: #ffffff;
+            border: 1px solid rgba(194, 24, 91, 0.15);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            position: static;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem 2rem;
+            width: 100%;
         }
 
-        @media (min-width: 1024px) {
-            .legend-section {
-                position: sticky;
-                top: 100px;
+        .legend-header-inline {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-right: 1rem;
+            border-right: 2px solid #e2e8f0;
+        }
+
+        @media (max-width: 850px) {
+            .legend-header-inline {
+                border-right: none;
+                width: 100%;
+                margin-bottom: 0.2rem;
+                padding-right: 0;
             }
+        }
+
+        .legend-items-inline {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem 2rem;
+            flex: 1;
+        }
+
+        .legend-inline-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-inline-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
         }
 
         .horizontal-progress-card {
@@ -1355,41 +1397,40 @@
                         </div>
                     </div>
 
-                    <div class="cyber-grid">
-                        <!-- Progress Bar Section -->
-                        <div class="progress-bar-section">
-                            <div class="horizontal-progress-card">
-                                <div class="progress-info-row">
-                                    <span class="progress-text-lbl"><i class="ri-checkbox-multiple-line"></i> Steps Completed: <strong id="completedCount">0</strong> of 12</span>
-                                    <span class="progress-percentage-lbl" id="progressPercentage">0%</span>
-                                </div>
-                                <div class="progress-bar-track">
-                                    <div class="progress-bar-fill" id="progressBar"></div>
-                                </div>
+                    <!-- Single Line Guide Legend (Positioned ABOVE Progress Bar) -->
+                    <div class="legend-horizontal-strip">
+                        <div class="legend-header-inline">
+                            <i class="ri-booklet-line" style="color: var(--primary);"></i>
+                            <span>Guide Legend:</span>
+                        </div>
+                        <div class="legend-items-inline">
+                            <div class="legend-inline-item">
+                                <div class="badge-actor badge-you" style="margin-bottom:0;">YOU</div>
+                                <span class="legend-inline-desc">Do this yourself</span>
+                            </div>
+                            <div class="legend-inline-item">
+                                <div class="badge-actor badge-support" style="margin-bottom:0;">FREE SUPPORT</div>
+                                <span class="legend-inline-desc">Free Govt/NGO service</span>
+                            </div>
+                            <div class="legend-inline-item">
+                                <div class="badge-actor badge-police" style="margin-bottom:0;">POLICE</div>
+                                <span class="legend-inline-desc">Law enforcement</span>
+                            </div>
+                            <div class="legend-inline-item">
+                                <div class="badge-actor badge-lawyer" style="margin-bottom:0;">LAWYER</div>
+                                <span class="legend-inline-desc">Legal professional</span>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Clear terms legend -->
-                        <div class="legend-section">
-                            <div class="legend-card">
-                                <h3 class="legend-title">
-                                    <i class="ri-booklet-line"></i>
-                                    <span>Guide Legend</span>
-                                    <span class="legend-desc">Do this yourself, no help needed</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span class="legend-badge support">FREE SUPPORT</span>
-                                    <span class="legend-desc">Free government or NGO support service</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span class="legend-badge police">POLICE</span>
-                                    <span class="legend-desc">Law enforcement action</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span class="legend-badge lawyer">LAWYER</span>
-                                    <span class="legend-desc">Needs a legal professional</span>
-                                </div>
-                            </div>
+                    <!-- Full-Width Progress Bar (Positioned BELOW Legend) -->
+                    <div class="horizontal-progress-card" style="margin-bottom: 2rem;">
+                        <div class="progress-info-row">
+                            <span class="progress-text-lbl"><i class="ri-checkbox-multiple-line"></i> Steps Completed: <strong id="completedCount">0</strong> of 7</span>
+                            <span class="progress-percentage-lbl" id="progressPercentage">0%</span>
+                        </div>
+                        <div class="progress-bar-track">
+                            <div class="progress-bar-fill" id="progressBar"></div>
                         </div>
                     </div>
 
