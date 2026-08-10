@@ -98,6 +98,206 @@
             }
         }
 
+        /* Cyber GBV Page Switcher Cards */
+        .cyber-pages-nav {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .cyber-pages-nav {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .cyber-page-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .cyber-page-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(194, 24, 91, 0.12);
+        }
+
+        .cyber-page-card.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #ffffff 0%, #fff0f6 100%);
+            box-shadow: 0 15px 35px rgba(194, 24, 91, 0.15);
+        }
+
+        .cyber-page-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            width: fit-content;
+        }
+
+        .cyber-page-card.active .cyber-page-badge {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .cyber-page-card h3 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .cyber-page-card.active h3 {
+            color: var(--primary-dark);
+        }
+
+        .cyber-page-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .cyber-page-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .cyber-page-card:hover .cyber-page-action i {
+            transform: translateX(4px);
+        }
+
+        /* Page Content Containers */
+        .cyber-page-view {
+            display: none;
+        }
+
+        .cyber-page-view.active {
+            display: block;
+            animation: fadeInPage 0.4s ease-out;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Additional Resources Cards Styling */
+        .resource-section-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .resource-section-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .resource-box-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(194, 24, 91, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .resource-box-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(194, 24, 91, 0.1);
+        }
+
+        .resource-box-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: #fff0f6;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .resource-box-card h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.6rem;
+        }
+
+        .resource-box-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .resource-link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.4rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            background: var(--primary-dark);
+            color: #ffffff !important;
+            transition: var(--transition);
+            width: fit-content;
+        }
+
+        .resource-link-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(194, 24, 91, 0.25);
+        }
+
+        .resource-link-btn.secondary {
+            background: #f1f5f9;
+            color: var(--text-main) !important;
+        }
+
+        .resource-link-btn.secondary:hover {
+            background: #e2e8f0;
+            color: var(--primary) !important;
+        }
+
         /* Reassurance Alert Box */
         .reassurance-box {
             background: linear-gradient(95deg, #fff5f5 0%, #ffe3e3 100%);
@@ -985,91 +1185,12 @@
         <!-- Reassurance & Intro Header -->
         <section class="cyber-header">
             <div class="container">
-                <h1 class="cyber-title">Intimate Image Leaks (NCII) Response</h1>
-                <p class="cyber-subtitle">An action-oriented Standard Operating Procedure (SOP) under Indian law to secure content removal, access safety resources, and initiate legal proceedings.</p>
-                
-                <div class="reassurance-box">
-                    <i class="ri-shield-heart-fill"></i>
-                    <div>
-                        <p>This is not your fault. Indian law treats non-consensual intimate image sharing as a serious crime. There are real, working tools operated by the government and platforms to get content taken down and hold the perpetrator accountable.</p>
-                    </div>
-                </div>
+                <h1 class="cyber-title">Cyber Gender-Based Violence (GBV) Support Hub</h1>
+                <p class="cyber-subtitle">Actionable Standard Operating Procedures (SOP), reporting portals, and comprehensive resources to combat digital abuse, non-consensual image leaks (NCII), and cyber harassment under Indian law.</p>
             </div>
         </section>
 
         <!-- Main Workspace Area -->
-        <div class="container" style="margin-top: 3rem;">
-            <!-- Tab Navigation Header -->
-            <div class="tab-nav">
-                <button class="tab-btn active" data-tab="tab-sop"><i class="ri-checkbox-multiple-line"></i> Action Steps Checklist</button>
-                <button class="tab-btn" data-tab="tab-special"><i class="ri-alert-line"></i> Special Situations</button>
-                <button class="tab-btn" data-tab="tab-rights"><i class="ri-scales-3-line"></i> Know Your Rights (Laws)</button>
-            </div>
-
-            <!-- Tab Contents -->
-
-            <!-- Tab 1: SOP steps -->
-            <div id="tab-sop" class="tab-content active">
-                <!-- Start Here Quick Dashboard -->
-                <div class="dashboard-card">
-                    <div class="dashboard-title">
-                        <i class="ri-notification-badge-fill"></i>
-                        <span>Start Here: 3 Things To Do Right Now</span>
-                    </div>
-                    <div class="start-steps-grid">
-                        <div class="start-step-item">
-                            <span class="start-step-num">1</span>
-                            <div class="start-step-header">
-                                <i class="ri-shield-cross-fill"></i>
-                                <span>Assess Physical Safety</span>
-                            </div>
-                            <div class="start-step-desc">
-                                If you fear immediate physical threat from an ex-partner, stalker, or offender, call the police helpline on <strong>112</strong> immediately.
-                            </div>
-                        </div>
-                        <div class="start-step-item">
-                            <span class="start-step-num">2</span>
-                            <div class="start-step-header">
-                                <i class="ri-close-circle-fill"></i>
-                                <span>Do Not Pay or Respond</span>
-                            </div>
-                            <div class="start-step-desc">
-                                Do not engage with blackmail demands. Paying does not make it stop, it almost always triggers further extortion demands.
-                            </div>
-                        </div>
-                        <div class="start-step-item">
-                            <span class="start-step-num">3</span>
-                            <div class="start-step-header">
-                                <i class="ri-team-fill"></i>
-                                <span>Break the Isolation</span>
-                            </div>
-                            <div class="start-step-desc">
-                                Tell one trusted person. Isolation plays into the hands of the abuser. You do not need to make all decisions alone today.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="cyber-grid">
-                    <!-- Progress Bar Section -->
-                    <div class="progress-bar-section">
-                        <div class="horizontal-progress-card">
-                            <div class="progress-info-row">
-                                <span class="progress-text-lbl"><i class="ri-checkbox-multiple-line"></i> Steps Completed: <strong id="completedCount">0</strong> of 12</span>
-                                <span class="progress-percentage-lbl" id="progressPercentage">0%</span>
-                            </div>
-                            <div class="progress-bar-track">
-                                <div class="progress-bar-fill" id="progressBar"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Clear terms legend -->
-                    <div class="legend-section">
-                        <div class="legend-card">
-                            <h3 class="legend-title">
-                                <i class="ri-booklet-line"></i>
-                                <span>Guide Legend</span>
                             </h3>
                             <div class="legend-list">
                                 <div class="legend-item">
@@ -1647,9 +1768,97 @@
                 </div>
             </div>
 
+            <!-- Page 2 View: Additional Cyber Resources Page -->
+            <div id="page-resources" class="cyber-page-view">
+                <div class="reassurance-box" style="margin-bottom: 2.5rem; background: #eef2ff; border-color: #c7d2fe;">
+                    <i class="ri-customer-service-2-fill" style="color: #4f46e5;"></i>
+                    <div>
+                        <p><strong>Comprehensive Support Directory:</strong> Access verified emergency helplines, official government portals, content take-down tools, digital privacy checklists, and pro-bono legal/mental health assistance.</p>
+                    </div>
+                </div>
 
+                <div class="resource-section-grid">
+                    <!-- Resource Card 1 -->
+                    <div class="resource-box-card">
+                        <div>
+                            <div class="resource-box-icon"><i class="ri-phone-find-fill"></i></div>
+                            <h3>National Cyber Crime Helpline (1930)</h3>
+                            <p>Official 24/7 National Cyber Crime Helpline managed by the Ministry of Home Affairs (MHA) for reporting financial cyber fraud and cyber offences against women and children.</p>
+                        </div>
+                        <a href="tel:1930" class="resource-link-btn"><i class="ri-phone-fill"></i> Call 1930 Helpline</a>
+                    </div>
 
-        </div>
+                    <!-- Resource Card 2 -->
+                    <div class="resource-box-card">
+                        <div>
+                            <div class="resource-box-icon"><i class="ri-global-fill"></i></div>
+                            <h3>National Cyber Crime Reporting Portal</h3>
+                            <p>Official Indian government portal (<code>cybercrime.gov.in</code>) to file complaints confidentially or anonymously regarding online harassment, cyber stalking, and objectionable media.</p>
+                        </div>
+                        <a href="https://cybercrime.gov.in" target="_blank" rel="noopener" class="resource-link-btn"><i class="ri-external-link-line"></i> Visit CyberCrime.gov.in</a>
+                    </div>
+
+                    <!-- Resource Card 3 -->
+                    <div class="resource-box-card">
+                        <div>
+                            <div class="resource-box-icon"><i class="ri-shield-flash-fill"></i></div>
+                            <h3>StopNCII.org Hash Prevention Platform</h3>
+                            <p>Global platform operated by SWGfL that generates unique digital hashes directly on your device (without uploading original photos) to prevent NCII distribution across major tech networks.</p>
+                        </div>
+                        <a href="https://stopncii.org" target="_blank" rel="noopener" class="resource-link-btn"><i class="ri-external-link-line"></i> Access StopNCII.org</a>
+                    </div>
+
+                    <!-- Resource Card 4 -->
+                    <div class="resource-box-card">
+                        <div>
+                            <div class="resource-box-icon"><i class="ri-user-protect-fill"></i></div>
+                            <h3>Take It Down (for Minors Under 18)</h3>
+                            <p>Operated by NCMEC, this tool helps individuals under 18 (or trusted guardians) remove explicit images or videos taken when they were under 18 from online platforms.</p>
+                        </div>
+                        <a href="https://takeitdown.ncmec.org" target="_blank" rel="noopener" class="resource-link-btn"><i class="ri-external-link-line"></i> Visit Take It Down</a>
+                    </div>
+
+                    <!-- Resource Card 5 -->
+                    <div class="resource-box-card">
+                        <div>
+                            <div class="resource-box-icon"><i class="ri-google-fill"></i></div>
+                            <h3>Google Search Content Removal</h3>
+                            <p>Official Google webform to request the removal of non-consensual explicit personal imagery or personal information (doxxing) from Google Search results.</p>
+                        </div>
+                        <a href="https://support.google.com/websearch/answer/6302812" target="_blank" rel="noopener" class="resource-link-btn secondary"><i class="ri-external-link-line"></i> Google Removal Form</a>
+                    </div>
+
+                    <!-- Resource Card 6 -->
+                    <div class="resource-box-card">
+                        <div>
+                            <div class="resource-box-icon"><i class="ri-women-fill"></i></div>
+                            <h3>NCW 24/7 Women Helpline (7827170170)</h3>
+                            <p>National Commission for Women 24/7 dedicated helpline providing support, legal advice, and assistance for women facing domestic violence, cyber stalking, or harassment.</p>
+                        </div>
+                        <a href="tel:7827170170" class="resource-link-btn"><i class="ri-phone-fill"></i> Call 7827170170</a>
+                    </div>
+
+                    <!-- Resource Card 7 -->
+                    <div class="resource-box-card">
+                        <div>
+                            <div class="resource-box-icon"><i class="ri-file-text-fill"></i></div>
+                            <h3>Digital Evidence Preservation Toolkit</h3>
+                            <p>Guide on taking valid digital evidence: full uncropped screenshots displaying URL bar, system clock, message headers, profile handles, and exporting chat logs before blocking perpetrators.</p>
+                        </div>
+                        <div class="resource-link-btn secondary" style="cursor: default;"><i class="ri-check-line"></i> Document Evidence Early</div>
+                    </div>
+
+                    <!-- Resource Card 8 -->
+                    <div class="resource-box-card">
+                        <div>
+                            <div class="resource-box-icon"><i class="ri-heart-pulse-fill"></i></div>
+                            <h3>Tele-MANAS Mental Health Counseling</h3>
+                            <p>Government of India 24/7 free, confidential tele-mental health helpline (14416) providing trauma counselling, stress management, and psychological support.</p>
+                        </div>
+                        <a href="tel:14416" class="resource-link-btn"><i class="ri-phone-fill"></i> Call 14416 Tele-MANAS</a>
+                    </div>
+                </div>
+            </div>
     </main>
 
     <!-- Footer -->
@@ -1710,7 +1919,47 @@
 
     <!-- Custom Page Script for Cyber GBV Interactive Elements -->
     <script>
+        function switchCyberPage(pageId) {
+            // Hide all page views
+            const pageViews = document.querySelectorAll('.cyber-page-view');
+            pageViews.forEach(view => view.classList.remove('active'));
+
+            // Deactivate all module cards
+            const pageCards = document.querySelectorAll('.cyber-page-card');
+            pageCards.forEach(card => card.classList.remove('active'));
+
+            // Activate target page view
+            const targetView = document.getElementById(pageId);
+            if (targetView) {
+                targetView.classList.add('active');
+            }
+
+            // Activate corresponding card
+            const targetCard = document.querySelector(`.cyber-page-card[data-page="${pageId}"]`);
+            if (targetCard) {
+                targetCard.classList.add('active');
+            }
+
+            // Update URL hash
+            if (pageId === 'page-resources') {
+                window.location.hash = 'resources';
+            } else {
+                window.location.hash = 'ncii';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            // Check hash or URL param on load
+            const hash = window.location.hash.toLowerCase();
+            const urlParams = new URLSearchParams(window.location.search);
+            const viewParam = urlParams.get('view');
+
+            if (hash === '#resources' || hash === '#additional-resources' || viewParam === 'resources') {
+                switchCyberPage('page-resources');
+            } else if (hash === '#ncii' || viewParam === 'ncii') {
+                switchCyberPage('page-ncii');
+            }
+
             // Tab switching logic
             const tabButtons = document.querySelectorAll('.tab-btn');
             const tabContents = document.querySelectorAll('.tab-content');
