@@ -2492,38 +2492,47 @@ footer {
     margin-bottom: 2rem;
 }
 
-/* Footer Standalone Donate Link (Browse-all-resources style) */
+/* Footer Standalone Donate Button (Browse-all-resources style) */
 .btn-donate-footer {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    color: var(--text-main) !important;
+    justify-content: center;
+    gap: 0.6rem;
+    background: var(--primary-dark);
+    color: #ffffff !important;
+    padding: 0.85rem 1.8rem;
+    border-radius: 14px;
     font-weight: 700;
-    font-size: 1.15rem;
+    font-size: 1rem;
     margin-top: 1.5rem;
     text-decoration: none;
-    transition: var(--transition);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 4px 12px rgba(162, 8, 102, 0.2);
+    border: none;
 }
 
 .btn-donate-footer:hover {
-    color: var(--primary) !important;
-    transform: translateX(3px);
+    background: var(--primary);
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(194, 24, 91, 0.35);
 }
 
 /* Micro-animation for arrow icon */
 .btn-donate-footer i {
     transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     display: inline-block;
 }
 
 .btn-donate-footer:hover i {
-    transform: translate(2px, -2px);
+    transform: translate(3px, -3px);
 }
 
 @media (max-width: 1024px) {
     .btn-donate-footer {
-        margin-top: 1rem;
+        width: 100%;
+        margin-top: 1.2rem;
     }
 }
 
