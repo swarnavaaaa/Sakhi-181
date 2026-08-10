@@ -2492,6 +2492,11 @@ footer {
     margin-bottom: 2rem;
 }
 
+.footer-links-col {
+    display: flex;
+    flex-direction: column;
+}
+
 /* Footer Standalone Donate Button (Browse-all-resources style) */
 .btn-donate-footer {
     display: inline-flex;
@@ -2530,9 +2535,19 @@ footer {
 }
 
 @media (max-width: 1024px) {
+    .footer-links-col h4 {
+        order: 1;
+    }
+
     .btn-donate-footer {
+        order: 2;
         width: 100%;
-        margin-top: 1.2rem;
+        margin-top: 0.8rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .footer-links-col ul {
+        order: 3;
     }
 }
 
