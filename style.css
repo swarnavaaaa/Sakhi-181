@@ -1237,7 +1237,7 @@ footer {
     .impact-grid { grid-template-columns: 1fr 1fr; gap: 6rem; }
     
     .footer-grid {
-        grid-template-columns: 2fr 1fr 1fr;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
     }
     
     .footer-bottom {
@@ -2490,5 +2490,40 @@ footer {
 .details-error-state p {
     color: var(--text-muted);
     margin-bottom: 2rem;
+}
+
+/* Footer Donate Button */
+.btn-donate-footer {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--primary);
+    color: #fff !important;
+    padding: 0.8rem 1.8rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    border: none;
+    box-shadow: 0 4px 10px rgba(194, 24, 91, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.5rem;
+    text-decoration: none;
+}
+
+.btn-donate-footer:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(194, 24, 91, 0.3);
+    color: #fff !important;
+}
+
+@media (max-width: 1024px) {
+    .btn-donate-footer {
+        width: 100%;
+        margin-top: 0;
+    }
 }
 
