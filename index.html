@@ -133,11 +133,14 @@
                             <i class="ri-focus-3-line"></i> Use Current Location
                         </button>
                     </div>
+                    <div style="text-align: center; margin: 1rem 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 1rem;">
+                        <span style="flex: 1; height: 1px; background: #e2e8f0;"></span>
+                        or
+                        <span style="flex: 1; height: 1px; background: #e2e8f0;"></span>
+                    </div>
                     <div class="form-group">
-                        <label for="categorySelect">Center Category</label>
-                        <select id="categorySelect">
-                            <option value="">All Categories</option>
-                        </select>
+                        <label for="pinInput">Pin Code</label>
+                        <input type="text" id="pinInput" placeholder="Enter 6-digit PIN" maxlength="6" aria-label="Enter 6-digit PIN code">
                     </div>
                     <div class="form-group">
                         <label for="districtSelect">District</label>
@@ -146,8 +149,10 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="pinInput">Pin Code</label>
-                        <input type="text" id="pinInput" placeholder="Enter 6-digit PIN" maxlength="6" aria-label="Enter 6-digit PIN code">
+                        <label for="categorySelect">Center Category</label>
+                        <select id="categorySelect">
+                            <option value="">All Categories</option>
+                        </select>
                     </div>
                     <button type="submit" class="btn-hero">
                         <i class="ri-search-line"></i> Locate Sakhi Center
