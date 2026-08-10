@@ -1237,7 +1237,7 @@ footer {
     .impact-grid { grid-template-columns: 1fr 1fr; gap: 6rem; }
     
     .footer-grid {
-        grid-template-columns: 2fr 1fr 1.2fr 1fr;
+        grid-template-columns: 2fr 1fr 1fr;
     }
     
     .footer-bottom {
@@ -2492,35 +2492,28 @@ footer {
     margin-bottom: 2rem;
 }
 
-/* Footer Standalone Donate Button (Browse-all-resources style) */
+/* Footer Standalone Donate Link (Browse-all-resources style) */
 .btn-donate-footer {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    background: #d45e99; /* Bright pink color matching the user screenshot */
-    color: white !important;
-    padding: 0.9rem 2.2rem;
-    border-radius: 16px; /* Moderately rounded corners matching the screenshot */
+    gap: 0.4rem;
+    color: var(--text-main) !important;
     font-weight: 700;
-    font-size: 1.05rem;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    border: none;
+    font-size: 1.15rem;
+    margin-top: 1.5rem;
     text-decoration: none;
-    box-shadow: 0 4px 10px rgba(212, 94, 153, 0.15);
+    transition: var(--transition);
 }
 
 .btn-donate-footer:hover {
-    background: #c74b88; /* Slightly darker pink on hover */
-    color: white !important;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(212, 94, 153, 0.3);
+    color: var(--primary) !important;
+    transform: translateX(3px);
 }
 
 /* Micro-animation for arrow icon */
 .btn-donate-footer i {
     transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     display: inline-block;
 }
 
@@ -2528,19 +2521,9 @@ footer {
     transform: translate(2px, -2px);
 }
 
-.footer-donate-col {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 @media (max-width: 1024px) {
     .btn-donate-footer {
-        width: 100%;
-    }
-    .footer-donate-col {
-        justify-content: flex-start;
-        padding: 1rem 0 2rem 0;
+        margin-top: 1rem;
     }
 }
 
