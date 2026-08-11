@@ -912,34 +912,50 @@
             letter-spacing: 0.5px;
         }
 
-        .sop-step-badge {
-            padding: 0.15rem 0.5rem;
+        .sop-step-badge,
+        .badge-actor,
+        .legend-badge {
+            padding: 0.2rem 0.6rem;
             border-radius: 10px;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             font-weight: 800;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
             border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            line-height: 1.2;
         }
 
-        .sop-step-badge.you {
+        .sop-step-badge.you,
+        .badge-actor.badge-you,
+        .legend-badge.you {
             background: var(--badge-you-bg);
             color: var(--badge-you-text);
             border-color: var(--badge-you-border);
         }
 
-        .sop-step-badge.support {
+        .sop-step-badge.support,
+        .badge-actor.badge-support,
+        .legend-badge.support {
             background: var(--badge-support-bg);
             color: var(--badge-support-text);
             border-color: var(--badge-support-border);
         }
 
-        .sop-step-badge.police {
+        .sop-step-badge.police,
+        .badge-actor.badge-police,
+        .legend-badge.police {
             background: var(--badge-police-bg);
             color: var(--badge-police-text);
             border-color: var(--badge-police-border);
         }
 
-        .sop-step-badge.lawyer {
+        .sop-step-badge.lawyer,
+        .badge-actor.badge-lawyer,
+        .legend-badge.lawyer {
             background: var(--badge-lawyer-bg);
             color: var(--badge-lawyer-text);
             border-color: var(--badge-lawyer-border);
@@ -1411,19 +1427,19 @@
                         </div>
                         <div class="legend-items-inline">
                             <div class="legend-inline-item">
-                                <div class="badge-actor badge-you" style="margin-bottom:0;">YOU</div>
+                                <span class="sop-step-badge you">YOU</span>
                                 <span class="legend-inline-desc">Do this yourself</span>
                             </div>
                             <div class="legend-inline-item">
-                                <div class="badge-actor badge-support" style="margin-bottom:0;">FREE SUPPORT</div>
+                                <span class="sop-step-badge support">FREE SUPPORT</span>
                                 <span class="legend-inline-desc">Free Govt/NGO service</span>
                             </div>
                             <div class="legend-inline-item">
-                                <div class="badge-actor badge-police" style="margin-bottom:0;">POLICE</div>
+                                <span class="sop-step-badge police">POLICE</span>
                                 <span class="legend-inline-desc">Law enforcement</span>
                             </div>
                             <div class="legend-inline-item">
-                                <div class="badge-actor badge-lawyer" style="margin-bottom:0;">LAWYER</div>
+                                <span class="sop-step-badge lawyer">LAWYER</span>
                                 <span class="legend-inline-desc">Legal professional</span>
                             </div>
                         </div>
