@@ -392,7 +392,8 @@
 
             // Render Services Tags
             if (servicesStr) {
-                const servicesList = servicesStr.split(/[,\n;]+/).map(s => s.trim()).filter(s => s);
+                const servicesList = servicesStr.split(/[\n;]+/).map(s => s.trim()).filter(s => s);
+                // const servicesList = servicesStr.split(/[,\n;]+/).map(s => s.trim()).filter(s => s);
                 const servicesContainer = document.getElementById('servicesContainer');
                 if (servicesContainer) {
                     servicesList.forEach(srv => {
