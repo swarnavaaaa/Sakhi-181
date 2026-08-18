@@ -2554,4 +2554,14 @@ footer {
         order: 3;
     }
 }
+/* SV CHANGES */
+figcaption {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  padding: 4px 0;
+}
 
+figcaption a {
+  color: inherit;
+}
