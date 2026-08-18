@@ -154,122 +154,10 @@
 
     <!-- Details Page Logic -->
     <script>
+    (function() {
         // Supabase Credentials
         const SUPABASE_URL = 'https://ifasovihhhxznuvdgoxn.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYXNvdmloaGh4em51dmRnb3huIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNDIzMDgsImV4cCI6MjA5MTcxODMwOH0.iu5satWImQmodqy4FTXxWL6RZEUSVs22Y8Hnfh6753E';
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
-            const container = document.getElementById('detailsContainer');
-
-            if (!id) {
-                showError("Invalid Request", "No center ID was specified in the URL. Please go back to the homepage and select a center.");
-                return;
-            }
-
-            // Wait for Supabase to initialize from CDN
-            let client = null;
-            if (typeof supabase !== 'undefined') {
-                client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            } else {
-                // Retry loop for CDN load delay
-                for (let i = 0; i < 15; i++) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    if (typeof supabase !== 'undefined') {
-                        client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                        break;
-                    }
-                }
-            }
-
-            if (!client) {
-                showError("Database Error", "Unable to initialize database connection. Please check your network connection and reload the page.");
-                return;
-            }
-
-            try {
-                // Fetch center details by ID
-                const { data: center, error } = await client
-                    .from('centers')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
-
-                if (error || !center) {
-                    console.error("Supabase fetch error:", error);
-                    showError("Center Not Found", `We couldn't retrieve details for center ID "${id}". It may have been removed or updated.`);
-                    return;
-                }
-
-                renderCenterDetails(center);
-            } catch (err) {
-                console.error("Unexpected execution error:", err);
-                showError("Unexpected Error", "An error occurred while rendering the page. Please try again.");
-            }
-        });
-
-        function getProp(obj, key) {
-            if (!obj) return undefined;
-            if (obj[key] !== undefined) return obj[key];
-            const lowerKey = key.toLowerCase();
-            for (let k in obj) {
-                if (k.toLowerCase() === lowerKey) return obj[k];
-    <script>
-        // Supabase Credentials
-        const SUPABASE_URL = 'https://ifasovihhhxznuvdgoxn.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYXNvdmloaGh4em51dmRnb3huIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNDIzMDgsImV4cCI6MjA5MTcxODMwOH0.iu5satWImQmodqy4FTXxWL6RZEUSVs22Y8Hnfh6753E';
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
-            const container = document.getElementById('detailsContainer');
-
-            if (!id) {
-                showError("Invalid Request", "No center ID was specified in the URL. Please go back to the homepage and select a center.");
-                return;
-            }
-
-            // Wait for Supabase to initialize from CDN
-            let client = null;
-            if (typeof supabase !== 'undefined') {
-                client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            } else {
-                // Retry loop for CDN load delay
-                for (let i = 0; i < 15; i++) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    if (typeof supabase !== 'undefined') {
-                        client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                        break;
-                    }
-                }
-            }
-
-            if (!client) {
-                showError("Database Error", "Unable to initialize database connection. Please check your network connection and reload the page.");
-                return;
-            }
-
-            try {
-                // Fetch center details by ID
-                const { data: center, error } = await client
-                    .from('centers')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
-
-                if (error || !center) {
-                    console.error("Supabase fetch error:", error);
-                    showError("Center Not Found", `We couldn't retrieve details for center ID "${id}". It may have been removed or updated.`);
-                    return;
-                }
-
-                renderCenterDetails(center);
-            } catch (err) {
-                console.error("Unexpected execution error:", err);
-                showError("Unexpected Error", "An error occurred while rendering the page. Please try again.");
-            }
-        });
 
         function getProp(obj, key) {
             if (!obj) return undefined;
@@ -281,36 +169,179 @@
             return undefined;
         }
 
-        function getCenterPhotos(rawStr) {
-            if (typeof extractImageUrls === 'function') {
-                const res = extractImageUrls(rawStr);
-                if (res && res.length > 0) return res;
+        function formatImageUrl(url) {
+            if (!url) return null;
+            let cleanUrl = String(url).trim().replace(/^["']|["']$/g, '');
+            if (!cleanUrl) return null;
+
+            // Google Drive file link: drive.google.com/file/d/FILE_ID/view...
+            const gDriveFileMatch = cleanUrl.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (gDriveFileMatch && gDriveFileMatch[1]) {
+                return `https://lh3.googleusercontent.com/d/${gDriveFileMatch[1]}`;
             }
+
+            // Google Drive open/uc link: drive.google.com/open?id=FILE_ID or drive.google.com/uc?id=FILE_ID
+            const gDriveIdMatch = cleanUrl.match(/drive\.google\.com\/(?:open|uc)\?(?:.*&)?id=([a-zA-Z0-9_-]+)/);
+            if (gDriveIdMatch && gDriveIdMatch[1]) {
+                return `https://lh3.googleusercontent.com/d/${gDriveIdMatch[1]}`;
+            }
+
+            // Dropbox links: replace dl=0 with raw=1
+            if (cleanUrl.includes('dropbox.com')) {
+                return cleanUrl.replace(/\?dl=0$/, '?raw=1').replace(/\?dl=1$/, '?raw=1');
+            }
+
+            // Add protocol if missing
+            if (cleanUrl.startsWith('www.')) {
+                cleanUrl = 'https://' + cleanUrl;
+            }
+
+            return cleanUrl;
+        }
+
+        function extractImageUrls(rawStr) {
+            if (!rawStr) return [];
+            const items = String(rawStr).split(/[,\n;]+/).map(s => s.trim()).filter(s => s.length > 0);
+            const validUrls = [];
+            const seen = new Set();
+
+            items.forEach(item => {
+                if (item.includes('http') && item.includes(' ')) {
+                    const spaceParts = item.split(/\s+/).filter(p => p.startsWith('http') || p.startsWith('www.'));
+                    spaceParts.forEach(part => {
+                        const formatted = formatImageUrl(part);
+                        if (formatted && !seen.has(formatted)) {
+                            seen.add(formatted);
+                            validUrls.push({ original: part, formatted: formatted });
+                        }
+                    });
+                } else {
+                    const formatted = formatImageUrl(item);
+                    if (formatted && !seen.has(formatted)) {
+                        seen.add(formatted);
+                        validUrls.push({ original: item, formatted: formatted });
+                    }
+                }
+            });
+
+            return validUrls;
+        }
+
+        function getCenterPhotos(rawStr) {
+            const res = extractImageUrls(rawStr);
+            if (res && res.length > 0) return res;
             if (!rawStr) return [];
             const items = String(rawStr).split(/[,\n;]+/).map(s => s.trim()).filter(s => s.length > 0);
             return items.map(url => ({
                 original: url,
-                formatted: typeof formatImageUrl === 'function' ? formatImageUrl(url) : url
+                formatted: formatImageUrl(url) || url
             })).filter(item => item.formatted);
         }
 
-
         function showError(title, message) {
             const container = document.getElementById('detailsContainer');
-            container.innerHTML = `
-                <div class="details-error-state">
-                    <i class="ri-error-warning-line"></i>
-                    <h2>${title}</h2>
-                    <p>${message}</p>
-                    <a href="index.html" class="btn-back" style="margin-bottom: 0;">
-                        <i class="ri-home-line"></i> Go to Homepage
-                    </a>
-                </div>
-            `;
+            if (container) {
+                container.innerHTML = `
+                    <div class="details-error-state">
+                        <i class="ri-error-warning-line"></i>
+                        <h2>${title}</h2>
+                        <p>${message}</p>
+                        <a href="index.html" class="btn-back" style="margin-bottom: 0;">
+                            <i class="ri-home-line"></i> Go to Homepage
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        async function fetchCenterFromSupabase(id) {
+            // 1. Try via direct Supabase REST API (fastest & most reliable without CDN delays)
+            try {
+                let restUrl = `${SUPABASE_URL}/rest/v1/centers?select=*`;
+                if (/^\d+$/.test(id)) {
+                    restUrl += `&id=eq.${encodeURIComponent(id)}`;
+                } else {
+                    restUrl += `&or=(Name.ilike.*${encodeURIComponent(id)}*,District.ilike.*${encodeURIComponent(id)}*)`;
+                }
+                restUrl += `&limit=1`;
+
+                const res = await fetch(restUrl, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+
+                if (res.ok) {
+                    const list = await res.json();
+                    if (Array.isArray(list) && list.length > 0) {
+                        return list[0];
+                    }
+                }
+            } catch (restErr) {
+                console.warn("Direct REST fetch attempt failed, trying Supabase JS Client:", restErr);
+            }
+
+            // 2. Try via Supabase JS SDK client if available
+            try {
+                if (typeof supabase !== 'undefined' && supabase.createClient) {
+                    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    let query = client.from('centers').select('*');
+                    if (/^\d+$/.test(id)) {
+                        query = query.eq('id', parseInt(id, 10));
+                    } else {
+                        query = query.or(`Name.ilike.%${id}%,District.ilike.%${id}%`);
+                    }
+                    const { data, error } = await query.limit(1);
+                    if (!error && data && data.length > 0) {
+                        return data[0];
+                    }
+                }
+            } catch (sdkErr) {
+                console.error("Supabase SDK query failed:", sdkErr);
+            }
+
+            return null;
+        }
+
+        async function initDetailsPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id') || urlParams.get('centerId') || urlParams.get('name');
+
+            if (!id) {
+                showError("No Center Selected", "No center identifier was found in the URL. Please return to the homepage to search and select a center.");
+                return;
+            }
+
+            // Safety timeout: if fetching takes longer than 8 seconds, show informative error
+            const timeoutTimer = setTimeout(() => {
+                const container = document.getElementById('detailsContainer');
+                if (container && container.querySelector('.details-loading-state')) {
+                    showError("Connection Timeout", "Taking longer than usual to retrieve center data. Please check your internet connection and try reloading.");
+                }
+            }, 8000);
+
+            try {
+                const center = await fetchCenterFromSupabase(id);
+                clearTimeout(timeoutTimer);
+
+                if (!center) {
+                    showError("Center Not Found", `We couldn't retrieve details for center "${id}". It may have been updated or removed.`);
+                    return;
+                }
+
+                renderCenterDetails(center);
+            } catch (err) {
+                clearTimeout(timeoutTimer);
+                console.error("Error rendering center details:", err);
+                showError("Unexpected Error", "An error occurred while loading center details. Please reload the page.");
+            }
         }
 
         function renderCenterDetails(center) {
             const container = document.getElementById('detailsContainer');
+            if (!container) return;
+
             const name = getProp(center, "Name") || "Support Center";
             const category = getProp(center, "Category");
             const type = getProp(center, "NGO/GOVT/Pvt");
@@ -365,7 +396,8 @@
 
             // Update page metadata
             document.title = `${name} | Sakhi 181 Telangana`;
-            document.getElementById('breadcrumbActive').textContent = name;
+            const breadcrumbEl = document.getElementById('breadcrumbActive');
+            if (breadcrumbEl) breadcrumbEl.textContent = name;
 
             // Render Layout HTML
             container.innerHTML = `
@@ -476,7 +508,6 @@
             // Render Services Tags
             if (servicesStr) {
                 const servicesList = servicesStr.split(/[,\n;]+/).map(s => s.trim()).filter(s => s);
-                // const servicesList = servicesStr.split(/[,\n;]+/).map(s => s.trim()).filter(s => s);
                 const servicesContainer = document.getElementById('servicesContainer');
                 if (servicesContainer) {
                     servicesList.forEach(srv => {
@@ -518,7 +549,7 @@
             thumbs.forEach((t, i) => i === index ? t.classList.add('active') : t.classList.remove('active'));
         };
 
-        function handleImageError(img, rawUrl = '') {
+        window.handleImageError = function(img, rawUrl = '') {
             const wrapper = img.parentElement;
             if (wrapper) {
                 wrapper.innerHTML = `
@@ -529,5 +560,14 @@
                     </div>
                 `;
             }
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initDetailsPage);
+        } else {
+            initDetailsPage();
         }
+    })();
     </script>
+</body>
+</html>
