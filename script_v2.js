@@ -533,8 +533,13 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             const isWithin100km = center.distance !== undefined && center.distance <= 100;
 
             // D. Matches (PIN, District, Universal)
-            const cleanCenterPin = (getProp(center, "Pincode") || "").toString().replace(/\D/g, '');
-            const matchesPinSearch = cleanPinSearch && cleanCenterPin && (cleanCenterPin.includes(cleanPinSearch) || cleanPinSearch.includes(cleanCenterPin));
+            let cleanCenterPin = (getProp(center, "Pincode") || "").toString().replace(/\D/g, '');
+            if (!cleanCenterPin && center["Address"]) {
+                const extracted = extractPinFromAddress(center["Address"]);
+                if (extracted) cleanCenterPin = extracted.replace(/\D/g, '');
+            }
+            const matchesPinSearch = cleanPinSearch && cleanCenterPin && (cleanCenterPin === cleanPinSearch || cleanCenterPin.includes(cleanPinSearch) || cleanPinSearch.includes(cleanCenterPin));
+            center.matchesPinSearch = !!matchesPinSearch;
             
             const matchesDetectedDistrict = detectedDistrict && distName && (distName.includes(detectedDistrict.toLowerCase()) || detectedDistrict.toLowerCase().includes(distName));
 
@@ -571,18 +576,24 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             return !duplicate;
         });
 
-        // 5. Final Sort (Distance first, then Score, then Name)
+        // 5. Final Sort (Exact PIN match first if PIN search, then Score, then Distance, then Name)
         finalResults.sort((a, b) => {
-            const distA = a.distance !== undefined ? a.distance : 1000000;
-            const distB = b.distance !== undefined ? b.distance : 1000000;
-            
-            // Primary Sort: Physical Distance (Closer is better)
+            if (cleanPinSearch) {
+                const pinMatchA = a.matchesPinSearch ? 1 : 0;
+                const pinMatchB = b.matchesPinSearch ? 1 : 0;
+                if (pinMatchA !== pinMatchB) {
+                    return pinMatchB - pinMatchA; // 1 (matching PIN) before 0 (different PIN)
+                }
+            }
+
+            if (b.matchScore !== a.matchScore) {
+                return b.matchScore - a.matchScore;
+            }
+
+            const distA = a.distance !== undefined && !isNaN(a.distance) ? a.distance : 1000000;
+            const distB = b.distance !== undefined && !isNaN(b.distance) ? b.distance : 1000000;
             if (distA !== distB) return distA - distB;
-            
-            // Secondary Sort: Relevance Score (PIN match, District match, etc.)
-            if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
-            
-            // Tertiary Sort: Alphabetical Name
+
             const nameA = getProp(a, "Name") || "";
             const nameB = getProp(b, "Name") || "";
             return nameA.localeCompare(nameB);
@@ -590,7 +601,7 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
 
         // 6. UI Render
         if (finalResults.length > 0) {
-            renderCenters(finalResults, listId);
+            renderCenters(finalResults, listId, cleanPinSearch);
             const label = category || (pin ? `near ${pin}` : "your area");
             showLocationToast({ city: label }, finalResults.length);
         } else {
@@ -631,16 +642,85 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-function renderCenters(centers, listId = 'centersResultsList') {
+function formatImageUrl(url) {
+    if (!url) return null;
+    let cleanUrl = String(url).trim().replace(/^["']|["']$/g, '');
+    if (!cleanUrl) return null;
+
+    // Google Drive file link: drive.google.com/file/d/FILE_ID/view...
+    const gDriveFileMatch = cleanUrl.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (gDriveFileMatch && gDriveFileMatch[1]) {
+        return `https://lh3.googleusercontent.com/d/${gDriveFileMatch[1]}`;
+    }
+
+    // Google Drive open/uc link: drive.google.com/open?id=FILE_ID or drive.google.com/uc?id=FILE_ID
+    const gDriveIdMatch = cleanUrl.match(/drive\.google\.com\/(?:open|uc)\?(?:.*&)?id=([a-zA-Z0-9_-]+)/);
+    if (gDriveIdMatch && gDriveIdMatch[1]) {
+        return `https://lh3.googleusercontent.com/d/${gDriveIdMatch[1]}`;
+    }
+
+    // Dropbox links: replace dl=0 with raw=1
+    if (cleanUrl.includes('dropbox.com')) {
+        return cleanUrl.replace(/\?dl=0$/, '?raw=1').replace(/\?dl=1$/, '?raw=1');
+    }
+
+    // Add protocol if missing
+    if (cleanUrl.startsWith('www.')) {
+        cleanUrl = 'https://' + cleanUrl;
+    }
+
+    return cleanUrl;
+}
+
+function extractImageUrls(rawStr) {
+    if (!rawStr) return [];
+    const items = String(rawStr).split(/[,\n;]+/).map(s => s.trim()).filter(s => s.length > 0);
+    const validUrls = [];
+    const seen = new Set();
+
+    items.forEach(item => {
+        if (item.includes('http') && item.includes(' ')) {
+            const spaceParts = item.split(/\s+/).filter(p => p.startsWith('http') || p.startsWith('www.'));
+            spaceParts.forEach(part => {
+                const formatted = formatImageUrl(part);
+                if (formatted && !seen.has(formatted)) {
+                    seen.add(formatted);
+                    validUrls.push({ original: part, formatted: formatted });
+                }
+            });
+        } else {
+            const formatted = formatImageUrl(item);
+            if (formatted && !seen.has(formatted)) {
+                seen.add(formatted);
+                validUrls.push({ original: item, formatted: formatted });
+            }
+        }
+    });
+
+    return validUrls;
+}
+
+
+function renderCenters(centers, listId = 'centersResultsList', searchPin = '') {
     const fragment = document.createDocumentFragment();
 
     centers.forEach((center, index) => {
         const hasDistance = center.distance !== undefined && !isNaN(center.distance);
         const distanceText = hasDistance ? `${Math.round(center.distance * 10) / 10} km away` : (getProp(center, "District") || 'Support Center');
         
-        // Mark the first item as the best/closest match
+        // Mark the first item as top match
         const isTopMatch = index === 0;
-        const badgeLabel = hasDistance ? "Closest to your location" : "Best match for your search";
+        let badgeLabel = "";
+        if (isTopMatch) {
+            const centerPin = getProp(center, "Pincode") || "";
+            if (searchPin && center.matchesPinSearch) {
+                badgeLabel = `Exact PIN Match (${centerPin || searchPin})`;
+            } else if (hasDistance) {
+                badgeLabel = "Closest to your location";
+            } else {
+                badgeLabel = "Best match for your search";
+            }
+        }
         
         const centerHtml = `
             <div class="center-item ${isTopMatch ? 'closest-highlight' : ''}" data-id="${getProp(center, "id") || center.id || ''}">

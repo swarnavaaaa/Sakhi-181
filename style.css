@@ -2557,13 +2557,6 @@ footer {
 
 /* SV CHANGES */
 
-/* .photo-credit {
-  font-size: 12px;
-  color: #666;
-  text-align: center;
-  padding: 4px 0;
-  margin: 0;
-} */
 .photo-credit {
   font-size: 12px;
   color: #999;
@@ -2574,3 +2567,63 @@ footer {
 .photo-credit a {
   color: inherit;
 }
+
+/* Multi-Photo Gallery Styles */
+.photo-count-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(4px);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 50px;
+    z-index: 5;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.gallery-thumbs-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+}
+
+.thumb-item {
+    width: 60px;
+    height: 45px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.7;
+    transition: all 0.25s ease;
+    background: #f1f5f9;
+}
+
+.thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.thumb-item:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.thumb-item.active {
+    opacity: 1;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(194, 24, 91, 0.2);
+}
+
+
+>>>>>>> c207bca (Fix pincode search ranking logic, Google Drive photo URL formatting, and multi-photo gallery support)
