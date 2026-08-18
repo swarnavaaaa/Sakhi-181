@@ -2557,15 +2557,25 @@ footer {
 
 /* SV CHANGES */
 
+figcaption,
 .photo-credit {
   font-size: 12px;
   color: #999;
   text-align: center;
-  margin: 4px 0 0;
+  margin: 6px auto 0 auto;
+  display: block;
+  width: 100%;
 }
 
+figcaption a,
 .photo-credit a {
   color: inherit;
+  text-decoration: underline;
+}
+
+figcaption a:hover,
+.photo-credit a:hover {
+  color: var(--primary);
 }
 
 /* Multi-Photo Gallery Styles */
