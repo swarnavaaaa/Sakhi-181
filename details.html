@@ -199,7 +199,7 @@
         //     return cleanUrl;
         // }
 //Edited by SV to allow for different image sizes (main and thumbnail)
-        function formatImageUrl(url, size = 'w800') {
+        function formatImageUrl(url, size = 'w400') {
             if (!url) return null;
             let cleanUrl = String(url).trim().replace(/^["']|["']$/g, '');
             if (!cleanUrl) return null;
@@ -276,7 +276,7 @@
             const items = String(rawStr).split(/[,\n;]+/).map(s => s.trim()).filter(s => s.length > 0);
             return items.map(url => ({
                 original: url,
-                formatted: formatImageUrl(url, 'w800') || url,
+                formatted: formatImageUrl(url, 'w400') || url,
                 thumb: formatImageUrl(url, 'w150') || url
             })).filter(item => item.formatted);
         }
@@ -430,9 +430,7 @@
                     <div class="gallery-thumbs-row">
                         ${photoList.map((imgObj, idx) => `
                             <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="switchGalleryPhoto(${idx}, '${imgObj.formatted.replace(/'/g, "\\'")}', '${imgObj.original.replace(/'/g, "\\'")}')">
-                                // <img src="${imgObj.formatted}" alt="Thumbnail ${idx + 1}" onerror="this.src='sakhi-favicon.png'">
-                                // Edited by SV to use thumb size for thumbnails
-                                <img src="${imgObj.thumb}" alt="Thumbnail ${idx + 1}" onerror="this.src='sakhi-favicon.png'">
+                                <img src="${imgObj.formatted}" alt="Thumbnail ${idx + 1}" onerror="this.src='sakhi-favicon.png'">
                             </div>
                         `).join('')}
                     </div>
