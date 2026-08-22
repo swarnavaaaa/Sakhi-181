@@ -169,7 +169,37 @@
             return undefined;
         }
 
-        function formatImageUrl(url) {
+        // function formatImageUrl(url) {
+        //     if (!url) return null;
+        //     let cleanUrl = String(url).trim().replace(/^["']|["']$/g, '');
+        //     if (!cleanUrl) return null;
+
+        //     // Google Drive file link: drive.google.com/file/d/FILE_ID/view...
+        //     const gDriveFileMatch = cleanUrl.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+        //     if (gDriveFileMatch && gDriveFileMatch[1]) {
+        //         return `https://lh3.googleusercontent.com/d/${gDriveFileMatch[1]}`;
+        //     }
+
+        //     // Google Drive open/uc link: drive.google.com/open?id=FILE_ID or drive.google.com/uc?id=FILE_ID
+        //     const gDriveIdMatch = cleanUrl.match(/drive\.google\.com\/(?:open|uc)\?(?:.*&)?id=([a-zA-Z0-9_-]+)/);
+        //     if (gDriveIdMatch && gDriveIdMatch[1]) {
+        //         return `https://lh3.googleusercontent.com/d/${gDriveIdMatch[1]}`;
+        //     }
+
+        //     // Dropbox links: replace dl=0 with raw=1
+        //     if (cleanUrl.includes('dropbox.com')) {
+        //         return cleanUrl.replace(/\?dl=0$/, '?raw=1').replace(/\?dl=1$/, '?raw=1');
+        //     }
+
+        //     // Add protocol if missing
+        //     if (cleanUrl.startsWith('www.')) {
+        //         cleanUrl = 'https://' + cleanUrl;
+        //     }
+
+        //     return cleanUrl;
+        // }
+//Edited by SV to allow for different image sizes (main and thumbnail)
+        function formatImageUrl(url, size = 'w800') {
             if (!url) return null;
             let cleanUrl = String(url).trim().replace(/^["']|["']$/g, '');
             if (!cleanUrl) return null;
@@ -177,13 +207,13 @@
             // Google Drive file link: drive.google.com/file/d/FILE_ID/view...
             const gDriveFileMatch = cleanUrl.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
             if (gDriveFileMatch && gDriveFileMatch[1]) {
-                return `https://lh3.googleusercontent.com/d/${gDriveFileMatch[1]}`;
+                return `https://lh3.googleusercontent.com/d/${gDriveFileMatch[1]}=${size}`;
             }
 
             // Google Drive open/uc link: drive.google.com/open?id=FILE_ID or drive.google.com/uc?id=FILE_ID
             const gDriveIdMatch = cleanUrl.match(/drive\.google\.com\/(?:open|uc)\?(?:.*&)?id=([a-zA-Z0-9_-]+)/);
             if (gDriveIdMatch && gDriveIdMatch[1]) {
-                return `https://lh3.googleusercontent.com/d/${gDriveIdMatch[1]}`;
+                return `https://lh3.googleusercontent.com/d/${gDriveIdMatch[1]}=${size}`;
             }
 
             // Dropbox links: replace dl=0 with raw=1
@@ -227,6 +257,18 @@
             return validUrls;
         }
 
+        // function getCenterPhotos(rawStr) {
+        //     const res = extractImageUrls(rawStr);
+        //     if (res && res.length > 0) return res;
+        //     if (!rawStr) return [];
+        //     const items = String(rawStr).split(/[,\n;]+/).map(s => s.trim()).filter(s => s.length > 0);
+        //     return items.map(url => ({
+        //         original: url,
+        //         formatted: formatImageUrl(url) || url
+        //     })).filter(item => item.formatted);
+        // }
+
+//Edited by SV to fit the images into 2 sizes for main and thumbnail display
         function getCenterPhotos(rawStr) {
             const res = extractImageUrls(rawStr);
             if (res && res.length > 0) return res;
@@ -234,7 +276,8 @@
             const items = String(rawStr).split(/[,\n;]+/).map(s => s.trim()).filter(s => s.length > 0);
             return items.map(url => ({
                 original: url,
-                formatted: formatImageUrl(url) || url
+                formatted: formatImageUrl(url, 'w800') || url,
+                thumb: formatImageUrl(url, 'w150') || url
             })).filter(item => item.formatted);
         }
 
@@ -387,7 +430,9 @@
                     <div class="gallery-thumbs-row">
                         ${photoList.map((imgObj, idx) => `
                             <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="switchGalleryPhoto(${idx}, '${imgObj.formatted.replace(/'/g, "\\'")}', '${imgObj.original.replace(/'/g, "\\'")}')">
-                                <img src="${imgObj.formatted}" alt="Thumbnail ${idx + 1}" onerror="this.src='sakhi-favicon.png'">
+                                // <img src="${imgObj.formatted}" alt="Thumbnail ${idx + 1}" onerror="this.src='sakhi-favicon.png'">
+                                // Edited by SV to use thumb size for thumbnails
+                                <img src="${imgObj.thumb}" alt="Thumbnail ${idx + 1}" onerror="this.src='sakhi-favicon.png'">
                             </div>
                         `).join('')}
                     </div>
