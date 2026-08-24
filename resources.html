@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,24 +10,32 @@
     <title> Verified GBV Resources in Telangana</title>
     <!-- <title> GBV Resources Telangana | Support Services in Hyderabad</title> -->
 
-    <meta name="description" content="Access specialized support resources for Gender-Based Violence in Telangana and Hyderabad. Find information on Sakhi OSCs, legal aid, medical help, and counselling.">
-    <meta name="keywords" content="GBV resources Telangana, Hyderabad women support services, legal aid Hyderabad, medical help Telangana, Sakhi centers Hyderabad">
-    
+    <meta name="description"
+        content="Access specialized support resources for Gender-Based Violence in Telangana and Hyderabad. Find information on Sakhi OSCs, legal aid, medical help, and counselling.">
+    <meta name="keywords"
+        content="GBV resources Telangana, Hyderabad women support services, legal aid Hyderabad, medical help Telangana, Sakhi centers Hyderabad">
+
     <!-- Google Fonts - Preload to reduce render blocking -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
-    
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
+
     <!-- Remix Icons - Load asynchronously -->
     <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"></noscript>
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" media="print"
+        onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    </noscript>
+
     <link rel="preload" as="style" href="style.css">
     <link rel="stylesheet" href="style.css">
 
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 </head>
+
 <body>
 
     <!-- Emergency Bar -->
@@ -37,7 +46,9 @@
                 <h4>Immediate Emergency? <span>Call for help</span></h4>
             </div>
             <div class="emergency-buttons-desktop">
-                <span style="font-size: 0.75rem; font-weight: 700; color: white; margin-right: 0.5rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;">Verified Govt. Helplines:</span>
+                <span
+                    style="font-size: 0.75rem; font-weight: 700; color: white; margin-right: 0.5rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;">Verified
+                    Govt. Helplines:</span>
                 <a href="tel:181" class="btn-emergency-pill">National Women's Helpline 181</a>
                 <a href="tel:112" class="btn-emergency-pill">National Police Helpline 112</a>
             </div>
@@ -73,116 +84,149 @@
     </nav>
     <main>
 
-    <!-- Resource Hero -->
-    <header class="resource-hero">
-        <div class="container resource-hero-grid">
-            <div class="hero-text">
-                <span class="badge-purple">Support Knowledge Base</span>
-                <h1>Resource Center</h1>
-                <p>Empowering you with knowledge and support. Find reliable information on legal rights, safety protocols, and available services.</p>
-                
-                <div class="search-container">
-                    <i class="ri-search-line"></i>
-                    <input type="text" placeholder="Search for resource categories" id="resourceSearch" aria-label="Search resources">
-                </div>
-                <div id="searchStatus" style="margin-top: 1rem; font-size: 0.9rem; color: var(--primary); font-weight: 600; min-height: 1.5rem;"></div>
-            </div>
-            <div class="hero-image">
-                <img src="pexels-allhands_strnegth.jpg" alt="Violence Against Women Banner" class="resource-hero-img" width = "200"height="350" fetchpriority="high">
-                <!-- <img src="pexels-allhands.jpg" alt="Violence Against Women Banner" class="resource-hero-img" width = "200"height="450" fetchpriority="high"> -->
-                <figcaption>Photo credits: <a href="https://www.pexels.com" target="_blank" rel="noopener">Pexels</a></figcaption>
+        <!-- Resource Hero -->
+        <header class="resource-hero">
+            <div class="container resource-hero-grid">
+                <div class="hero-text">
+                    <span class="badge-purple">Support Knowledge Base</span>
+                    <h1>Resource Center</h1>
+                    <p>Empowering you with knowledge and support. Find reliable information on legal rights, safety
+                        protocols, and available services.</p>
 
-            </div>
-        </div>
-    </header>
-
-    <!-- Explore Topics Section -->
-    <section class="explore-section section-padding" style="background: #f8fafc;">
-        <div class="container">
-            <div>
-                <h2 style="font-size: 2rem; font-weight: 800;">Explore Topics</h2>
-                <div style="width: 50px; height: 4px; background: var(--primary); margin-top: 0.5rem;"></div>
-            </div>
-
-            <div class="topic-grid" style="margin-top: 3rem;">
-                <!-- Card 1 -->
-                <div id="shelter" class="topic-card">
-                    <div class="topic-icon"><i class="ri-map-pin-2-fill"></i></div>
-                    <h3>Sakhi One Stop Centers</h3>
-                    <p>Locate physical support centers offering integrated help including shelter, police support, and medical aid in one place.</p>
-                    <a href="javascript:void(0)" class="btn-link category-trigger" data-category="One Stop Center">Find Centers <i class="ri-arrow-right-line"></i></a>
-                </div>
-                <!-- Card 2 -->
-                <div id="legal" class="topic-card">
-                    <div class="topic-icon"><i class="ri-scales-3-line"></i></div>
-                    <h3>Legal Aid</h3>
-                    <p>Access free legal advice, document drafting, and representation to help you navigate the justice system effectively.</p>
-                    <a href="javascript:void(0)" class="btn-link category-trigger" data-category="Legal Aid">Legal Support <i class="ri-arrow-right-line"></i></a>
-                </div>
-                <!-- Card 3 -->
-                <div id="medical" class="topic-card">
-                    <div class="topic-icon"><i class="ri-hospital-line"></i></div>
-                    <h3>Medical Help</h3>
-                    <p>Immediate medical attention, forensic examinations, and healthcare referrals ensuring your health is prioritized.</p>
-                    <a href="javascript:void(0)" class="btn-link category-trigger" data-category="Medical Help">Medical Care <i class="ri-arrow-right-line"></i></a>
-                </div>
-                <!-- Card 4 -->
-                <div id="hiv" class="topic-card">
-                    <div class="topic-icon"><i class="ri-virus-line"></i></div>
-                    <h3>HIV support</h3>
-                    <p>Specialized resources for HIV/AIDS awareness, confidential testing, counselling, and integrated healthcare support.</p>
-                    <a href="javascript:void(0)" class="btn-link category-trigger" data-category="HIV">Find HIV support Resources <i class="ri-arrow-right-line"></i></a>
-                </div>
-                <!-- Card 5 -->
-                <div id="counselling" class="topic-card">
-                    <div class="topic-icon"><i class="ri-heart-pulse-line"></i></div>
-                    <h3>Counselling</h3>
-                    <p>Psychosocial support and mental health counselling to help you process trauma and build emotional resilience.</p>
-                    <a href="javascript:void(0)" class="btn-link category-trigger" data-category="Counselling">Get Support <i class="ri-arrow-right-line"></i></a>
-                </div>
-                <!-- Card 6 -->
-                <div id="lgbtq" class="topic-card">
-                    <div class="topic-icon"><i class="ri-rainbow-line"></i></div>
-                    <h3>LGBTQIA+ Resources</h3>
-                    <p>Tailored support and resources specifically for the LGBTQIA+ community facing discrimination or distress.</p>
-                    <a href="javascript:void(0)" class="btn-link category-trigger" data-category="LGBTQIA+">View Resources <i class="ri-arrow-right-line"></i></a>
-                </div>
-                <!-- Card 7 -->
-                <div id="cyber-gbv" class="topic-card">
-                    <div class="topic-icon"><i class="ri-shield-keyhole-line"></i></div>
-                    <h3>Cyber-GBV (Work in Progress)</h3>
-                    <p>Standard Operating Procedure (SOP), legal procedures and FIR filing steps for online harassment, image leaks, and cyber abuse.</p>
-                    <a href="cyber-gbv.html" class="btn-link">View SOP Guide <i class="ri-arrow-right-line"></i></a>
-                </div>
-            </div>
-
-            <!-- Resource Search Results -->
-            <div id="resourceResultsContainer" class="results-card" style="display: none; margin-top: 4rem; scroll-margin-top: 100px;">
-                <div class="results-header">
-                    <h3 id="resourceResultsTitle"><i class="ri-map-pin-2-line"></i> Support Centers</h3>
-                    <button class="btn-close-results" onclick="document.getElementById('resourceResultsContainer').style.display='none'">&times;</button>
-                </div>
-                <div id="resourceResultsList" class="results-list">
-                    <!-- Dynamic Content -->
-                </div>
-            </div>
-
-            <!-- Emergency Banner (Moved Below Grid) -->
-            <div class="emergency-response-banner" style="margin-top: 6rem;">
-                <div class="emergency-info">
-                    <i class="ri-phone-fill"></i>
-                    <div class="emergency-text">
-                        <span>Emergency Response</span>
-                        <h4>Helpline: 181</h4>
+                    <div class="search-container">
+                        <i class="ri-search-line"></i>
+                        <input type="text" placeholder="Search for resource categories" id="resourceSearch"
+                            aria-label="Search resources">
+                    </div>
+                    <div id="searchStatus"
+                        style="margin-top: 1rem; font-size: 0.9rem; color: var(--primary); font-weight: 600; min-height: 1.5rem;">
                     </div>
                 </div>
-                <div class="emergency-actions">
-                    <a href="index.html" class="btn-emergency-outline">Find Local Centre</a>
-                    <a href="tel:181" class="btn-emergency-white">Call Now</a>
+                <div class="hero-image">
+                    <img src="pexels-allhands_strnegth.jpg" alt="Violence Against Women Banner"
+                        class="resource-hero-img" width="200" height="350" fetchpriority="high">
+                    <!-- <img src="pexels-allhands.jpg" alt="Violence Against Women Banner" class="resource-hero-img" width = "200"height="450" fetchpriority="high"> -->
+                    <figcaption>Photo credits: <a href="https://www.pexels.com" target="_blank"
+                            rel="noopener">Pexels</a></figcaption>
+
                 </div>
             </div>
-        </div>
-    </section>
+        </header>
+
+        <!-- Explore Topics Section -->
+        <section class="explore-section section-padding" style="background: #f8fafc;">
+            <div class="container">
+                <div>
+                    <h2 style="font-size: 2rem; font-weight: 800;">Explore Topics</h2>
+                    <div style="width: 50px; height: 4px; background: var(--primary); margin-top: 0.5rem;"></div>
+                </div>
+
+                <div class="topic-grid" style="margin-top: 3rem;">
+                    <!-- Card 1 -->
+                    <div id="shelter" class="topic-card">
+                        <div class="topic-icon"><i class="ri-map-pin-2-fill"></i></div>
+                        <h3>Sakhi One Stop Centers</h3>
+                        <p>Locate physical support centers offering integrated help including shelter, police support,
+                            and medical aid in one place.</p>
+                        <a href="javascript:void(0)" class="btn-link category-trigger"
+                            data-category="One Stop Center">Find Centers <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                    <!-- Card 2 -->
+                    <div id="legal" class="topic-card">
+                        <div class="topic-icon"><i class="ri-scales-3-line"></i></div>
+                        <h3>Legal Aid</h3>
+                        <p>Access free legal advice, document drafting, and representation to help you navigate the
+                            justice system effectively.</p>
+                        <a href="javascript:void(0)" class="btn-link category-trigger" data-category="Legal Aid">Legal
+                            Support <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                    <!-- Card 3 -->
+                    <div id="medical" class="topic-card">
+                        <div class="topic-icon"><i class="ri-hospital-line"></i></div>
+                        <h3>Medical Help</h3>
+                        <p>Immediate medical attention, forensic examinations, and healthcare referrals ensuring your
+                            health is prioritized.</p>
+                        <a href="javascript:void(0)" class="btn-link category-trigger"
+                            data-category="Medical Help">Medical Care <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                    <!-- Card 4 -->
+                    <div id="hiv" class="topic-card">
+                        <div class="topic-icon"><i class="ri-virus-line"></i></div>
+                        <h3>HIV support</h3>
+                        <p>Specialized resources for HIV/AIDS awareness, confidential testing, counselling, and
+                            integrated healthcare support.</p>
+                        <a href="javascript:void(0)" class="btn-link category-trigger" data-category="HIV">Find HIV
+                            support Resources <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                    <!-- Card 5 -->
+                    <div id="counselling" class="topic-card">
+                        <div class="topic-icon"><i class="ri-heart-pulse-line"></i></div>
+                        <h3>Counselling</h3>
+                        <p>Psychosocial support and mental health counselling to help you process trauma and build
+                            emotional resilience.</p>
+                        <a href="javascript:void(0)" class="btn-link category-trigger" data-category="Counselling">Get
+                            Support <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                    <!-- Card 6 -->
+                    <div id="lgbtq" class="topic-card">
+                        <div class="topic-icon"><i class="ri-rainbow-line"></i></div>
+                        <h3>LGBTQIA+ Resources</h3>
+                        <p>Tailored support and resources specifically for the LGBTQIA+ community facing discrimination
+                            or distress.</p>
+                        <a href="javascript:void(0)" class="btn-link category-trigger" data-category="LGBTQIA+">View
+                            Resources <i class="ri-arrow-right-line"></i></a>
+                    </div>
+
+
+                    <!-- Card 8 -->
+                    <div id="govt-helpline" class="topic-card">
+                        <div class="topic-icon"><i class="ri-shield-keyhole-line"></i></div>
+                        <h3>Government Helpline Numbers</h3>
+                        <p>Access to government-supported helplines for immediate assistance and guidance.</p>
+                        <a href="javascript:void(0)" class="btn-link category-trigger"
+                            data-category="Government Helpline Number">View
+                            Resources <i class="ri-arrow-right-line"></i></a>
+                    </div>
+
+                    <!-- Card 7 -->
+                    <div id="cyber-gbv" class="topic-card">
+                        <div class="topic-icon"><i class="ri-shield-keyhole-line"></i></div>
+                        <h3>Cyber-GBV (Work in Progress)</h3>
+                        <p>Standard Operating Procedure (SOP), legal procedures and FIR filing steps for online
+                            harassment, image leaks, and cyber abuse.</p>
+                        <a href="cyber-gbv.html" class="btn-link">View SOP Guide <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </div>
+
+                <!-- Resource Search Results -->
+                <div id="resourceResultsContainer" class="results-card"
+                    style="display: none; margin-top: 4rem; scroll-margin-top: 100px;">
+                    <div class="results-header">
+                        <h3 id="resourceResultsTitle"><i class="ri-map-pin-2-line"></i> Support Centers</h3>
+                        <button class="btn-close-results"
+                            onclick="document.getElementById('resourceResultsContainer').style.display='none'">&times;</button>
+                    </div>
+                    <div id="resourceResultsList" class="results-list">
+                        <!-- Dynamic Content -->
+                    </div>
+                </div>
+
+                <!-- Emergency Banner (Moved Below Grid) -->
+                <div class="emergency-response-banner" style="margin-top: 6rem;">
+                    <div class="emergency-info">
+                        <i class="ri-phone-fill"></i>
+                        <div class="emergency-text">
+                            <span>Emergency Response</span>
+                            <h4>Helpline: 181</h4>
+                        </div>
+                    </div>
+                    <div class="emergency-actions">
+                        <a href="index.html" class="btn-emergency-outline">Find Local Centre</a>
+                        <a href="tel:181" class="btn-emergency-white">Call Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
     <!-- Footer -->
     <footer>
@@ -192,7 +236,8 @@
                     <div class="logo" style="margin-bottom: 1.5rem;">
                         <img src="Whitebg_Sakhi181_nospace.png" alt="Sakhi OSC Logo" width="150">
                     </div>
-                    <p>An initiative dedicated to the protection, support, and empowerment of women through accurate and accessible information and resources. </p>
+                    <p>An initiative dedicated to the protection, support, and empowerment of women through accurate and
+                        accessible information and resources. </p>
                 </div>
                 <div class="footer-links-col">
                     <h4>Legal</h4>
@@ -214,10 +259,15 @@
                 </div>
             </div>
             <div class="footer-bottom" style="flex-direction: column; gap: 1rem;">
-                <p style="font-size: 0.75rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.4;">Sakhi181 Foundation is an independent, non-governmental organization and is not affiliated with any government body. We work to create awareness and improve access to existing support systems for women, including government helplines and services.</p>
+                <p
+                    style="font-size: 0.75rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.4;">
+                    Sakhi181 Foundation is an independent, non-governmental organization and is not affiliated with any
+                    government body. We work to create awareness and improve access to existing support systems for
+                    women, including government helplines and services.</p>
                 <p>© 2026 Sakhi One Stop Centre. All Rights Reserved.</p>
                 <div class="social-links">
-                    <a href="https://www.instagram.com/sakhi181_foundation?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="social-icon" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+                    <a href="https://www.instagram.com/sakhi181_foundation?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                        target="_blank" class="social-icon" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
                 </div>
             </div>
         </div>
@@ -233,8 +283,10 @@
             }, 'google_translate_element');
         }
     </script>
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+    <script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 
     <script src="script_v2.js" defer></script>
 </body>
+
 </html>

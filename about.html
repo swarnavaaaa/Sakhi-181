@@ -1,31 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="sakhi-favicon2.png?v=1">
     <link rel="shortcut icon" type="image/png" href="sakhi-favicon2.png?v=1">
     <link rel="apple-touch-icon" href="sakhi-favicon2.png?v=1">
-    <title>Find help near you | Telangana NGO</title>
+    <!-- <title>Find help near you | Telangana NGO</title> -->
+    <title> Find help near you | Verified GBV Resources and Support | Sakhi181 </title>
+
     <!-- <title>About Sakhi 181 Telangana | Helping GBV Survivors in Hyderabad</title> -->
-    <meta name="description" content="Learn about our mission to provide a reliable support ecosystem for Gender-Based Violence survivors in Telangana and Hyderabad. Sakhi 181 offers verified information and immediate aid.">
-    <meta name="keywords" content="Sakhi 181 mission, GBV support Telangana, Hyderabad women helpline, OSC Telangana verified information">
-    
+    <meta name="description"
+        content="Learn about our mission to provide a reliable support ecosystem for Gender-Based Violence survivors in Telangana and Hyderabad. Sakhi 181 offers verified information and immediate aid.">
+    <meta name="keywords"
+        content="Sakhi 181 mission, GBV support Telangana, Hyderabad women helpline, OSC Telangana verified information">
+
     <!-- Google Fonts - Preload to reduce render blocking -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
-    
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
+
     <!-- Remix Icons - Load asynchronously -->
     <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"></noscript>
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" media="print"
+        onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    </noscript>
+
     <link rel="preload" as="style" href="style.css">
     <link rel="stylesheet" href="style.css">
 
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 </head>
+
 <body>
 
     <!-- Emergency Bar -->
@@ -36,7 +47,9 @@
                 <h4>Immediate Emergency? <span>Call for help</span></h4>
             </div>
             <div class="emergency-buttons-desktop">
-                <span style="font-size: 0.75rem; font-weight: 700; color: white; margin-right: 0.5rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;">Verified Govt. Helplines:</span>
+                <span
+                    style="font-size: 0.75rem; font-weight: 700; color: white; margin-right: 0.5rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;">Verified
+                    Govt. Helplines:</span>
                 <a href="tel:181" class="btn-emergency-pill">National Women's Helpline 181</a>
                 <a href="tel:112" class="btn-emergency-pill">National Police Helpline 112</a>
             </div>
@@ -73,107 +86,134 @@
     </nav>
     <main>
 
-    <!-- Mission Hero Section -->
-    <section class="mission-hero">
-        <div class="container mission-hero-content">
-            <div class="hero-text">
-                <!-- <span class="hero-pill" style="color: var(--primary);">The Awareness Gap</span> -->
-                <span class="hero-pill" style="color: var(--primary);">Empowering Through Awareness</span>
-                <!-- <h1>From Unaware to <br><span class="highlight">Empowered.</span></h1> -->
-                <h1>Bridging the gap between <br><span class="highlight">Need and Support.</span></h1>
-                <!-- <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 500px; margin-bottom: 3rem;">
+        <!-- Mission Hero Section -->
+        <section class="mission-hero">
+            <div class="container mission-hero-content">
+                <div class="hero-text">
+                    <!-- <span class="hero-pill" style="color: var(--primary);">The Awareness Gap</span> -->
+                    <span class="hero-pill" style="color: var(--primary);">Empowering Through Awareness</span>
+                    <!-- <h1>From Unaware to <br><span class="highlight">Empowered.</span></h1> -->
+                    <h1>Bridging the gap between <br><span class="highlight">Need and Support.</span></h1>
+                    <!-- <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 500px; margin-bottom: 3rem;">
                     Research shows that <strong>96% of individuals</strong> remain unaware of available support systems. Finding verified help in a crisis should not be another obstacle. Sakhi 181 centralizes verified data to ensure no one has to walk alone.
                 </p> -->
-                <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 500px; margin-bottom: 3rem;">
-                When someone is in crisis, the last thing they should face is confusion about where to turn. Yet research shows <strong>96% of individuals </strong> are unaware of available support systems. Sakhi181 centralizes verified data for domestic violence, sexual assault and any other Gender Based Violence (GBV) victims and survivors to bridge this gap, ensuring people can find the help they need, when they need it.
-                </p>
+                    <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 500px; margin-bottom: 3rem;">
+                        When someone is in crisis, the last thing they should face is confusion about where to turn. Yet
+                        research shows <strong>96% of individuals </strong> are unaware of available support systems.
+                        Sakhi181 centralizes verified data for domestic violence, sexual assault and any other Gender
+                        Based Violence (GBV) victims and survivors to bridge this gap, ensuring people can find the help
+                        they need, when they need it.
+                    </p>
 
-                <button class="btn-emergency" style="padding: 1rem 2.5rem; display: flex; align-items: center; gap: 0.5rem; background: var(--bg-dark); color: white;">
-                    Explore Services <i class="ri-arrow-right-line"></i>
-                </button>
-            </div>
-            <!-- <div class="hero-image-wrap">
+                    <button class="btn-emergency"
+                        style="padding: 1rem 2.5rem; display: flex; align-items: center; gap: 0.5rem; background: var(--bg-dark); color: white;">
+                        Explore Services <i class="ri-arrow-right-line"></i>
+                    </button>
+                </div>
+                <!-- <div class="hero-image-wrap">
                 <img src="about-page.webp" alt="Supportive Group" class="mission-hero-img" width="500" height="400" fetchpriority="high">
             </div> -->
-             <div class="hero-image-wrap">
-                <!-- <img src="Gemini_generated_img.png" alt="Supportive Group" class="mission-hero-img" width="500" height="400" fetchpriority="high"> -->
-                <img src="pexels_about_bridge.jpg" alt="Supportive Group" class="mission-hero-img" width="500" height="400" fetchpriority="high">
-                
-                <figcaption>Photo credits: <a href="https://www.pexels.com" target="_blank" rel="noopener">Pexels</a></figcaption>
-            </div>
-        </div>
-    </section>
+                <div class="hero-image-wrap">
+                    <!-- <img src="Gemini_generated_img.png" alt="Supportive Group" class="mission-hero-img" width="500" height="400" fetchpriority="high"> -->
+                    <img src="pexels_about_bridge.jpg" alt="Supportive Group" class="mission-hero-img" width="500"
+                        height="400" fetchpriority="high">
 
-    <!-- Pillar Cards -->
-    <div class="container">
-        <div class="feat-cards">
-            <div class="feat-card reveal">
-                <div class="feat-icon"><i class="ri-shield-cross-line"></i></div>
-                <h2>What we provide</h2>
-                <!-- <p>A free, secure platform designed to discover Government resources and NGOs that provide services for legal, shelters, counselling help women and LGBTQ+ individuals nearby. We provide comprehensive details, verified contact information, and photos to ensure you know exactly where you're going.</p> -->
-                <p>A free, secure platform that helps you find government resources and NGOs providing legal aid, shelters, counseling support and other services nearby for domestic violence, sexual assault, and other forms of gender-based violence victims and survivors. Every listing includes comprehensive details, verified contact information, and photos, so you know exactly where to go and what to expect. Our resources for now are based in Telangana.</p>
-
+                    <figcaption>Photo credits: <a href="https://www.pexels.com" target="_blank"
+                            rel="noopener">Pexels</a></figcaption>
+                </div>
             </div>
-            <div class="feat-card reveal">
-                <div class="feat-icon"><i class="ri-search-eye-line"></i></div>
-                <h2>How we do it</h2>
-                <!-- <p>Through cutting edge location intelligence and a rigorous verification process, we keep our database continuously updated. We bridge the gap between government resources and those who need them most.</p> -->
-            <p>We identify government resources and NGOs providing services in each category, then verify every location, including contact details, address, location and services offered. Finally, we share this verified information on our website so you can find help with confidence. This information is regularly verified and updated, so you can trust what you find. We actively identify and reach out to new ground-level resources on an ongoing basis to expand our list.</p>           
-            </div>
-            <div class="feat-card reveal">
-                <div class="feat-icon"><i class="ri-heart-pulse-line"></i></div>
-                <h2>Why it matters</h2>
-                <!-- <p>Life-saving speed is critical in moments of crisis. By bringing clarity, dignity, and hope, we help individuals navigate their darkest hours with the confidence of verified support.</p> -->
-                <p>Life-saving speed is critical in moments of crisis. Sakhi181 bridges this gap by identifying, verifying, and sharing accurate information about government resources and NGOs, so you can find help with confidence. Because when you're in crisis, you deserve help you can trust. Moreover, our platform fosters a sense of community and empowerment, ensuring that every individual feels supported and heard when most needed.</p>
-   
-        </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Mission Statement -->
-    <section class="mission-statement">
+        <!-- Pillar Cards -->
         <div class="container">
-            <span class="hero-pill" style="border-color: rgba(255,255,255,0.4); color: white;">Our Mission</span>
-            <h2>"We are committed to creating a reliable, accessible, and informed support ecosystem for individuals seeking help from GBV. Our goal is to ensure that no one feels lost or alone in moments of crisis."</h2>
-            <div style="width: 80px; height: 4px; background: var(--primary); margin: 3rem auto;"></div>
-        </div>
-    </section>
+            <div class="feat-cards">
+                <div class="feat-card reveal">
+                    <div class="feat-icon"><i class="ri-shield-cross-line"></i></div>
+                    <h2>What we provide</h2>
+                    <!-- <p>A free, secure platform designed to discover Government resources and NGOs that provide services for legal, shelters, counselling help women and LGBTQ+ individuals nearby. We provide comprehensive details, verified contact information, and photos to ensure you know exactly where you're going.</p> -->
+                    <p>A free, secure platform that helps you find government resources and NGOs providing legal aid,
+                        shelters, counseling support and other services nearby for domestic violence, sexual assault,
+                        and other forms of gender-based violence victims and survivors. Every listing includes
+                        comprehensive details, verified contact information, and photos, so you know exactly where to go
+                        and what to expect. Our resources for now are based in Telangana.</p>
 
-    <!-- Core Values -->
-    <section class="section-padding">
-        <div class="container values-container">
-            <div>
-                <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem;">Our Core Values</h2>
-                <p style="color: var(--text-muted);">These principles guide every decision we make and every partnership we forge.</p>
-            </div>
-            <div class="value-list">
-                <div class="value-item reveal">
-                    <div class="feat-icon" style="margin-bottom: 0;"><i class="ri-shield-check-line"></i></div>
-                    <div>
-                        <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Trust</h4>
-                        <p style="font-size: 0.9rem; color: var(--text-muted);">We earn and uphold the trust of individuals offering verified, dependable resources that they can trust in time of crisis.</p>
-                    </div>
                 </div>
-                <div class="value-item reveal">
-                    <div class="feat-icon" style="margin-bottom: 0;"><i class="ri-flashlight-line"></i></div>
-                    <div>
-                        <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Efficiency</h4>
-                        <p style="font-size: 0.9rem; color: var(--text-muted);">We ensure timely access to help through streamlined systems and accurate, up-to-date information.</p>
-                    </div>
+                <div class="feat-card reveal">
+                    <div class="feat-icon"><i class="ri-search-eye-line"></i></div>
+                    <h2>How we do it</h2>
+                    <!-- <p>Through cutting edge location intelligence and a rigorous verification process, we keep our database continuously updated. We bridge the gap between government resources and those who need them most.</p> -->
+                    <p>We identify government resources and NGOs providing services in each category, then verify every
+                        location, including contact details, address, location and services offered. Finally, we share
+                        this verified information on our website so you can find help with confidence. This information
+                        is regularly verified and updated, so you can trust what you find. We actively identify and
+                        reach out to new ground-level resources on an ongoing basis to expand our list.</p>
                 </div>
-                <div class="value-item reveal">
-                    <div class="feat-icon" style="margin-bottom: 0;"><i class="ri-group-line"></i></div>
-                    <div>
-                        <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Collaboration</h4>
-                        <p style="font-size: 0.9rem; color: var(--text-muted);">We work hand-in-hand with NGOs, communities, and government bodies to strengthen the support network across the country.</p>
-                    </div>
+                <div class="feat-card reveal">
+                    <div class="feat-icon"><i class="ri-heart-pulse-line"></i></div>
+                    <h2>Why it matters</h2>
+                    <!-- <p>Life-saving speed is critical in moments of crisis. By bringing clarity, dignity, and hope, we help individuals navigate their darkest hours with the confidence of verified support.</p> -->
+                    <p>Life-saving speed is critical in moments of crisis. Sakhi181 bridges this gap by identifying,
+                        verifying, and sharing accurate information about government resources and NGOs, so you can find
+                        help with confidence. Because when you're in crisis, you deserve help you can trust. Moreover,
+                        our platform fosters a sense of community and empowerment, ensuring that every individual feels
+                        supported and heard when most needed.</p>
+
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Leadership Section  -->
-     <!-- <section class="section-padding leadership-section" style="background: #f8fafc;">
+        <!-- Mission Statement -->
+        <section class="mission-statement">
+            <div class="container">
+                <span class="hero-pill" style="border-color: rgba(255,255,255,0.4); color: white;">Our Mission</span>
+                <h2>"We are committed to creating a reliable, accessible, and informed support ecosystem for individuals
+                    seeking help from GBV. Our goal is to ensure that no one feels lost or alone in moments of crisis."
+                </h2>
+                <div style="width: 80px; height: 4px; background: var(--primary); margin: 3rem auto;"></div>
+            </div>
+        </section>
+
+        <!-- Core Values -->
+        <section class="section-padding">
+            <div class="container values-container">
+                <div>
+                    <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem;">Our Core Values</h2>
+                    <p style="color: var(--text-muted);">These principles guide every decision we make and every
+                        partnership we forge.</p>
+                </div>
+                <div class="value-list">
+                    <div class="value-item reveal">
+                        <div class="feat-icon" style="margin-bottom: 0;"><i class="ri-shield-check-line"></i></div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Trust</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">We earn and uphold the trust of
+                                individuals offering verified, dependable resources that they can trust in time of
+                                crisis.</p>
+                        </div>
+                    </div>
+                    <div class="value-item reveal">
+                        <div class="feat-icon" style="margin-bottom: 0;"><i class="ri-flashlight-line"></i></div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Efficiency</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">We ensure timely access to help
+                                through streamlined systems and accurate, up-to-date information.</p>
+                        </div>
+                    </div>
+                    <div class="value-item reveal">
+                        <div class="feat-icon" style="margin-bottom: 0;"><i class="ri-group-line"></i></div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Collaboration</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">We work hand-in-hand with NGOs,
+                                communities, and government bodies to strengthen the support network across the country.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leadership Section  -->
+        <!-- <section class="section-padding leadership-section" style="background: #f8fafc;">
         <div class="container">
             <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">The Leadership</h2>
             <p style="color: var(--text-muted); margin-bottom: 4rem;">Guided by experts dedicated to social systemic change.</p>
@@ -188,18 +228,21 @@
         </div>
     </section> -->
 
-    <!-- CTA Section -->
-    <section class="section-padding">
-        <div class="container">
-            <div class="cta-banner reveal">
-                <h2>Join our mission for a safer tomorrow.</h2>
-                <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 3rem auto;">
-                    Whether you are a potential partner, a volunteer, or seeking to learn more about our data verification process, we are here to listen.
-                </p>
-                <a href="contact.html" class="btn-emergency" style="background: var(--primary); color: white; padding: 1.2rem 3rem; text-decoration: none; display: inline-block;">Get in touch</a>
+        <!-- CTA Section -->
+        <section class="section-padding">
+            <div class="container">
+                <div class="cta-banner reveal">
+                    <h2>Join our mission for a safer tomorrow.</h2>
+                    <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 3rem auto;">
+                        Whether you are a potential partner, a volunteer, or seeking to learn more about our data
+                        verification process, we are here to listen.
+                    </p>
+                    <a href="contact.html" class="btn-emergency"
+                        style="background: var(--primary); color: white; padding: 1.2rem 3rem; text-decoration: none; display: inline-block;">Get
+                        in touch</a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
     </main>
     <!-- Footer -->
@@ -210,7 +253,8 @@
                     <div class="logo" style="margin-bottom: 1.5rem;">
                         <img src="Whitebg_Sakhi181_nospace.png" alt="Sakhi OSC Logo" width="150">
                     </div>
-                    <p>An initiative dedicated to the protection, support, and empowerment of women through accurate and accessible information and resources. </p>
+                    <p>An initiative dedicated to the protection, support, and empowerment of women through accurate and
+                        accessible information and resources. </p>
                 </div>
                 <div class="footer-links-col">
                     <h4>Legal</h4>
@@ -232,10 +276,15 @@
                 </div>
             </div>
             <div class="footer-bottom" style="flex-direction: column; gap: 1rem;">
-                <p style="font-size: 0.75rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.4;">Sakhi181 Foundation is an independent, non-governmental organization and is not affiliated with any government body. We work to create awareness and improve access to existing support systems for women, including government helplines and services.</p>
+                <p
+                    style="font-size: 0.75rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.4;">
+                    Sakhi181 Foundation is an independent, non-governmental organization and is not affiliated with any
+                    government body. We work to create awareness and improve access to existing support systems for
+                    women, including government helplines and services.</p>
                 <p>© 2026 Sakhi One Stop Centre. All Rights Reserved.</p>
                 <div class="social-links">
-                    <a href="https://www.instagram.com/sakhi181_foundation?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="social-icon"><i class="ri-instagram-line"></i></a>
+                    <a href="https://www.instagram.com/sakhi181_foundation?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                        target="_blank" class="social-icon"><i class="ri-instagram-line"></i></a>
                 </div>
             </div>
         </div>
@@ -251,8 +300,10 @@
             }, 'google_translate_element');
         }
     </script>
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+    <script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 
     <script src="script_v2.js" defer></script>
 </body>
+
 </html>

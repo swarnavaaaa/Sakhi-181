@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="sakhi-favicon2.png?v=2">
     <link rel="shortcut icon" type="image/png" href="sakhi-favicon2.png?v=2">
     <link rel="apple-touch-icon" href="sakhi-favicon2.png?v=2">
-    <title> Find help near you | Verified GBV Resources and Support | Sakhi181 NGO </title>
+    <title> Find help near you | Verified GBV Resources and Support | Sakhi181 </title>
     <!-- <title>Sakhi 181 Telangana | Help for Gender-Based Violence in Hyderabad</title> -->
 
-    <meta name="description" content="Get support for Gender-Based Violence (GBV). Find verified resources for shelter, legal, medical, mental health. Call 181 for emergency">
+    <meta name="description"
+        content="Get support for Gender-Based Violence (GBV). Find verified resources for shelter, legal, medical, mental health. Call 181 for emergency">
     <!-- <meta name="description" content="Get support for Gender-Based Violence (GBV) at Sakhi One Stop Centres (OSC) across Telangana and Hyderabad. Call 181 for emergency rescue, shelter, legal, and medical aid.">-->
-    <meta name="keywords" content="GBV help Telangana, help near me, Sakhi OSC Hyderabad, 181 helpline Telangana, women safety Hyderabad, gender based violence support Hyderabad, domestic violence, sexual assualt, verified information, mental health, women, LGBTQ">
+    <meta name="keywords"
+        content="GBV help Telangana, help near me, Sakhi OSC Hyderabad, 181 helpline Telangana, women safety Hyderabad, gender based violence support Hyderabad, domestic violence, sexual assualt, verified information, mental health, women, LGBTQ">
     <!-- <meta name="keywords" content="GBV help Telangana, Sakhi OSC Hyderabad, 181 helpline Telangana, women safety Hyderabad, gender based violence support Hyderabad"> -->
 
     <!-- Critical Network Hints -->
@@ -21,14 +24,19 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
     <!-- Google Fonts - Preload to reduce render blocking -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
-    
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
+
     <!-- Remix Icons - Load asynchronously -->
     <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"></noscript>
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" media="print"
+        onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    </noscript>
+
     <!-- Critical CSS -->
     <style>
         :root {
@@ -39,26 +47,85 @@
             --text-main: #1e293b;
             --transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
             --container-max: 1200px;
-            --text-muted: #475569; /* Darkened for accessibility contrast */
+            --text-muted: #475569;
+            /* Darkened for accessibility contrast */
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Outfit', sans-serif; color: var(--text-main); background-color: var(--bg-light); line-height: 1.6; overflow-x: hidden; }
-        .container { width: 100%; max-width: var(--container-max); margin: 0 auto; }
-        nav { background: white; padding: 1rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
-        nav .container { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.25rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
-        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 4rem 0; text-align: center; }
-        .hero h1 { font-size: 2.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }
-        .hero p { color: rgba(255,255,255,0.8); font-size: 1rem; max-width: 600px; margin: 0 auto 2rem auto; }
-        .highlight { color: #fbbf24; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: var(--container-max);
+            margin: 0 auto;
+        }
+
+        nav {
+            background: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .highlight {
+            color: #fbbf24;
+        }
     </style>
-    
+
     <link rel="preload" as="style" href="style.css">
     <link rel="stylesheet" href="style.css">
-    
+
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 </head>
+
 <body>
 
     <!-- Emergency Bar -->
@@ -69,7 +136,9 @@
                 <h4>Immediate Emergency? <span>Call for help</span></h4>
             </div>
             <div class="emergency-buttons-desktop">
-                <span style="font-size: 0.75rem; font-weight: 700; color: white; margin-right: 0.5rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;">Verified Govt. Helplines:</span>
+                <span
+                    style="font-size: 0.75rem; font-weight: 700; color: white; margin-right: 0.5rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;">Verified
+                    Govt. Helplines:</span>
                 <a href="tel:181" class="btn-emergency-pill">National Women's Helpline 181</a>
                 <a href="tel:112" class="btn-emergency-pill">National Police Helpline 112</a>
             </div>
@@ -105,123 +174,138 @@
     </nav>
     <main>
 
-    <!-- Hero Section -->
-    <header class="hero">
-        <div class="container hero-content">
-            <div class="hero-text">
-              <!--  <h1> Find help now</h1> -->
-                <h1> You are not alone</h1>
-                <!-- <p style="font-size: 2.5rem; font-weight: 800; color: var(--primary);"></p>You are not alone </p> -->
-               <!-- <h2>You are not alone </h2> -->
-                <p>Sakhi181 provides verified, location-based access to both government-based and NGO support for various categories. Find a center near you.</p>
-               <!-- <p style="font-size: 0.85rem; opacity: 0.9; margin-top: 0.5rem;">(Currently the verified information is based in Telangana. We are working to expand coverage)</p>-->
-                <p style="font-size: 0.85rem; opacity: 0.9; margin-top: 0.5rem;">(Verified information primarily covers Telangana, with some content applicable nationwide.)</p>
-                
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <!--  <h1> Find help now</h1> -->
+                    <h1> You are not alone</h1>
+                    <!-- <p style="font-size: 2.5rem; font-weight: 800; color: var(--primary);"></p>You are not alone </p> -->
+                    <!-- <h2>You are not alone </h2> -->
+                    <p>Sakhi181 provides verified, location-based access to both government-based and NGO support for
+                        various categories. Find a center near you.</p>
+                    <!-- <p style="font-size: 0.85rem; opacity: 0.9; margin-top: 0.5rem;">(Currently the verified information is based in Telangana. We are working to expand coverage)</p>-->
+                    <p style="font-size: 0.85rem; opacity: 0.9; margin-top: 0.5rem;">(Verified information primarily
+                        covers Telangana, with some content applicable nationwide.)</p>
 
-            </div>
 
-            <div class="hero-card" id="find-center">
-                <h2><i class="ri-map-pin-2-fill" style="color: var(--primary);"></i> Find a Center</h2>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2rem;">Find Help Centres within 100 km from you.</p>
-                
-                <form>
-                    <div class="form-group" style="position: relative;">
-                        <label>Location Discovery</label>
-                        <button type="button" id="useCurrentLocation" class="btn-location-alt">
-                            <i class="ri-focus-3-line"></i> Use Current Location
+                </div>
+
+                <div class="hero-card" id="find-center">
+                    <h2><i class="ri-map-pin-2-fill" style="color: var(--primary);"></i> Find a Center</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2rem;">Find Help Centres
+                        within 100 km from you.</p>
+
+                    <form>
+                        <div class="form-group" style="position: relative;">
+                            <label>Location Discovery</label>
+                            <button type="button" id="useCurrentLocation" class="btn-location-alt">
+                                <i class="ri-focus-3-line"></i> Use Current Location
+                            </button>
+                        </div>
+                        <div
+                            style="text-align: center; margin: 1rem 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 1rem;">
+                            <span style="flex: 1; height: 1px; background: #e2e8f0;"></span>
+                            or
+                            <span style="flex: 1; height: 1px; background: #e2e8f0;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="pinInput">Pin Code</label>
+                            <input type="text" id="pinInput" placeholder="Enter 6-digit PIN" maxlength="6"
+                                aria-label="Enter 6-digit PIN code">
+                        </div>
+                        <div class="form-group">
+                            <label for="districtSelect">District (Optional)</label>
+                            <select id="districtSelect">
+                                <option value="">All Districts</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="categorySelect">Center Category (Optional)</label>
+                            <select id="categorySelect">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-hero">
+                            <i class="ri-search-line"></i> Find help near you
                         </button>
-                    </div>
-                    <div style="text-align: center; margin: 1rem 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 1rem;">
-                        <span style="flex: 1; height: 1px; background: #e2e8f0;"></span>
-                        or
-                        <span style="flex: 1; height: 1px; background: #e2e8f0;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="pinInput">Pin Code</label>
-                        <input type="text" id="pinInput" placeholder="Enter 6-digit PIN" maxlength="6" aria-label="Enter 6-digit PIN code">
-                    </div>
-                    <div class="form-group">
-                        <label for="districtSelect">District (Optional)</label>
-                        <select id="districtSelect">
-                            <option value="">All Districts</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="categorySelect">Center Category (Optional)</label>
-                        <select id="categorySelect">
-                            <option value="">All Categories</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-hero">
-                        <i class="ri-search-line"></i> Find help near you
-                    </button>
-                </form>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <!-- Search Results Container (Optimized for CLS) -->
+        <div id="searchResultsContainer" class="container"
+            style="display: none; margin-top: -3rem; position: relative; z-index: 101; min-height: 200px; margin-bottom: 2rem;">
+            <div class="results-card">
+                <div class="results-header">
+                    <h2><i class="ri-list-check"></i> Centers Nearby</h2>
+                    <button class="btn-close-results"
+                        onclick="document.getElementById('searchResultsContainer').style.display='none'">&times;</button>
+                </div>
+                <div id="centersResultsList" class="results-list">
+                    <!-- Results will be injected here -->
+                </div>
             </div>
         </div>
-    </header>
 
-    <!-- Search Results Container (Optimized for CLS) -->
-    <div id="searchResultsContainer" class="container" style="display: none; margin-top: -3rem; position: relative; z-index: 101; min-height: 200px; margin-bottom: 2rem;">
-        <div class="results-card">
-            <div class="results-header">
-                <h2><i class="ri-list-check"></i> Centers Nearby</h2>
-                <button class="btn-close-results" onclick="document.getElementById('searchResultsContainer').style.display='none'">&times;</button>
-            </div>
-            <div id="centersResultsList" class="results-list">
-                <!-- Results will be injected here -->
-            </div>
-        </div>
-    </div>
+        <!-- Resources Preview Section -->
+        <section class="section-padding integrated-section" style="background: #f8fafc;">
+            <div class="container" style="text-align: center;">
+                <span class="card-tag">Support Hub</span>
+                <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Explore our Resources</h2>
+                <p style="color: var(--text-muted); font-size: 1rem; max-width: 600px; margin: 0 auto;">Access
+                    specialized support through our integrated welfare network.</p>
 
-    <!-- Resources Preview Section -->
-    <section class="section-padding integrated-section" style="background: #f8fafc;">
-        <div class="container" style="text-align: center;">
-            <span class="card-tag">Support Hub</span>
-            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Explore our Resources</h2>
-            <p style="color: var(--text-muted); font-size: 1rem; max-width: 600px; margin: 0 auto;">Access specialized support through our integrated welfare network.</p>
-            
-            <div class="services-grid" style="margin-top: 4rem;">
-               
+                <div class="services-grid" style="margin-top: 4rem;">
 
-                <a href="resources.html#legal" class="service-box reveal">
-                    <div class="icon-box" style="background: #ede9fe; color: #7c3aed;"><i class="ri-scales-3-line"></i></div>
-                    <h3>Legal Aid</h3>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Access free legal advice and representation to help you navigate the system.</p>
-                    <span class="btn-link">Learn More <i class="ri-arrow-right-line"></i></span>
-                </a>
 
-                 <a href="resources.html#shelter" class="service-box reveal">
-                    <div class="icon-box" style="background: #dbeafe; color: #2563eb;"><i class="ri-map-pin-2-fill"></i></div>
-                    <h3>Sakhi One Stop Centers</h3>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Locate centers providing shelter, legal, counselling and medical aid in one place.</p>
-                    <span class="btn-link">View Details <i class="ri-arrow-right-line"></i></span>
-                </a>
+                    <a href="resources.html#legal" class="service-box reveal">
+                        <div class="icon-box" style="background: #ede9fe; color: #7c3aed;"><i
+                                class="ri-scales-3-line"></i></div>
+                        <h3>Legal Aid</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Access free legal advice
+                            and representation to help you navigate the system.</p>
+                        <span class="btn-link">Learn More <i class="ri-arrow-right-line"></i></span>
+                    </a>
 
-                <!-- <a href="resources.html#medical" class="service-box reveal">
+                    <a href="resources.html#shelter" class="service-box reveal">
+                        <div class="icon-box" style="background: #dbeafe; color: #2563eb;"><i
+                                class="ri-map-pin-2-fill"></i></div>
+                        <h3>Sakhi One Stop Centers</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Locate centers providing
+                            shelter, legal, counselling and medical aid in one place.</p>
+                        <span class="btn-link">View Details <i class="ri-arrow-right-line"></i></span>
+                    </a>
+
+                    <!-- <a href="resources.html#medical" class="service-box reveal">
                     <div class="icon-box" style="background: #fff7ed; color: #ea580c;"><i class="ri-hospital-line"></i></div>
                     <h3>Medical Help</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Immediate medical attention and healthcare referrals ensuring your safety.</p>
                     <span class="btn-link">Get Support <i class="ri-arrow-right-line"></i></span>
                 </a> -->
 
-                 <a href="resources.html#medical" class="service-box reveal">
-                    <div class="icon-box" style="background: #fff7ed; color: #ea580c;"><i class="ri-hospital-line"></i></div>
-                    <h3>Counselling</h3>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Emotional support and guidance to help you through difficult times.</p>
-                    <span class="btn-link">Get Support <i class="ri-arrow-right-line"></i></span>
-                </a>
-            </div>
+                    <a href="resources.html#medical" class="service-box reveal">
+                        <div class="icon-box" style="background: #fff7ed; color: #ea580c;"><i
+                                class="ri-hospital-line"></i></div>
+                        <h3>Counselling</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin: 1rem 0;">Emotional support and
+                            guidance to help you through difficult times.</p>
+                        <span class="btn-link">Get Support <i class="ri-arrow-right-line"></i></span>
+                    </a>
+                </div>
 
-            <div style="margin-top: 4rem;">
-                <a href="resources.html" class="btn-hero" style="display: inline-flex; width: auto; padding: 1.2rem 3rem;">
-                    Browse All Resources <i class="ri-arrow-right-up-line"></i>
-                </a>
+                <div style="margin-top: 4rem;">
+                    <a href="resources.html" class="btn-hero"
+                        style="display: inline-flex; width: auto; padding: 1.2rem 3rem;">
+                        Browse All Resources <i class="ri-arrow-right-up-line"></i>
+                    </a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Mission Section -->
-   <!--   <section class="section-padding">
+        <!-- Mission Section -->
+        <!--   <section class="section-padding">
         <div class="container">
             <div class="mission-header">
                 <h2>Empowering Women Through Integrated Care</h2>
@@ -290,7 +374,8 @@
                         <img src="Whitebg_Sakhi181_nospace.png" alt="Sakhi OSC Logo" width="150">
                     </div>
                     <!-- <p>An initiative for the protection and empowerment of womem, providing support in one location.</p> -->
-                    <p>An initiative dedicated to the protection, support, and empowerment of women through accurate and accessible information and resources. </p>
+                    <p>An initiative dedicated to the protection, support, and empowerment of women through accurate and
+                        accessible information and resources. </p>
                 </div>
                 <div class="footer-links-col">
                     <h4>Legal</h4>
@@ -312,10 +397,15 @@
                 </div>
             </div>
             <div class="footer-bottom" style="flex-direction: column; gap: 1rem;">
-                <p style="font-size: 0.75rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.4;">Sakhi181 Foundation is an independent, non-governmental organization and is not affiliated with any government body. We work to create awareness and improve access to existing support systems for women, including government helplines and services.</p>
+                <p
+                    style="font-size: 0.75rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.4;">
+                    Sakhi181 Foundation is an independent, non-governmental organization and is not affiliated with any
+                    government body. We work to create awareness and improve access to existing support systems for
+                    women, including government helplines and services.</p>
                 <p>© 2026 Sakhi One Stop Centre. All Rights Reserved.</p>
                 <div class="social-links">
-                    <a href="https://www.instagram.com/sakhi181_foundation?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="social-icon" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+                    <a href="https://www.instagram.com/sakhi181_foundation?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                        target="_blank" class="social-icon" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
                 </div>
             </div>
         </div>
@@ -331,8 +421,10 @@
             }, 'google_translate_element');
         }
     </script>
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+    <script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 
     <script src="script_v2.js" defer></script>
 </body>
+
 </html>
