@@ -40,4 +40,36 @@ TO anon
 USING (true);
 
 
+-- ============================================================================
+-- GOVERNMENT HELPLINES TABLE
+-- ============================================================================
+
+DROP TABLE IF EXISTS government_helplines;
+
+CREATE TABLE government_helplines (
+    id BIGSERIAL PRIMARY KEY,
+    "Name" TEXT NOT NULL,
+    "Number" TEXT NOT NULL,
+    "National / State" TEXT,
+    "Toll-Free (Y/N)" TEXT,
+    "Category" TEXT,
+    "Services Provided" TEXT,
+    "Languages Supported" TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Index for fast category and type filtering
+CREATE INDEX IF NOT EXISTS idx_helplines_category ON government_helplines("Category");
+CREATE INDEX IF NOT EXISTS idx_helplines_national_state ON government_helplines("National / State");
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE government_helplines ENABLE ROW LEVEL SECURITY;
+
+-- Policy to allow public read access
+CREATE POLICY "Allow public read access on government_helplines" 
+ON government_helplines FOR SELECT 
+TO anon 
+USING (true);
+
+
 
