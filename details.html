@@ -231,54 +231,42 @@
 
         function extractImageUrls(rawStr) {
             if (!rawStr) return [];
-            const items = String(rawStr).split(/[,\n;]+/).map(s => s.trim()).filter(s => s.length > 0);
+            const str = String(rawStr).trim();
+            if (!str) return [];
+
             const validUrls = [];
             const seen = new Set();
 
-            items.forEach(item => {
-                if (item.includes('http') && item.includes(' ')) {
-                    const spaceParts = item.split(/\s+/).filter(p => p.startsWith('http') || p.startsWith('www.'));
-                    spaceParts.forEach(part => {
-                        const formatted = formatImageUrl(part);
-                        if (formatted && !seen.has(formatted)) {
-                            seen.add(formatted);
-                            validUrls.push({ original: part, formatted: formatted });
-                        }
-                    });
-                } else {
-                    const formatted = formatImageUrl(item);
+            // 1. Check for any full URL matches
+            const urlMatches = str.match(/https?:\/\/[^\s,;"'<>)]+/g);
+            if (urlMatches && urlMatches.length > 0) {
+                urlMatches.forEach(url => {
+                    const clean = url.replace(/[),;.]+$/, '').trim();
+                    const formatted = formatImageUrl(clean, 'w800');
                     if (formatted && !seen.has(formatted)) {
                         seen.add(formatted);
-                        validUrls.push({ original: item, formatted: formatted });
+                        validUrls.push({ original: clean, formatted: formatted });
                     }
+                });
+            }
+
+            if (validUrls.length > 0) return validUrls;
+
+            // 2. Fallback split by delimiters
+            const items = str.split(/[,\n;|\s]+/).map(s => s.trim()).filter(s => s.length > 0);
+            items.forEach(item => {
+                const formatted = formatImageUrl(item, 'w800');
+                if (formatted && !seen.has(formatted)) {
+                    seen.add(formatted);
+                    validUrls.push({ original: item, formatted: formatted });
                 }
             });
 
             return validUrls;
         }
 
-        // function getCenterPhotos(rawStr) {
-        //     const res = extractImageUrls(rawStr);
-        //     if (res && res.length > 0) return res;
-        //     if (!rawStr) return [];
-        //     const items = String(rawStr).split(/[,\n;]+/).map(s => s.trim()).filter(s => s.length > 0);
-        //     return items.map(url => ({
-        //         original: url,
-        //         formatted: formatImageUrl(url) || url
-        //     })).filter(item => item.formatted);
-        // }
-
-//Edited by SV to fit the images into 2 sizes for main and thumbnail display
         function getCenterPhotos(rawStr) {
-            const res = extractImageUrls(rawStr);
-            if (res && res.length > 0) return res;
-            if (!rawStr) return [];
-            const items = String(rawStr).split(/[,\n;]+/).map(s => s.trim()).filter(s => s.length > 0);
-            return items.map(url => ({
-                original: url,
-                formatted: formatImageUrl(url, 'w400') || url,
-                thumb: formatImageUrl(url, 'w150') || url
-            })).filter(item => item.formatted);
+            return extractImageUrls(rawStr);
         }
 
         function showError(title, message) {
@@ -415,12 +403,6 @@
                         </div>
                     </div>
                 `;
-            } else if (photoList.length === 1) {
-                photoCardHtml = `
-                    <div class="details-photo-wrapper">
-                        <img src="${photoList[0].formatted}" alt="Photo of ${name}" class="details-photo-img" onerror="handleImageError(this, '${photoList[0].original.replace(/'/g, "\\'")}')">
-                    </div>
-                `;
             } else {
                 photoCardHtml = `
                     <div class="gallery-carousel-wrapper" id="galleryCarousel">
@@ -435,27 +417,31 @@
                                     `).join('')}
                                 </div>
                             </div>
-                            <button type="button" class="carousel-nav-btn prev" onclick="navigateGallery(-1)" aria-label="Previous Photo">
+                            <!-- Carousel Navigation Buttons -->
+                            <button type="button" class="carousel-nav-btn prev" onclick="navigateGallery(-1)" aria-label="Previous Photo" title="Previous Image">
                                 <i class="ri-arrow-left-s-line"></i>
                             </button>
-                            <button type="button" class="carousel-nav-btn next" onclick="navigateGallery(1)" aria-label="Next Photo">
+                            <button type="button" class="carousel-nav-btn next" onclick="navigateGallery(1)" aria-label="Next Photo" title="Next Image">
                                 <i class="ri-arrow-right-s-line"></i>
                             </button>
-                            <div class="carousel-dots" id="carouselDots">
-                                ${photoList.map((_, idx) => `
-                                    <button type="button" class="carousel-dot ${idx === 0 ? 'active' : ''}" onclick="goToGallerySlide(${idx})" aria-label="Slide ${idx + 1}"></button>
+                            ${photoList.length > 1 ? `
+                                <div class="carousel-dots" id="carouselDots">
+                                    ${photoList.map((_, idx) => `
+                                        <button type="button" class="carousel-dot ${idx === 0 ? 'active' : ''}" onclick="goToGallerySlide(${idx})" aria-label="Slide ${idx + 1}"></button>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                        ${photoList.length > 1 ? `
+                            <div class="gallery-thumbs-row" id="galleryThumbs">
+                                ${photoList.map((imgObj, idx) => `
+                                    <button type="button" class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="goToGallerySlide(${idx})" aria-label="View photo ${idx + 1}">
+                                        <img src="${imgObj.formatted}" alt="Thumbnail ${idx + 1}" onerror="this.src='sakhi-favicon.png'">
+                                    </button>
                                 `).join('')}
                             </div>
-                        </div>
-                        <div class="gallery-thumbs-row" id="galleryThumbs">
-                            ${photoList.map((imgObj, idx) => `
-                                <button type="button" class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="goToGallerySlide(${idx})" aria-label="View photo ${idx + 1}">
-                                    <img src="${imgObj.formatted}" alt="Thumbnail ${idx + 1}" onerror="this.src='sakhi-favicon.png'">
-                                </button>
-                            `).join('')}
-                        </div>
+                        ` : ''}
                     </div>
-                `;
             }
 
             // Update page metadata
