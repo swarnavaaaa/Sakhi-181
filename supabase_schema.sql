@@ -55,6 +55,7 @@ CREATE TABLE government_helplines (
     "Category" TEXT,
     "Services Provided" TEXT,
     "Languages Supported" TEXT,
+    "Website" TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
