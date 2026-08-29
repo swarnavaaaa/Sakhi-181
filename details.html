@@ -410,7 +410,7 @@
                 photoCardHtml = `
                     <div class="details-photo-wrapper">
                         <div class="photo-placeholder">
-                            <i class="ri-hotel-line"></i>
+                            <i class="ri-building-line"></i>
                             <p>No Photo Uploaded Yet</p>
                         </div>
                     </div>
@@ -423,16 +423,37 @@
                 `;
             } else {
                 photoCardHtml = `
-                    <div class="details-photo-wrapper">
-                        <span id="photoBadge" class="photo-count-badge">Photo 1 of ${photoList.length}</span>
-                        <img id="mainGalleryImg" src="${photoList[0].formatted}" alt="Photo of ${name}" class="details-photo-img" onerror="handleImageError(this, '${photoList[0].original.replace(/'/g, "\\'")}')">
-                    </div>
-                    <div class="gallery-thumbs-row">
-                        ${photoList.map((imgObj, idx) => `
-                            <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="switchGalleryPhoto(${idx}, '${imgObj.formatted.replace(/'/g, "\\'")}', '${imgObj.original.replace(/'/g, "\\'")}')">
-                                <img src="${imgObj.formatted}" alt="Thumbnail ${idx + 1}" onerror="this.src='sakhi-favicon.png'">
+                    <div class="gallery-carousel-wrapper" id="galleryCarousel">
+                        <div class="details-photo-wrapper" id="carouselWrapper">
+                            <span id="photoBadge" class="photo-count-badge">1 / ${photoList.length}</span>
+                            <div class="carousel-track-container" id="carouselTrackContainer">
+                                <div class="carousel-track" id="carouselTrack" style="transform: translateX(0%);">
+                                    ${photoList.map((imgObj, idx) => `
+                                        <div class="carousel-slide" data-slide-index="${idx}">
+                                            <img src="${imgObj.formatted}" alt="Photo ${idx + 1} of ${name}" class="details-photo-img" loading="${idx === 0 ? 'eager' : 'lazy'}" onerror="handleCarouselImageError(this, '${imgObj.original.replace(/'/g, "\\'")}')">
+                                        </div>
+                                    `).join('')}
+                                </div>
                             </div>
-                        `).join('')}
+                            <button type="button" class="carousel-nav-btn prev" onclick="navigateGallery(-1)" aria-label="Previous Photo">
+                                <i class="ri-arrow-left-s-line"></i>
+                            </button>
+                            <button type="button" class="carousel-nav-btn next" onclick="navigateGallery(1)" aria-label="Next Photo">
+                                <i class="ri-arrow-right-s-line"></i>
+                            </button>
+                            <div class="carousel-dots" id="carouselDots">
+                                ${photoList.map((_, idx) => `
+                                    <button type="button" class="carousel-dot ${idx === 0 ? 'active' : ''}" onclick="goToGallerySlide(${idx})" aria-label="Slide ${idx + 1}"></button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="gallery-thumbs-row" id="galleryThumbs">
+                            ${photoList.map((imgObj, idx) => `
+                                <button type="button" class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="goToGallerySlide(${idx})" aria-label="View photo ${idx + 1}">
+                                    <img src="${imgObj.formatted}" alt="Thumbnail ${idx + 1}" onerror="this.src='sakhi-favicon.png'">
+                                </button>
+                            `).join('')}
+                        </div>
                     </div>
                 `;
             }
@@ -544,6 +565,17 @@
                                 </a>
                             ` : ''}
                         </div>
+                        <div class="details-card feedback-notice-card">
+                            <div class="feedback-notice-inner">
+                                <div class="feedback-notice-icon">
+                                    <i class="ri-message-3-line"></i>
+                                </div>
+                                <div class="feedback-notice-body">
+                                    <p class="feedback-notice-text">Notice something missing or incorrect? Have more details to share about this center?</p>
+                                    <p class="feedback-notice-subtext"><a href="contact.html" class="feedback-notice-link">Contact us</a> — we'd love to hear from you.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -578,18 +610,107 @@
                     console.error("Leaflet error:", mapErr);
                 }
             }
+
+            // Initialize Carousel Gestures & Listeners if multi-photo carousel exists
+            initGalleryCarousel();
         }
 
-        window.switchGalleryPhoto = function(index, formattedUrl, originalUrl) {
-            const mainImg = document.getElementById('mainGalleryImg');
+        let currentGalleryIndex = 0;
+
+        window.goToGallerySlide = function(index) {
+            const track = document.getElementById('carouselTrack');
             const photoBadge = document.getElementById('photoBadge');
             const thumbs = document.querySelectorAll('.gallery-thumbs-row .thumb-item');
-            if (mainImg) {
-                mainImg.src = formattedUrl;
-                mainImg.setAttribute('onerror', `handleImageError(this, '${originalUrl.replace(/'/g, "\\'")}')`);
+            const dots = document.querySelectorAll('.carousel-dots .carousel-dot');
+
+            if (!track) return;
+            const slides = track.querySelectorAll('.carousel-slide');
+            if (slides.length === 0) return;
+
+            const totalSlides = slides.length;
+            if (index < 0) index = totalSlides - 1;
+            if (index >= totalSlides) index = 0;
+
+            currentGalleryIndex = index;
+            track.style.transform = `translateX(-${currentGalleryIndex * 100}%)`;
+
+            if (photoBadge) {
+                photoBadge.textContent = `${currentGalleryIndex + 1} / ${totalSlides}`;
             }
-            if (photoBadge) photoBadge.textContent = `Photo ${index + 1} of ${thumbs.length}`;
-            thumbs.forEach((t, i) => i === index ? t.classList.add('active') : t.classList.remove('active'));
+
+            thumbs.forEach((t, i) => {
+                if (i === currentGalleryIndex) {
+                    t.classList.add('active');
+                    t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                } else {
+                    t.classList.remove('active');
+                }
+            });
+
+            dots.forEach((d, i) => {
+                if (i === currentGalleryIndex) {
+                    d.classList.add('active');
+                } else {
+                    d.classList.remove('active');
+                }
+            });
+        };
+
+        window.navigateGallery = function(direction) {
+            goToGallerySlide(currentGalleryIndex + direction);
+        };
+
+        function initGalleryCarousel() {
+            currentGalleryIndex = 0;
+            const container = document.getElementById('carouselTrackContainer');
+            const carouselWrapper = document.getElementById('galleryCarousel');
+            if (!container) return;
+
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            container.addEventListener('touchstart', (e) => {
+                if (e.touches && e.touches.length > 0) {
+                    touchStartX = e.touches[0].clientX;
+                }
+            }, { passive: true });
+
+            container.addEventListener('touchend', (e) => {
+                if (e.changedTouches && e.changedTouches.length > 0) {
+                    touchEndX = e.changedTouches[0].clientX;
+                    const diff = touchStartX - touchEndX;
+                    if (Math.abs(diff) > 40) {
+                        if (diff > 0) {
+                            navigateGallery(1);
+                        } else {
+                            navigateGallery(-1);
+                        }
+                    }
+                }
+            }, { passive: true });
+
+            if (carouselWrapper) {
+                carouselWrapper.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') {
+                        navigateGallery(-1);
+                    } else if (e.key === 'ArrowRight') {
+                        navigateGallery(1);
+                    }
+                });
+            }
+        }
+
+        window.handleCarouselImageError = function(img, rawUrl = '') {
+            const slide = img.parentElement;
+            if (slide) {
+                slide.innerHTML = `
+                    <div class="photo-placeholder carousel-error-placeholder">
+                        <i class="ri-image-warning-line" style="font-size: 2rem; color: #f59e0b;"></i>
+                        <p style="font-weight: 600; font-size: 0.8rem; margin: 0;">Image Preview Unavailable</p>
+                        ${rawUrl ? `<a href="${rawUrl}" target="_blank" style="color:var(--primary); text-decoration:underline; font-size: 0.75rem;">Open Original</a>` : ''}
+                    </div>
+                `;
+            }
         };
 
         window.handleImageError = function(img, rawUrl = '') {
