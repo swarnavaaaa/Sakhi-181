@@ -450,13 +450,20 @@
             const breadcrumbEl = document.getElementById('breadcrumbActive');
             if (breadcrumbEl) breadcrumbEl.textContent = name;
 
+            const categoryBadgesHtml = category ? category
+                .split(/[,\n;/|]+/)
+                .map(c => c.trim())
+                .filter(Boolean)
+                .map(cat => `<span class="badge-detail category"><i class="ri-bookmark-line"></i> ${cat}</span>`)
+                .join('') : '';
+
             // Render Layout HTML
             container.innerHTML = `
                 <div class="details-header-card">
                     <div class="details-header-top">
                         <h1 class="details-title">${name}</h1>
                         <div class="details-meta-badges">
-                            ${category ? `<span class="badge-detail category"><i class="ri-bookmark-line"></i> ${category}</span>` : ''}
+                            ${categoryBadgesHtml}
                             ${type ? `<span class="badge-detail type"><i class="ri-building-line"></i> ${type}</span>` : ''}
                             ${verifiedDate ? `<span class="badge-detail verified"><i class="ri-checkbox-circle-fill"></i> Verified Center</span>` : ''}
                         </div>

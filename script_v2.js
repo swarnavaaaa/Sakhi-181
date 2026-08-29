@@ -285,9 +285,16 @@ async function populateCategories() {
         if (error) throw error;
 
         if (data) {
-            const categories = [...new Set(data.map(item => item.Category))]
-                .filter(cat => cat && cat.trim() !== "")
-                .sort();
+            const rawCategories = data
+                .map(item => item.Category)
+                .filter(cat => cat && typeof cat === 'string' && cat.trim() !== "");
+
+            // Split multi-category entries (by comma, semicolon, slash, or newline)
+            const splitCategories = rawCategories.flatMap(catStr => 
+                catStr.split(/[,\n;/|]+/).map(s => s.trim())
+            ).filter(s => s.length > 0);
+
+            const categories = [...new Set(splitCategories)].sort((a, b) => a.localeCompare(b));
 
             const fragment = document.createDocumentFragment();
             categories.forEach(cat => {
@@ -517,11 +524,20 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
             }
 
             // B. Category match
-            const cCat = getProp(center, "Category") || "";
-            const categoryMatch = !category || (cCat && (
-                cCat.toLowerCase() === category.toLowerCase() || 
-                cCat.toLowerCase().includes(category.toLowerCase())
-            ));
+            const rawCatStr = getProp(center, "Category") || "";
+            const centerCategories = rawCatStr
+                .split(/[,\n;/|]+/)
+                .map(c => c.trim().toLowerCase())
+                .filter(Boolean);
+            const targetCat = (category || "").trim().toLowerCase();
+
+            const categoryMatch = !category || (
+                centerCategories.length > 0 && (
+                    centerCategories.includes(targetCat) ||
+                    centerCategories.some(c => c === targetCat || c.includes(targetCat) || targetCat.includes(c)) ||
+                    rawCatStr.toLowerCase().includes(targetCat)
+                )
+            );
 
             // B2. District match (explicit filter)
             const districtMatch = !district || (distName && (
@@ -722,6 +738,16 @@ function renderCenters(centers, listId = 'centersResultsList', searchPin = '') {
             }
         }
         
+        const rawCenterCat = getProp(center, "Category") || 'Sakhi One Stop Centre';
+        const centerCategoriesList = rawCenterCat
+            .split(/[,\n;/|]+/)
+            .map(c => c.trim())
+            .filter(Boolean);
+        
+        const categoriesHtml = centerCategoriesList.length > 0 
+            ? `<div class="center-categories-pills">${centerCategoriesList.map(cat => `<span class="category-pill-item"><i class="ri-bookmark-line"></i> ${cat}</span>`).join('')}</div>`
+            : `<p style="font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-bottom: 1rem;">Sakhi One Stop Centre</p>`;
+        
         const centerHtml = `
             <div class="center-item ${isTopMatch ? 'closest-highlight' : ''}" data-id="${getProp(center, "id") || center.id || ''}">
                 ${isTopMatch ? `<div class="closest-badge"><i class="ri-flashlight-fill"></i> ${badgeLabel}</div>` : ''}
@@ -731,7 +757,7 @@ function renderCenters(centers, listId = 'centersResultsList', searchPin = '') {
                         <i class="${hasDistance ? 'ri-map-pin-range-line' : 'ri-map-pin-2-line'}"></i> ${distanceText}
                     </span>
                 </div>
-                <p style="font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-bottom: 1rem;">${getProp(center, "Category") || 'Sakhi One Stop Centre'}</p>
+                ${categoriesHtml}
                 
                 <div class="center-details">
                     <div class="center-info-row">

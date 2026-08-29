@@ -1952,6 +1952,33 @@ footer {
     max-width: 100%;
 }
 
+.center-categories-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.category-pill-item {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--bg-light);
+    border: 1px solid rgba(194, 24, 91, 0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    letter-spacing: 0.2px;
+}
+
+.category-pill-item i {
+    font-size: 0.75rem;
+    opacity: 0.85;
+}
+
 .contact-link {
     color: var(--text-main);
     font-weight: 400; /* Removed bold from actual phone/email */
