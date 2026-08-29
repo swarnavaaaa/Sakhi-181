@@ -277,37 +277,45 @@ async function populateCategories() {
 
     try {
         console.log("Fetching unique categories...");
-        // Use a select query to get all categories
-        const { data, error } = await supabaseClient
-            .from('centers')
-            .select('Category');
+        const [centersRes, helplinesRes] = await Promise.allSettled([
+            supabaseClient.from('centers').select('Category'),
+            supabaseClient.from('government_helplines').select('Category')
+        ]);
 
-        if (error) throw error;
-
-        if (data) {
-            const rawCategories = data
-                .map(item => item.Category)
-                .filter(cat => cat && typeof cat === 'string' && cat.trim() !== "");
-
-            // Split multi-category entries (by comma, semicolon, slash, or newline)
-            const splitCategories = rawCategories.flatMap(catStr => 
-                catStr.split(/[,\n;/|]+/).map(s => s.trim())
-            ).filter(s => s.length > 0);
-
-            const categories = [...new Set(splitCategories)].sort((a, b) => a.localeCompare(b));
-
-            const fragment = document.createDocumentFragment();
-            categories.forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat;
-                option.textContent = cat;
-                fragment.appendChild(option);
-            });
-            
-            requestAnimationFrame(() => {
-                categorySelect.appendChild(fragment);
-            });
+        let allCategoryStrings = [];
+        if (centersRes.status === 'fulfilled' && centersRes.value.data) {
+            allCategoryStrings.push(...centersRes.value.data.map(i => i.Category));
         }
+        if (helplinesRes.status === 'fulfilled' && helplinesRes.value.data) {
+            allCategoryStrings.push(...helplinesRes.value.data.map(i => i.Category));
+        }
+
+        // Always include Government Helpline Number as a default category if not present
+        if (!allCategoryStrings.some(s => s && s.toLowerCase().includes('government helpline'))) {
+            allCategoryStrings.push('Government Helpline Number');
+        }
+
+        const rawCategories = allCategoryStrings
+            .filter(cat => cat && typeof cat === 'string' && cat.trim() !== "");
+
+        // Split multi-category entries (by comma, semicolon, slash, or newline)
+        const splitCategories = rawCategories.flatMap(catStr => 
+            catStr.split(/[,\n;/|]+/).map(s => s.trim())
+        ).filter(s => s.length > 0);
+
+        const categories = [...new Set(splitCategories)].sort((a, b) => a.localeCompare(b));
+
+        const fragment = document.createDocumentFragment();
+        categories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat;
+            option.textContent = cat;
+            fragment.appendChild(option);
+        });
+        
+        requestAnimationFrame(() => {
+            categorySelect.appendChild(fragment);
+        });
     } catch (err) {
         console.error("Error populating categories:", err);
     }
@@ -403,6 +411,30 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
     }, 100);
 
     try {
+        // Check if searching for Government Helplines
+        const isHelplineSearch = category && (
+            category.toLowerCase().includes('helpline') || 
+            category.toLowerCase() === 'government helpline number'
+        );
+
+        if (isHelplineSearch) {
+            console.log("Querying government_helplines table...");
+            try {
+                const { data: helplines, error: hlError } = await supabaseClient
+                    .from('government_helplines')
+                    .select('*');
+
+                if (!hlError && helplines && helplines.length > 0) {
+                    console.log(`Successfully fetched ${helplines.length} government helplines.`);
+                    renderHelplines(helplines, listId);
+                    showLocationToast({ city: "Government Helplines" }, helplines.length);
+                    return;
+                }
+            } catch (hlErr) {
+                console.warn("Could not load from government_helplines table, checking centers table as fallback:", hlErr);
+            }
+        }
+
         // 1. Fetch all centers
         console.log("Fetching centers from Supabase...");
         const { data: allCenters, error } = await supabaseClient.from('centers').select('*');
@@ -820,6 +852,96 @@ function renderCenters(centers, listId = 'centersResultsList', searchPin = '') {
         fragment.appendChild(tempDiv.firstChild);
     });
     
+    const resultsList = document.getElementById(listId);
+    if (resultsList) {
+        resultsList.innerHTML = '';
+        resultsList.appendChild(fragment);
+    }
+}
+
+/**
+ * Renders Government Helplines from government_helplines table
+ */
+function renderHelplines(helplines, listId = 'centersResultsList') {
+    const fragment = document.createDocumentFragment();
+
+    helplines.forEach((item) => {
+        const name = getProp(item, "Name") || "Government Helpline";
+        const number = getProp(item, "Number") || "";
+        const nationalState = getProp(item, "National / State") || "";
+        const tollFree = getProp(item, "Toll-Free (Y/N)") || "";
+        const category = getProp(item, "Category") || "Government Helpline";
+        const services = getProp(item, "Services Provided") || "";
+        const languages = getProp(item, "Languages Supported") || "";
+        const website = getProp(item, "Website") || "";
+
+        const isTollFree = tollFree && (tollFree.toLowerCase().startsWith('y') || tollFree.toLowerCase().includes('toll'));
+
+        const categoriesList = category
+            .split(/[,\n;/|]+/)
+            .map(c => c.trim())
+            .filter(Boolean);
+
+        const categoriesHtml = categoriesList.length > 0
+            ? `<div class="center-categories-pills">${categoriesList.map(cat => `<span class="category-pill-item"><i class="ri-bookmark-line"></i> ${cat}</span>`).join('')}</div>`
+            : '';
+
+        const cardHtml = `
+            <div class="center-item helpline-card-item">
+                <div class="center-header">
+                    <h4>${name}</h4>
+                    <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
+                        ${nationalState ? `<span class="center-type-badge"><i class="ri-government-line"></i> ${nationalState}</span>` : ''}
+                        ${isTollFree ? `<span class="badge-detail verified" style="font-size: 0.65rem; padding: 0.25rem 0.6rem;"><i class="ri-checkbox-circle-fill"></i> Toll-Free</span>` : ''}
+                    </div>
+                </div>
+                ${categoriesHtml}
+                
+                <div class="center-details">
+                    ${number ? `
+                        <div class="center-info-row" style="background: rgba(194, 24, 91, 0.05); padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid rgba(194, 24, 91, 0.15); margin-bottom: 0.5rem;">
+                            <i class="ri-phone-fill" style="color: var(--primary); font-size: 1.2rem;"></i>
+                            <span><strong class="info-label" style="color: var(--primary);">Helpline:</strong> 
+                                <a href="tel:${number}" class="contact-link" style="font-size: 1.15rem; font-weight: 800; color: var(--primary); text-decoration: none;">${number}</a>
+                            </span>
+                        </div>
+                    ` : ''}
+                    ${services ? `
+                        <div class="center-info-row">
+                            <i class="ri-hand-heart-line"></i>
+                            <span><strong class="info-label">Services Provided:</strong> ${services}</span>
+                        </div>
+                    ` : ''}
+                    ${languages ? `
+                        <div class="center-info-row">
+                            <i class="ri-translate-2"></i>
+                            <span><strong class="info-label">Languages Supported:</strong> ${languages}</span>
+                        </div>
+                    ` : ''}
+                    ${website ? `
+                        <div class="center-info-row">
+                            <i class="ri-global-line"></i>
+                            <span><strong class="info-label">Official Website:</strong> 
+                                <a href="${website.startsWith('http') ? website : 'https://' + website}" target="_blank" class="contact-link">${website}</a>
+                            </span>
+                        </div>
+                    ` : ''}
+                </div>
+
+                <div class="center-item-footer" style="margin-top: 1.2rem;">
+                    ${number ? `
+                        <a href="tel:${number}" class="btn-maps" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white !important; font-weight: 700; border: none; padding: 0.65rem 1.25rem; border-radius: 50px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; width: 100%; justify-content: center; box-shadow: 0 4px 12px rgba(194, 24, 91, 0.25);">
+                            <i class="ri-phone-fill"></i> Call Helpline (${number})
+                        </a>
+                    ` : '<div></div>'}
+                </div>
+            </div>
+        `;
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = cardHtml.trim();
+        fragment.appendChild(tempDiv.firstChild);
+    });
+
     const resultsList = document.getElementById(listId);
     if (resultsList) {
         resultsList.innerHTML = '';
