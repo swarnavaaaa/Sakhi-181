@@ -405,6 +405,129 @@
             margin: 0;
         }
 
+        /* Quick Note / Work In Progress Disclaimer Card */
+        .wip-disclaimer-box {
+            background: #ffffff !important;
+            border: 2px solid rgba(194, 24, 91, 0.22) !important;
+            border-left: 6px solid var(--primary) !important;
+            border-radius: 16px !important;
+            padding: 1.4rem 1.75rem !important;
+            max-width: 820px !important;
+            margin: 1.75rem auto 0 auto !important;
+            box-shadow: 0 10px 30px rgba(194, 24, 91, 0.08) !important;
+            text-align: left !important;
+            display: block !important;
+            position: relative !important;
+            box-sizing: border-box !important;
+        }
+
+        .wip-disclaimer-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.9rem;
+            border-bottom: 1.5px solid #f1f5f9;
+        }
+
+        .wip-disclaimer-heading-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .wip-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 11px;
+            border-radius: 50px;
+            background: #fef3c7;
+            color: #92400e;
+            border: 1.5px solid #fde68a;
+        }
+
+        .wip-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .wip-title i {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .wip-disclaimer-text {
+            font-size: 0.94rem;
+            color: #475569;
+            line-height: 1.6;
+            margin: 0 0 1.2rem 0;
+            font-weight: 400;
+        }
+
+        .wip-action-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: linear-gradient(135deg, #fff0f6 0%, #fff7fb 100%);
+            padding: 0.9rem 1.25rem;
+            border-radius: 12px;
+            border: 1.5px solid rgba(194, 24, 91, 0.16);
+        }
+
+        .wip-action-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .wip-action-label i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .wip-helpline-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #ffffff !important;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 0.65rem 1.35rem;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(194, 24, 91, 0.35);
+            transition: all 0.25s ease;
+        }
+
+        .wip-helpline-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(194, 24, 91, 0.5);
+            color: #ffffff !important;
+        }
+
+        .wip-helpline-btn i {
+            font-size: 1.05rem;
+        }
+
         /* Tab System */
         .tab-nav {
             display: flex;
@@ -1334,17 +1457,24 @@
                         Procedures (SOPs), emergency helplines, content take-down portals, and legal rights under Indian
                         law.</p>
                     <div class="wip-disclaimer-box">
-                        <div class="wip-disclaimer-icon">
-                            <i class="ri-information-line"></i>
-                        </div>
-                        <div class="wip-disclaimer-content">
-                            <div class="wip-disclaimer-header">
+                        <div class="wip-disclaimer-top">
+                            <div class="wip-disclaimer-heading-group">
                                 <span class="wip-pill"><i class="ri-draft-line"></i> Work in Progress</span>
-                                <span class="wip-title">Important Legal & Safety Notice</span>
+                                <h4 class="wip-title"><i class="ri-shield-check-line"></i> Important Legal & Safety Notice</h4>
                             </div>
+                        </div>
+                        <div class="wip-disclaimer-body">
                             <p class="wip-disclaimer-text">
-                                This page is still a work in progress, and some information is yet to be fully verified. We’re doing our best to make it accurate and reliable, but please don’t rely on it as legal advice. For anything important, we sincerely encourage you to consult a qualified lawyer. You can also reach out to the <a href="tel:181" class="wip-helpline-link"><i class="ri-phone-fill"></i> National Women's Helpline at 181</a> for support.
+                                This page is still a work in progress, and some information is yet to be fully verified. We’re doing our best to make it accurate and reliable, but please don’t rely on it as legal advice. For anything important, we sincerely encourage you to consult a qualified lawyer.
                             </p>
+                            <div class="wip-action-row">
+                                <span class="wip-action-label"><i class="ri-customer-service-2-line"></i> Need immediate confidential support?</span>
+                                <a href="tel:181" class="wip-helpline-btn">
+                                    <i class="ri-phone-fill"></i>
+                                    <span>Call National Women's Helpline <strong>181</strong></span>
+                                    <i class="ri-arrow-right-s-line"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
