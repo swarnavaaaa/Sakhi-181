@@ -178,6 +178,15 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger.addEventListener('click', () => {
             const category = trigger.getAttribute('data-category');
             if (category) {
+                // Update title immediately on click
+                const cardHeader = trigger.closest('.topic-card')?.querySelector('h3')?.textContent?.trim();
+                const headingTitle = cardHeader || category;
+                const resTitle = document.getElementById('resourceResultsTitle');
+                if (resTitle) {
+                    const isHl = headingTitle.toLowerCase().includes('helpline');
+                    resTitle.innerHTML = `<i class="${isHl ? 'ri-shield-keyhole-line' : 'ri-map-pin-2-line'}"></i> ${headingTitle}`;
+                }
+
                 // If we have stored location, use it. Otherwise just search by category globally.
                 const storedLocation = sessionStorage.getItem('userLocation');
                 let searchParams = { category, source: 'resource-card' };
@@ -383,19 +392,73 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
         return;
     }
 
-    const resultsContainer = document.getElementById(containerId);
-    const resultsList = document.getElementById(listId);
+    let resultsContainer = document.getElementById(containerId);
+    let resultsList = document.getElementById(listId);
     
+    // Auto-detect container on resources.html if default container isn't found
     if (!resultsContainer || !resultsList) {
-        if (window.location.pathname.includes('resources.html')) {
-            return performUnifiedSearch({ lat, lon, pin, category, source, listId: 'resourceResultsList', containerId: 'resourceResultsContainer' });
+        const resContainer = document.getElementById('resourceResultsContainer');
+        const resList = document.getElementById('resourceResultsList');
+        if (resContainer && resList) {
+            resultsContainer = resContainer;
+            resultsList = resList;
+            containerId = 'resourceResultsContainer';
+            listId = 'resourceResultsList';
+        } else {
+            return;
         }
-        return;
+    }
+
+    // Dynamically update section header title
+    const resourceTitle = document.getElementById('resourceResultsTitle');
+    const isHelplineSearch = category && (
+        category.toLowerCase().includes('helpline') || 
+        category.toLowerCase() === 'government helpline number'
+    );
+
+    if (resourceTitle) {
+        if (isHelplineSearch) {
+            resourceTitle.innerHTML = `<i class="ri-shield-keyhole-line"></i> Government Helpline Numbers`;
+        } else if (category) {
+            const categoryIcons = {
+                'one stop center': 'ri-map-pin-2-line',
+                'legal aid': 'ri-scales-3-line',
+                'legal': 'ri-scales-3-line',
+                'medical help': 'ri-hospital-line',
+                'medical': 'ri-hospital-line',
+                'hiv': 'ri-virus-line',
+                'counselling': 'ri-heart-pulse-line',
+                'lgbtqia+': 'ri-rainbow-line',
+                'lgbtq': 'ri-rainbow-line',
+                'shelter': 'ri-home-heart-line'
+            };
+            const lowerCat = category.toLowerCase();
+            let icon = 'ri-map-pin-2-line';
+            for (const [key, ic] of Object.entries(categoryIcons)) {
+                if (lowerCat.includes(key)) {
+                    icon = ic;
+                    break;
+                }
+            }
+            resourceTitle.innerHTML = `<i class="${icon}"></i> ${category}`;
+        } else {
+            resourceTitle.innerHTML = `<i class="ri-map-pin-2-line"></i> Support Centers`;
+        }
+    }
+
+    const searchHeader = document.querySelector('#searchResultsContainer .results-header h2');
+    if (searchHeader) {
+        if (isHelplineSearch) {
+            searchHeader.innerHTML = `<i class="ri-shield-keyhole-line"></i> Government Helpline Numbers`;
+        } else {
+            searchHeader.innerHTML = `<i class="ri-list-check"></i> Centers Nearby`;
+        }
     }
 
     // UI Feedback
     let statusText = "Searching for Sakhi Centers...";
-    if (category && district) statusText = `Finding <strong>${category}</strong> centers in <strong>${district}</strong>...`;
+    if (isHelplineSearch) statusText = `Loading <strong>Government Helpline Numbers</strong>...`;
+    else if (category && district) statusText = `Finding <strong>${category}</strong> centers in <strong>${district}</strong>...`;
     else if (category) statusText = `Finding <strong>${category}</strong> centers...`;
     else if (district) statusText = `Finding centers in <strong>${district}</strong>...`;
     else if (pin) statusText = `Searching for centers matching PIN <strong>${pin}</strong>...`;
@@ -411,27 +474,72 @@ async function performUnifiedSearch({ lat = null, lon = null, pin = null, catego
     }, 100);
 
     try {
-        // Check if searching for Government Helplines
-        const isHelplineSearch = category && (
-            category.toLowerCase().includes('helpline') || 
-            category.toLowerCase() === 'government helpline number'
-        );
-
         if (isHelplineSearch) {
-            console.log("Querying government_helplines table...");
+            console.log("Fetching helplines from government_helplines and centers tables...");
+            let allHelplines = [];
+
+            // 1. Fetch from government_helplines table
             try {
                 const { data: helplines, error: hlError } = await supabaseClient
                     .from('government_helplines')
                     .select('*');
 
                 if (!hlError && helplines && helplines.length > 0) {
-                    console.log(`Successfully fetched ${helplines.length} government helplines.`);
-                    renderHelplines(helplines, listId);
-                    showLocationToast({ city: "Government Helplines" }, helplines.length);
-                    return;
+                    allHelplines.push(...helplines);
+                } else if (hlError) {
+                    console.warn("government_helplines query error:", hlError);
                 }
             } catch (hlErr) {
-                console.warn("Could not load from government_helplines table, checking centers table as fallback:", hlErr);
+                console.warn("Could not load from government_helplines table:", hlErr);
+            }
+
+            // 2. Also check centers table for any helpline entries (to merge legacy helplines like 181, 14490)
+            try {
+                const { data: centerHelplines, error: chError } = await supabaseClient
+                    .from('centers')
+                    .select('*');
+
+                if (!chError && centerHelplines && centerHelplines.length > 0) {
+                    const filteredCh = centerHelplines.filter(c => {
+                        const cat = (getProp(c, "Category") || "").toLowerCase();
+                        const name = (getProp(c, "Name") || "").toLowerCase();
+                        return cat.includes('helpline') || name.includes('helpline');
+                    });
+
+                    filteredCh.forEach(ch => {
+                        const chNum = (getProp(ch, "Phone Number") || getProp(ch, "Number") || "").toString().trim();
+                        const chName = (getProp(ch, "Name") || "").toString().trim().toLowerCase();
+                        const alreadyExists = allHelplines.some(h => {
+                            const hNum = (getProp(h, "Number") || getProp(h, "Phone Number") || "").toString().trim();
+                            const hName = (getProp(h, "Name") || "").toString().trim().toLowerCase();
+                            return (chNum && hNum && (chNum === hNum || hNum.includes(chNum) || chNum.includes(hNum))) || 
+                                   (chName && hName && (chName === hName || hName.includes(chName) || chName.includes(hName)));
+                        });
+
+                        if (!alreadyExists) {
+                            allHelplines.push({
+                                id: ch.id,
+                                Name: getProp(ch, "Name"),
+                                Number: chNum,
+                                'National / State': getProp(ch, "District") && getProp(ch, "District").toLowerCase().includes('state') ? 'State' : (getProp(ch, "District") || 'National'),
+                                'Toll-Free (Y/N)': 'Y',
+                                Category: getProp(ch, "Category") || 'Government Helpline',
+                                'Services Provided': getProp(ch, "Services provided") || getProp(ch, "Services Provided") || '',
+                                'Languages Supported': getProp(ch, "Languages Supported") || '',
+                                Website: getProp(ch, "Website") || ''
+                            });
+                        }
+                    });
+                }
+            } catch (cErr) {
+                console.warn("Could not check centers table for fallback helplines:", cErr);
+            }
+
+            if (allHelplines.length > 0) {
+                console.log(`Successfully rendering ${allHelplines.length} government helplines.`);
+                renderHelplines(allHelplines, listId);
+                showLocationToast({ city: "Government Helplines" }, allHelplines.length);
+                return;
             }
         }
 
@@ -867,13 +975,13 @@ function renderHelplines(helplines, listId = 'centersResultsList') {
 
     helplines.forEach((item) => {
         const name = getProp(item, "Name") || "Government Helpline";
-        const number = getProp(item, "Number") || "";
-        const nationalState = getProp(item, "National / State") || "";
-        const tollFree = getProp(item, "Toll-Free (Y/N)") || "";
+        const number = (getProp(item, "Number") || getProp(item, "Phone Number") || "").toString().trim();
+        const nationalState = getProp(item, "National / State") || getProp(item, "District") || "";
+        const tollFree = (getProp(item, "Toll-Free (Y/N)") || getProp(item, "Toll-Free") || "Y").toString().trim();
         const category = getProp(item, "Category") || "Government Helpline";
-        const services = getProp(item, "Services Provided") || "";
-        const languages = getProp(item, "Languages Supported") || "";
-        const website = getProp(item, "Website") || "";
+        const services = getProp(item, "Services Provided") || getProp(item, "Services provided") || "";
+        const languages = getProp(item, "Languages Supported") || getProp(item, "Languages supported") || "";
+        const rawWebsite = getProp(item, "Website") || "";
 
         const isTollFree = tollFree && (tollFree.toLowerCase().startsWith('y') || tollFree.toLowerCase().includes('toll'));
 
@@ -886,23 +994,43 @@ function renderHelplines(helplines, listId = 'centersResultsList') {
             ? `<div class="center-categories-pills">${categoriesList.map(cat => `<span class="category-pill-item"><i class="ri-bookmark-line"></i> ${cat}</span>`).join('')}</div>`
             : '';
 
+        let websiteHtml = '';
+        if (rawWebsite) {
+            const urls = rawWebsite.split(/[,\n;]+/).map(u => u.trim()).filter(u => u.length > 0);
+            if (urls.length > 0) {
+                const links = urls.map(u => {
+                    const full = u.startsWith('http') ? u : 'https://' + u;
+                    const display = u.replace(/^https?:\/\//, '').replace(/\/$/, '');
+                    return `<a href="${full}" target="_blank" rel="noopener noreferrer" class="contact-link" style="color: var(--primary); text-decoration: underline; word-break: break-all;">${display}</a>`;
+                }).join('<span style="color: var(--text-muted); margin: 0 0.4rem;">|</span>');
+                websiteHtml = `
+                    <div class="center-info-row">
+                        <i class="ri-global-line"></i>
+                        <span><strong class="info-label">Official Website:</strong> ${links}</span>
+                    </div>
+                `;
+            }
+        }
+
+        const cleanNumber = number.replace(/\D/g, '') || number;
+
         const cardHtml = `
-            <div class="center-item helpline-card-item">
-                <div class="center-header">
-                    <h4>${name}</h4>
+            <div class="center-item helpline-card-item" style="background: white; border: 1.5px solid rgba(194, 24, 91, 0.15); border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);">
+                <div class="center-header" style="margin-bottom: 0.75rem;">
+                    <h4 style="font-size: 1.2rem; color: var(--primary-dark); font-weight: 800;">${name}</h4>
                     <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
-                        ${nationalState ? `<span class="center-type-badge"><i class="ri-government-line"></i> ${nationalState}</span>` : ''}
-                        ${isTollFree ? `<span class="badge-detail verified" style="font-size: 0.65rem; padding: 0.25rem 0.6rem;"><i class="ri-checkbox-circle-fill"></i> Toll-Free</span>` : ''}
+                        ${nationalState ? `<span class="center-type-badge" style="background: rgba(194, 24, 91, 0.1); color: var(--primary); border: 1px solid rgba(194, 24, 91, 0.2);"><i class="ri-government-line"></i> ${nationalState} Helpline</span>` : ''}
+                        ${isTollFree ? `<span class="badge-detail verified" style="font-size: 0.7rem; padding: 0.25rem 0.6rem; background: #ecfdf5; color: #059669; border: 1px solid rgba(5, 150, 105, 0.2); border-radius: 50px; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem;"><i class="ri-checkbox-circle-fill"></i> Toll-Free</span>` : ''}
                     </div>
                 </div>
                 ${categoriesHtml}
                 
-                <div class="center-details">
+                <div class="center-details" style="margin-top: 1rem; margin-bottom: 1.25rem;">
                     ${number ? `
-                        <div class="center-info-row" style="background: rgba(194, 24, 91, 0.05); padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid rgba(194, 24, 91, 0.15); margin-bottom: 0.5rem;">
-                            <i class="ri-phone-fill" style="color: var(--primary); font-size: 1.2rem;"></i>
-                            <span><strong class="info-label" style="color: var(--primary);">Helpline:</strong> 
-                                <a href="tel:${number}" class="contact-link" style="font-size: 1.15rem; font-weight: 800; color: var(--primary); text-decoration: none;">${number}</a>
+                        <div class="center-info-row" style="background: rgba(194, 24, 91, 0.05); padding: 0.75rem 1rem; border-radius: 10px; border: 1.5px solid rgba(194, 24, 91, 0.15); margin-bottom: 0.75rem; align-items: center;">
+                            <i class="ri-phone-fill" style="color: var(--primary); font-size: 1.35rem;"></i>
+                            <span><strong class="info-label" style="color: var(--primary); font-size: 0.95rem;">Helpline Number:</strong> 
+                                <a href="tel:${cleanNumber}" class="contact-link" style="font-size: 1.25rem; font-weight: 800; color: var(--primary); text-decoration: none; letter-spacing: 0.5px;">${number}</a>
                             </span>
                         </div>
                     ` : ''}
@@ -918,19 +1046,12 @@ function renderHelplines(helplines, listId = 'centersResultsList') {
                             <span><strong class="info-label">Languages Supported:</strong> ${languages}</span>
                         </div>
                     ` : ''}
-                    ${website ? `
-                        <div class="center-info-row">
-                            <i class="ri-global-line"></i>
-                            <span><strong class="info-label">Official Website:</strong> 
-                                <a href="${website.startsWith('http') ? website : 'https://' + website}" target="_blank" class="contact-link">${website}</a>
-                            </span>
-                        </div>
-                    ` : ''}
+                    ${websiteHtml}
                 </div>
 
-                <div class="center-item-footer" style="margin-top: 1.2rem;">
+                <div class="center-item-footer" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #e2e8f0;">
                     ${number ? `
-                        <a href="tel:${number}" class="btn-maps" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white !important; font-weight: 700; border: none; padding: 0.65rem 1.25rem; border-radius: 50px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; width: 100%; justify-content: center; box-shadow: 0 4px 12px rgba(194, 24, 91, 0.25);">
+                        <a href="tel:${cleanNumber}" class="btn-maps" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white !important; font-weight: 700; border: none; padding: 0.75rem 1.25rem; border-radius: 50px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; width: 100%; justify-content: center; box-shadow: 0 4px 12px rgba(194, 24, 91, 0.25); font-size: 0.95rem;">
                             <i class="ri-phone-fill"></i> Call Helpline (${number})
                         </a>
                     ` : '<div></div>'}

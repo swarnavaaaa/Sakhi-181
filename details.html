@@ -310,7 +310,45 @@
                     }
                 }
             } catch (restErr) {
-                console.warn("Direct REST fetch attempt failed, trying Supabase JS Client:", restErr);
+                console.warn("Direct REST fetch attempt on centers failed:", restErr);
+            }
+
+            // 1b. Try via direct Supabase REST API on government_helplines table
+            try {
+                let restUrl = `${SUPABASE_URL}/rest/v1/government_helplines?select=*`;
+                if (/^\d+$/.test(id)) {
+                    restUrl += `&id=eq.${encodeURIComponent(id)}`;
+                } else {
+                    restUrl += `&or=(Name.ilike.*${encodeURIComponent(id)}*,Number.ilike.*${encodeURIComponent(id)}*)`;
+                }
+                restUrl += `&limit=1`;
+
+                const res = await fetch(restUrl, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+
+                if (res.ok) {
+                    const list = await res.json();
+                    if (Array.isArray(list) && list.length > 0) {
+                        const h = list[0];
+                        return {
+                            id: h.id,
+                            Name: h.Name,
+                            Category: h.Category || 'Government Helpline Number',
+                            'Phone Number': h.Number,
+                            District: h['National / State'] ? `${h['National / State']} Helpline` : 'National Helpline',
+                            'Services provided': h['Services Provided'],
+                            Website: h.Website,
+                            Address: h['National / State'] ? `${h['National / State']} Level Official Helpline Service` : 'National Government Helpline Service',
+                            Pincode: h['Toll-Free (Y/N)'] === 'Y' ? 'Toll-Free Service' : 'National Helpline'
+                        };
+                    }
+                }
+            } catch (hlRestErr) {
+                console.warn("Direct REST fetch attempt on government_helplines failed:", hlRestErr);
             }
 
             // 2. Try via Supabase JS SDK client if available
@@ -326,6 +364,22 @@
                     const { data, error } = await query.limit(1);
                     if (!error && data && data.length > 0) {
                         return data[0];
+                    }
+
+                    const { data: hlData, error: hlErr } = await client.from('government_helplines').select('*').limit(1);
+                    if (!hlErr && hlData && hlData.length > 0) {
+                        const h = hlData[0];
+                        return {
+                            id: h.id,
+                            Name: h.Name,
+                            Category: h.Category || 'Government Helpline Number',
+                            'Phone Number': h.Number,
+                            District: h['National / State'] ? `${h['National / State']} Helpline` : 'National Helpline',
+                            'Services provided': h['Services Provided'],
+                            Website: h.Website,
+                            Address: h['National / State'] ? `${h['National / State']} Level Official Helpline Service` : 'National Government Helpline Service',
+                            Pincode: h['Toll-Free (Y/N)'] === 'Y' ? 'Toll-Free Service' : 'National Helpline'
+                        };
                     }
                 }
             } catch (sdkErr) {
