@@ -1,0 +1,29 @@
+---
+title: "Sakhi181 Partners with Mobbera Foundation"
+date: "2026-10-16"
+excerpt: "Sakhi181 is partnering with Mobbera Foundation to empower LGBTQIA+ communities and connect survivors with practical, compassionate support."
+published: true
+---
+
+# Sakhi181 Partners with Mobbera Foundation
+
+We are pleased to announce that Sakhi181 has partnered with Mobbera Foundation. Through this partnership, we aim to empower LGBTQIA+ community members with information and support to help them navigate challenges and thrive.
+
+## About Mobbera Foundation
+
+Mobbera Foundation is committed to empowering communities and fostering inclusive growth. For survivors of gender-based violence experiencing distress, its support brings together immediate help and practical resources that can strengthen well-being and self-reliance.
+
+Its support includes:
+
+- **Crisis support:** Immediate assistance and intervention during emergencies to help safeguard vulnerable people.
+- **Mental health support:** Counseling and guidance to strengthen emotional well-being.
+- **Employment support:** Help finding meaningful job opportunities and connecting with career pathways.
+- **Upskilling:** Training and skill development to strengthen employability and self-reliance.
+- **Social entitlements:** Support accessing government schemes, rights, and welfare benefits.
+- **Sensitisation sessions:** Awareness programs that promote inclusion, equality, and social responsibility.
+
+Together, these services can help people navigate urgent challenges while building toward stability and opportunity. Learn more about [Mobbera Foundation](https://www.instagram.com/mobberafoundation/?hl=en).
+
+## About the Partnership
+
+We are excited about this partnership and will share more details soon.
