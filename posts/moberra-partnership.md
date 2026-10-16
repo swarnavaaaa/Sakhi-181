@@ -13,7 +13,7 @@ We are pleased to announce that Sakhi181 has partnered with Mobbera Foundation. 
 
 ## About Mobbera Foundation
 
-Mobbera Foundation is committed to empowering communities and fostering inclusive growth. For survivors of gender-based violence experiencing distress, its support brings together immediate help and practical resources that can strengthen well-being and self-reliance.
+Mobbera Foundation is committed to empowering communities and fostering inclusive growth, with a motto of empowering LGBTQIA+ rights via art,events,&projects. For survivors of gender-based violence experiencing distress, its support brings together immediate help and practical resources that can strengthen well-being and self-reliance.
 
 Its support includes:
 
