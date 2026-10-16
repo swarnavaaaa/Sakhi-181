@@ -132,7 +132,29 @@
             color: var(--text-muted);
             font-size: 1.1rem;
         }
+/* SV changes for UPI - start*/
+        .upi-transfer-option {
+            margin: 0 auto 3rem;
+            text-align: center;
+        }
 
+        .upi-transfer-option h2 {
+            color: var(--text-main);
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .upi-transfer-option img {
+            display: block;
+            width: min(100%, 400px);
+            aspect-ratio: 1;
+            object-fit: contain;
+            margin: 0 auto;
+            padding: 0.75rem;
+            border: 1px solid rgba(194, 24, 91, 0.1);
+            border-radius: 12px;
+        }
+/* SV changes for UPI - end */
         .bank-card {
             background: linear-gradient(145deg, #ffffff, #fdf2f8);
             border-radius: 24px;
@@ -419,6 +441,12 @@
     <!-- How to Donate (Bank Transfer) -->
     <section id="how-to-donate" class="donate-section-alt">
         <div class="container transfer-container">
+             <!-- SV changes for UPI - start  -->
+            <div class="upi-transfer-option">
+                <h2>Donate via UPI</h2>
+                <img src="UPI.jpeg" alt="Scan this QR code to donate via UPI" onerror="this.closest('.upi-transfer-option').hidden = true">
+            </div>
+            <!-- SV changes for UPI - end  -->
             <div class="transfer-header">
                 <h2>Bank Transfer</h2>
                 <p>Support our cause securely via direct bank transfer using the details below.</p>
