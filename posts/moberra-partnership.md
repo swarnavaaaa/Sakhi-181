@@ -2,7 +2,7 @@
 title: "Sakhi181 Partners with Mobbera Foundation"
 date: "2026-10-16"
 excerpt: "Sakhi181 is partnering with Mobbera Foundation to empower LGBTQIA+ communities and connect survivors with practical, compassionate support."
-coverImage: "/images/posts/Mobberra logo.jpeg"
+coverImage: "/images/posts/mobbera_logo_image.jpeg"
 
 published: true
 ---
