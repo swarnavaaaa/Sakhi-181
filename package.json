@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "node scripts/build-blog.js"
+    "build": "node scripts/build-blog.js && node scripts/build-search-index.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",

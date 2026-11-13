@@ -29,8 +29,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
     </noscript>
 
-    <link rel="preload" as="style" href="style.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="preload" as="style" href="style.css?v=2.3">
+    <link rel="stylesheet" href="style.css?v=2.3">
 
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
@@ -65,12 +65,17 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="resources.html" class="active">Resources</a></li>
+                <li><a href="additional-resources.html">Additional Resources</a></li>
                 <!-- <li><a href="cyber-gbv.html">Cyber GBV</a></li> -->
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
                 <li><a href="donate.html">Donate</a></li>
             </ul>
             <div class="nav-actions">
+                <button type="button" class="site-search-btn" id="siteSearchBtn" aria-label="Search website" aria-haspopup="dialog" aria-expanded="false">
+                    <i class="ri-search-line"></i>
+                    <span class="site-search-btn-label">Search</span>
+                </button>
                 <div class="translate-control">
                     <i class="ri-translate-2"></i>
                     <div id="google_translate_element"></div>
@@ -253,6 +258,7 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="about.html">About Us</a></li>
                         <li><a href="resources.html">Resources</a></li>
+                        <li><a href="additional-resources.html">Additional Resources</a></li>
                         <li><a href="blog.html">Blog</a></li>
                         <li><a href="contact.html">Contact Us</a></li>
                     </ul>
@@ -287,6 +293,7 @@
         src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 
     <script src="script_v2.js?v=2.1" defer></script>
+    <script src="site-search.js?v=1.0" defer></script>
 </body>
 
 </html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, follow">
+    <link rel="icon" type="image/png" href="sakhi-favicon2.png?v=2">
+    <link rel="shortcut icon" type="image/png" href="sakhi-favicon2.png?v=2">
+    <link rel="apple-touch-icon" href="sakhi-favicon2.png?v=2">
+    <title>Search Website | Sakhi 181</title>
+    <meta name="description" content="Search verified GBV resources, cyber safety guides, support centers, helplines, and blog articles on Sakhi 181.">
+
+    <!-- Critical Network Hints -->
+    <link rel="preconnect" href="https://ifasovihhhxznuvdgoxn.supabase.co">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <!-- Google Fonts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
+
+    <!-- Remix Icons -->
+    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    </noscript>
+
+    <link rel="preload" as="style" href="style.css?v=2.3">
+    <link rel="stylesheet" href="style.css?v=2.3">
+
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+</head>
+
+<body>
+
+    <!-- Emergency Bar -->
+    <div class="emergency-bar">
+        <div class="container">
+            <div class="emergency-content">
+                <i class="ri-phone-fill"></i>
+                <h4>Immediate Emergency? <span>Call for help</span></h4>
+            </div>
+            <div class="emergency-buttons-desktop">
+                <span style="font-size: 0.75rem; font-weight: 700; color: white; margin-right: 0.5rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;">Verified Govt. Helplines:</span>
+                <a href="tel:181" class="btn-emergency-pill">National Women's Helpline 181</a>
+                <a href="tel:112" class="btn-emergency-pill">National Police Helpline 112</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="Whitebg_Sakhi181_nospace.png" alt="Sakhi OSC Logo" width="180">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="resources.html">Resources</a></li>
+                <li><a href="additional-resources.html">Additional Resources</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="donate.html">Donate</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button type="button" class="site-search-btn" id="siteSearchBtn" aria-label="Search website" aria-haspopup="dialog" aria-expanded="false">
+                    <i class="ri-search-line"></i>
+                    <span class="site-search-btn-label">Search</span>
+                </button>
+                <div class="translate-control">
+                    <i class="ri-translate-2"></i>
+                    <div id="google_translate_element"></div>
+                </div>
+                <button class="btn-nav" id="quickExit">Quick Exit</button>
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation Menu">
+                    <i class="ri-menu-line"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main id="searchResultsPage">
+        <!-- Search Page Hero -->
+        <header class="search-page-hero">
+            <div class="container">
+                <span class="search-hero-pill"><i class="ri-compass-3-line"></i> Site-Wide Search</span>
+                <h1>Search Sakhi 181</h1>
+                <p>Find verified support centers, helplines, cyber safety SOP guides, legal resources, and community stories.</p>
+
+                <form id="pageSearchForm" class="search-page-form" role="search">
+                    <div class="site-search-input-wrap search-page-input-wrap">
+                        <i class="ri-search-line site-search-input-icon"></i>
+                        <input
+                            type="text"
+                            id="pageSearchInput"
+                            class="site-search-input"
+                            placeholder="Search by keyword, topic, helpline, or district..."
+                            autocomplete="off"
+                            aria-label="Search Sakhi 181"
+                            aria-autocomplete="list"
+                            aria-controls="pageSearchAc"
+                        >
+                        <button type="button" class="site-search-clear" id="pageSearchClear" aria-label="Clear search" hidden>
+                            <i class="ri-close-circle-fill"></i>
+                        </button>
+                        <button type="submit" class="site-search-submit">
+                            <span>Search</span>
+                            <i class="ri-arrow-right-line"></i>
+                        </button>
+                    </div>
+                    <div id="pageSearchAc" class="search-autocomplete-dropdown" role="listbox" hidden></div>
+                </form>
+            </div>
+        </header>
+
+        <!-- Search Results Content -->
+        <section class="search-results-section">
+            <div class="container">
+                <div id="searchToolbar" class="search-toolbar">
+                    <div id="searchFilterBar" class="search-filter-bar" role="group" aria-label="Filter results by content type"></div>
+                    <div id="searchSummaryText" class="search-summary-text" aria-live="polite"></div>
+                </div>
+
+                <div id="searchResultsList" class="search-results-list">
+                    <!-- Dynamic search results injected here -->
+                </div>
+
+                <div id="searchPagination" class="search-pagination" role="navigation" aria-label="Search results pagination"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo" style="margin-bottom: 1.5rem;">
+                        <img src="Whitebg_Sakhi181_nospace.png" alt="Sakhi OSC Logo" width="150">
+                    </div>
+                    <p>An initiative dedicated to the protection, support, and empowerment of women through accurate and accessible information and resources.</p>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                    <a href="donate.html" class="btn-donate-footer">Donate <i class="ri-arrow-right-up-line"></i></a>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="resources.html">Resources</a></li>
+                        <li><a href="additional-resources.html">Additional Resources</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="flex-direction: column; gap: 1rem;">
+                <p style="font-size: 0.75rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.4;">Sakhi181 Foundation is an independent, non-governmental organization and is not affiliated with any government body. We work to create awareness and improve access to existing support systems for women, including government helplines and services.</p>
+                <p>© 2026 Sakhi One Stop Centre. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/sakhi181_foundation?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="social-icon" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'hi,mr,ta,te,gu,kn,ml,pa,bn,as',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+    <script src="script_v2.js?v=2.2" defer></script>
+    <script src="site-search.js?v=1.0" defer></script>
+</body>
+
+</html>

@@ -16,7 +16,7 @@
     <!-- Remix Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2.3">
 
     <!-- Custom Premium Styles for Cyber GBV Interactive SOP -->
     <style>
@@ -1285,12 +1285,17 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="resources.html">Resources</a></li>
+                <li><a href="additional-resources.html">Additional Resources</a></li>
                 <!-- <li><a href="cyber-gbv.html" class="active">Cyber GBV</a></li> -->
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
                 <li><a href="donate.html">Donate</a></li>
             </ul>
             <div class="nav-actions">
+                <button type="button" class="site-search-btn" id="siteSearchBtn" aria-label="Search website" aria-haspopup="dialog" aria-expanded="false">
+                    <i class="ri-search-line"></i>
+                    <span class="site-search-btn-label">Search</span>
+                </button>
                 <div class="translate-control">
                     <i class="ri-translate-2"></i>
                     <div id="google_translate_element"></div>
@@ -1327,7 +1332,7 @@
                 </div>
 
                 <!-- Section 1: Reporting & Emergency Helplines -->
-                <div style="margin-bottom: 3rem;">
+                <div id="reporting-helplines" class="cyber-resource-section" style="margin-bottom: 3rem;">
                     <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.6rem;">
                         <i class="ri-alarm-warning-fill" style="color: var(--primary);"></i> 1. Reporting & Emergency Helplines
                     </h2>
@@ -1391,7 +1396,7 @@
                 </div>
 
                 <!-- Section 2: Legal Rights, Laws & Grievance Redressal -->
-                <div style="margin-bottom: 3rem;">
+                <div id="legal-redressal" class="cyber-resource-section" style="margin-bottom: 3rem;">
                     <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.6rem;">
                         <i class="ri-scales-3-line" style="color: var(--primary);"></i> 2. Legal Rights, Laws & Grievance Redressal
                     </h2>
@@ -1437,7 +1442,7 @@
                 </div>
 
                 <!-- Section 3: Cyber Awareness & Digital Empowerment -->
-                <div style="margin-bottom: 3rem;">
+                <div id="cyber-awareness" class="cyber-resource-section" style="margin-bottom: 3rem;">
                     <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.6rem;">
                         <i class="ri-megaphone-fill" style="color: var(--primary);"></i> 3. Cyber Awareness & Digital Empowerment
                     </h2>
@@ -1483,7 +1488,7 @@
                 </div>
 
                 <!-- Section 4: Practical Cyber Hygiene & Handbooks -->
-                <div style="margin-bottom: 3rem;">
+                <div id="cyber-hygiene" class="cyber-resource-section" style="margin-bottom: 3rem;">
                     <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.6rem;">
                         <i class="ri-shield-user-fill" style="color: var(--primary);"></i> 4. Practical Cyber Hygiene & Safety Handbooks
                     </h2>
@@ -1529,7 +1534,7 @@
                 </div>
 
                 <!-- Section 5: Automated Take-Down & Platform Safety Tools -->
-                <div style="margin-bottom: 3rem;">
+                <div id="takedown-tools" class="cyber-resource-section" style="margin-bottom: 3rem;">
                     <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.6rem;">
                         <i class="ri-shield-flash-line" style="color: var(--primary);"></i> 5. Automated Take-Down & Platform Safety Tools
                     </h2>
@@ -1575,7 +1580,7 @@
                 </div>
 
                 <!-- Section 6: Institutional Framework & International Toolkits -->
-                <div style="margin-bottom: 2rem;">
+                <div id="institutional-toolkits" class="cyber-resource-section" style="margin-bottom: 2rem;">
                     <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.6rem;">
                         <i class="ri-global-line" style="color: var(--primary);"></i> 6. Institutional Framework & International Toolkits
                     </h2>
@@ -1647,6 +1652,7 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="about.html">About Us</a></li>
                         <li><a href="resources.html">Resources</a></li>
+                        <li><a href="additional-resources.html">Additional Resources</a></li>
                         <!-- <li><a href="cyber-gbv.html">Cyber GBV</a></li> -->
                         <li><a href="blog.html">Blog</a></li>
                         <li><a href="contact.html">Contact Us</a></li>
@@ -1678,6 +1684,7 @@
     
     <!-- Base Script for Navigation and Header functionality -->
     <script src="script_v2.js" defer></script>
+    <script src="site-search.js?v=1.0" defer></script>
 
 </body>
 </html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="sakhi-favicon2.png?v=2">
+    <link rel="shortcut icon" type="image/png" href="sakhi-favicon2.png?v=2">
+    <link rel="apple-touch-icon" href="sakhi-favicon2.png?v=2">
+    <title>Additional Resources &amp; Recommended Reads | Sakhi 181</title>
+    <meta name="description"
+        content="Curated non-emergency, informative reads, international support directories, investigative journalism, and policy research on women's safety and support systems.">
+    <meta name="keywords"
+        content="additional resources, global helplines, findahelpline, domesticshelters, her case matters, investigative reports, One Stop Centres research, IWWAGE, IndiaSpend, Reporters Collective">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
+
+    <!-- Remix Icons -->
+    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" media="print"
+        onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    </noscript>
+
+    <link rel="preload" as="style" href="style.css?v=2.3">
+    <link rel="stylesheet" href="style.css?v=2.3">
+
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+</head>
+
+<body>
+
+    <!-- Emergency Bar -->
+    <div class="emergency-bar">
+        <div class="container">
+            <div class="emergency-content">
+                <i class="ri-phone-fill"></i>
+                <h4>Immediate Emergency? <span>Call for help</span></h4>
+            </div>
+            <div class="emergency-buttons-desktop">
+                <span
+                    style="font-size: 0.75rem; font-weight: 700; color: white; margin-right: 0.5rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;">Verified
+                    Govt. Helplines:</span>
+                <a href="tel:181" class="btn-emergency-pill">National Women's Helpline 181</a>
+                <a href="tel:112" class="btn-emergency-pill">National Police Helpline 112</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="Whitebg_Sakhi181_nospace.png" alt="Sakhi OSC Logo" width="180">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="resources.html">Resources</a></li>
+                <li><a href="additional-resources.html" class="active">Additional Resources</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="donate.html">Donate</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button type="button" class="site-search-btn" id="siteSearchBtn" aria-label="Search website"
+                    aria-haspopup="dialog" aria-expanded="false">
+                    <i class="ri-search-line"></i>
+                    <span class="site-search-btn-label">Search</span>
+                </button>
+                <div class="translate-control">
+                    <i class="ri-translate-2"></i>
+                    <div id="google_translate_element"></div>
+                </div>
+                <button class="btn-nav" id="quickExit">Quick Exit</button>
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation Menu">
+                    <i class="ri-menu-line"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <header class="additional-hero">
+            <div class="container">
+                <span class="search-hero-pill"><i class="ri-book-open-line"></i> Non-Emergency &amp; Informative Reads</span>
+                <h1>Additional Resources &amp; Reading Room</h1>
+                <p>Explore international support directories, educational guides, investigative journalism, and research
+                    reports on gender-based violence and crisis support systems.</p>
+
+                <div class="additional-notice-box">
+                    <div class="additional-notice-icon">
+                        <i class="ri-information-line"></i>
+                    </div>
+                    <div class="additional-notice-body">
+                        <strong>Looking for immediate or India-specific help?</strong>
+                        <p>This page curates general informative reads and global reference links separately from our
+                            emergency directory. For verified support centers and helplines in India, visit our
+                            <a href="resources.html">Resource Center</a> or <a href="index.html#find-center">Find a
+                                Center near you</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <section class="additional-content-section">
+            <div class="container">
+                <!-- Filter Bar -->
+                <div class="additional-filter-bar" role="group" aria-label="Filter additional reads by category">
+                    <button type="button" class="additional-filter-pill active" data-reading-filter="all">
+                        <i class="ri-apps-line"></i> All Reads <span class="additional-filter-count">6</span>
+                    </button>
+                    <button type="button" class="additional-filter-pill" data-reading-filter="global">
+                        <i class="ri-earth-line"></i> Global Directories &amp; Guides <span
+                            class="additional-filter-count">3</span>
+                    </button>
+                    <button type="button" class="additional-filter-pill" data-reading-filter="research">
+                        <i class="ri-file-chart-line"></i> Reports &amp; Journalism <span
+                            class="additional-filter-count">3</span>
+                    </button>
+                </div>
+
+                <!-- Section 1: Global Directories & Educational Guides -->
+                <div id="global-guides" class="additional-group" data-reading-group="global">
+                    <div class="additional-section-head">
+                        <div class="additional-section-badge"><i class="ri-earth-line"></i> International &amp;
+                            Educational</div>
+                        <h2>Global Directories &amp; Educational Guides</h2>
+                        <p>Helpful non-India-specific directories and survivor-centered educational resources from
+                            around the world.</p>
+                    </div>
+
+                    <div class="additional-cards-grid">
+                        <!-- Card 1: Find A Helpline -->
+                        <article class="additional-card">
+                            <div class="additional-card-top">
+                                <div class="additional-card-icon"><i class="ri-global-line"></i></div>
+                                <span class="additional-card-tag">Global Directory</span>
+                            </div>
+                            <h3>Find A Helpline</h3>
+                            <p>A free, confidential international directory connecting people worldwide to verified crisis
+                                hotlines, text lines, and online chat support across countries and topic areas including
+                                domestic abuse, sexual violence, and mental health.</p>
+                            <div class="additional-card-footer">
+                                <span class="additional-domain"><i class="ri-link"></i> findahelpline.com</span>
+                                <a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer"
+                                    class="additional-read-btn">
+                                    Visit Directory <i class="ri-external-link-line"></i>
+                                </a>
+                            </div>
+                        </article>
+
+                        <!-- Card 2: DomesticShelters.org -->
+                        <article class="additional-card">
+                            <div class="additional-card-top">
+                                <div class="additional-card-icon"><i class="ri-home-heart-line"></i></div>
+                                <span class="additional-card-tag">US &amp; Canada Directory + Library</span>
+                            </div>
+                            <h3>DomesticShelters.org</h3>
+                            <p>A comprehensive North American directory of domestic violence shelters and advocacy
+                                programs, paired with an extensive educational library of articles covering abuse
+                                recognition, safety planning, and long-term recovery.</p>
+                            <div class="additional-card-footer">
+                                <span class="additional-domain"><i class="ri-link"></i> domesticshelters.org</span>
+                                <a href="https://www.domesticshelters.org/" target="_blank" rel="noopener noreferrer"
+                                    class="additional-read-btn">
+                                    Explore Library <i class="ri-external-link-line"></i>
+                                </a>
+                            </div>
+                        </article>
+
+                        <!-- Card 3: Her Case Matters -->
+                        <article class="additional-card">
+                            <div class="additional-card-top">
+                                <div class="additional-card-icon"><i class="ri-book-2-line"></i></div>
+                                <span class="additional-card-tag">Survivor Education &amp; Legal Info</span>
+                            </div>
+                            <h3>Her Case Matters: Sexual Abuse &amp; Assault</h3>
+                            <p>An accessible resource guide outlining the distinctions between sexual abuse and sexual
+                                assault, survivor rights, trauma support pathways, and civil justice options for
+                                institutional accountability.</p>
+                            <div class="additional-card-footer">
+                                <span class="additional-domain"><i class="ri-link"></i> hercasematters.com</span>
+                                <a href="https://www.hercasematters.com/sexual-abuse-and-assault/" target="_blank"
+                                    rel="noopener noreferrer" class="additional-read-btn">
+                                    Read Guide <i class="ri-external-link-line"></i>
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Section 2: Research Reports & Investigative Journalism -->
+                <div id="research-reports" class="additional-group" data-reading-group="research">
+                    <div class="additional-section-head">
+                        <div class="additional-section-badge research"><i class="ri-newspaper-line"></i> Research
+                            &amp; Longform Reads</div>
+                        <h2>Investigative Journalism &amp; Policy Research</h2>
+                        <p>Independent reporting and institutional assessments examining how 181 helplines and One Stop
+                            Centres operate on the ground.</p>
+                    </div>
+
+                    <div class="additional-cards-grid">
+                        <!-- Card 4: The Reporters' Collective -->
+                        <article class="additional-card">
+                            <div class="additional-card-top">
+                                <div class="additional-card-icon research"><i class="ri-article-line"></i></div>
+                                <span class="additional-card-tag research">The Reporters' Collective</span>
+                            </div>
+                            <h3>A Cold Shoulder: The Collapse of Government Help Centres Meant to Protect Women</h3>
+                            <p>An in-depth investigative report examining ground-level gaps, staffing shortages, public
+                                awareness challenges, and Nirbhaya Fund utilization across government-backed women's
+                                help centres.</p>
+                            <div class="additional-card-footer">
+                                <span class="additional-domain"><i class="ri-link"></i> reporters-collective.in</span>
+                                <a href="https://www.reporters-collective.in/womens-safety/a-cold-shoulder-the-collapse-of-government-help-centres-meant-to-protect-women"
+                                    target="_blank" rel="noopener noreferrer" class="additional-read-btn">
+                                    Read Investigation <i class="ri-external-link-line"></i>
+                                </a>
+                            </div>
+                        </article>
+
+                        <!-- Card 5: IndiaSpend -->
+                        <article class="additional-card">
+                            <div class="additional-card-top">
+                                <div class="additional-card-icon research"><i class="ri-bar-chart-box-line"></i></div>
+                                <span class="additional-card-tag research">IndiaSpend</span>
+                            </div>
+                            <h3>One Stop, Many Challenges: Sakhi Centres Struggle to Support Women Survivors of Violence</h3>
+                            <p>Data-backed journalism exploring how Sakhi One Stop Centres deliver medical, legal,
+                                psychological, and shelter services, and the administrative, funding, and coordination
+                                hurdles affecting survivors.</p>
+                            <div class="additional-card-footer">
+                                <span class="additional-domain"><i class="ri-link"></i> indiaspend.com</span>
+                                <a href="https://www.indiaspend.com/governance/one-stop-many-challenges-sakhi-centres-struggle-to-support-women-survivors-of-violence-861666"
+                                    target="_blank" rel="noopener noreferrer" class="additional-read-btn">
+                                    Read Article <i class="ri-external-link-line"></i>
+                                </a>
+                            </div>
+                        </article>
+
+                        <!-- Card 6: IWWAGE Rapid Assessment PDF -->
+                        <article class="additional-card">
+                            <div class="additional-card-top">
+                                <div class="additional-card-icon research"><i class="ri-file-pdf-2-line"></i></div>
+                                <span class="additional-card-tag research">IWWAGE Policy Assessment (PDF)</span>
+                            </div>
+                            <h3>Rapid Assessment of 181 Helpline and One Stop Centres</h3>
+                            <p>A comprehensive multi-state policy assessment by IWWAGE, IFMR, Jagori, and TISS reviewing
+                                service standards, helpline-to-OSC referral integration, capacity needs, and structural
+                                recommendations.</p>
+                            <div class="additional-card-footer">
+                                <span class="additional-domain"><i class="ri-file-pdf-line"></i> iwwage.org (PDF)</span>
+                                <a href="https://iwwage.org/wp-content/uploads/2019/08/Rapid-Assessment-of-181-Helpline-and-One-Stop-Centres.pdf"
+                                    target="_blank" rel="noopener noreferrer" class="additional-read-btn">
+                                    Open PDF Report <i class="ri-external-link-line"></i>
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Separate India Emergency / Verified Resources CTA -->
+                <div class="additional-cta-banner">
+                    <div class="additional-cta-text">
+                        <h3>Need Verified Support Centers or Helplines in India?</h3>
+                        <p>Return to our India-focused directory for Sakhi One Stop Centres, legal aid, medical help,
+                            counselling, and emergency helplines.</p>
+                    </div>
+                    <div class="additional-cta-actions">
+                        <a href="resources.html" class="additional-cta-btn primary">
+                            <i class="ri-heart-handshake-line"></i> Open Resource Center
+                        </a>
+                        <a href="index.html#find-center" class="additional-cta-btn secondary">
+                            <i class="ri-map-pin-2-line"></i> Find Local Center
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo" style="margin-bottom: 1.5rem;">
+                        <img src="Whitebg_Sakhi181_nospace.png" alt="Sakhi OSC Logo" width="150">
+                    </div>
+                    <p>An initiative dedicated to the protection, support, and empowerment of women through accurate and
+                        accessible information and resources.</p>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                    <a href="donate.html" class="btn-donate-footer">Donate <i class="ri-arrow-right-up-line"></i></a>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="resources.html">Resources</a></li>
+                        <li><a href="additional-resources.html">Additional Resources</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="flex-direction: column; gap: 1rem;">
+                <p
+                    style="font-size: 0.75rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.4;">
+                    Sakhi181 Foundation is an independent, non-governmental organization and is not affiliated with any
+                    government body. We work to create awareness and improve access to existing support systems for
+                    women, including government helplines and services.</p>
+                <p>© 2026 Sakhi One Stop Centre. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/sakhi181_foundation?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                        target="_blank" class="social-icon" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'hi,mr,ta,te,gu,kn,ml,pa,bn,as',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+
+    <script src="script_v2.js?v=2.2" defer></script>
+    <script src="site-search.js?v=1.0" defer></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterBtns = document.querySelectorAll('[data-reading-filter]');
+            const groups = document.querySelectorAll('[data-reading-group]');
+
+            filterBtns.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const target = btn.getAttribute('data-reading-filter');
+                    filterBtns.forEach((b) => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    groups.forEach((group) => {
+                        const groupType = group.getAttribute('data-reading-group');
+                        group.style.display = (target === 'all' || target === groupType) ? 'block' : 'none';
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
