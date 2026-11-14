@@ -42,7 +42,7 @@
         'Digital Shakti Campaign',
         'CERT-In Mahila Suraksha Handbook',
         'Bhumika Support Centers',
-        'Additional Resources',
+        'Learn More',
         'Find A Helpline',
         'DomesticShelters.org',
         'Her Case Matters',

@@ -229,10 +229,10 @@ const STATIC_PAGES = [
     },
     {
         file: 'additional-resources.html',
-        title: 'Additional Resources & Reading Room — Global Guides & Research',
+        title: 'Learn More — Global Guides & Research',
         type: 'resources',
-        typeLabel: 'Additional Resources',
-        extraKeywords: 'findahelpline, domesticshelters, hercasematters, sexual abuse, sexual assault, Reporters Collective, Cold Shoulder, IndiaSpend, IWWAGE, Rapid Assessment of 181 Helpline and One Stop Centres, informative reads, research, international directories'
+        typeLabel: 'Learn More',
+        extraKeywords: 'additional resources, findahelpline, domesticshelters, hercasematters, sexual abuse, sexual assault, Reporters Collective, Cold Shoulder, IndiaSpend, IWWAGE, Rapid Assessment of 181 Helpline and One Stop Centres, informative reads, research, international directories'
     },
     {
         file: 'cyber-gbv.html',
